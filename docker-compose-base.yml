@@ -1,0 +1,76 @@
+services:
+  database_service:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - '${MYSQL_PORT}:3306'
+    volumes:
+      - database_data:/var/lib/mysql
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  message_queue_service:
+    image: redis:7
+    restart: unless-stopped
+    ports:
+      - '${MESSAGE_QUEUE_REDIS_PORT}:6379'
+    volumes:
+      - message_queue_data:/data
+    command: ['redis-server', '--appendonly', 'yes']
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  cache_service:
+    image: redis:7
+    restart: unless-stopped
+    ports:
+      - '${CACHE_REDIS_PORT}:6379'
+    volumes:
+      - cache_data:/data
+    command: ['redis-server', '--appendonly', 'yes']
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  adminer_service:
+    image: adminer:4.8.1
+    restart: unless-stopped
+    ports:
+      - '${ADMINER_PORT}:8080'
+    environment:
+      ADMINER_DEFAULT_SERVER: database_service
+    depends_on:
+      database_service:
+        condition: service_healthy
+
+  ollama_service:
+    image: ollama/ollama:0.17.4
+    restart: unless-stopped
+    ports:
+      - '${OLLAMA_PORT}:11434'
+    volumes:
+      - ollama_data:/root/.ollama
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:11434/']
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  database_data:
+  message_queue_data:
+  cache_data:
+  ollama_data:

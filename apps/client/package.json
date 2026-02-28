@@ -1,0 +1,22 @@
+{
+  "name": "@chatbot/client",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite --host",
+    "lint": "eslint . --fix",
+    "debug": "vite --host",
+    "prod": "vite build && vite preview --host",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.5",
+    "@types/react-dom": "^19.2.3"
+  }
+}

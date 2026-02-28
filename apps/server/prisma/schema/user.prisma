@@ -1,0 +1,17 @@
+model User {
+    id            Int       @id @default(autoincrement())
+    roleId        Int
+    email         String    @unique
+    name          String?
+    phone         String?
+    address       String?
+    gender        String?
+    dateOfBirth   DateTime?
+    password      String
+    activatedAt   DateTime?
+    lockedAt      DateTime?
+    createdAt     DateTime  @default(now())
+    updatedAt     DateTime  @updatedAt
+    role          Role      @relation(fields: [roleId], references: [id])
+    refreshTokens Token[]
+}

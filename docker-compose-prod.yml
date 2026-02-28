@@ -1,0 +1,15 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        FRONTEND_PORT: ${VITE_APP_PORT}
+        BACKEND_PORT: ${NEST_APP_PORT}
+    container_name: turbo-app
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+    ports:
+      - '${VITE_APP_PORT}:${VITE_APP_PORT}'
+      - '${NEST_APP_PORT}:${NEST_APP_PORT}'
