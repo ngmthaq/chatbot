@@ -8,5 +8,5 @@ export class ActivateUserDto {
   @Validate(TokenShouldExist)
   @IsTrimmedString({ message: ExceptionDict.isString() })
   @IsNotEmpty({ message: ExceptionDict.isNotEmpty() })
-  token: string;
+  token!: string;
 }

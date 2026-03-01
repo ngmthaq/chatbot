@@ -8,7 +8,7 @@ export class CreateRoleDto {
   @Validate(RoleNameShouldNotExist)
   @IsTrimmedString({ message: ExceptionDict.isString() })
   @IsNotEmpty({ message: ExceptionDict.isNotEmpty() })
-  name: string;
+  name!: string;
 
   @IsTrimmedString({ message: ExceptionDict.isString() })
   @IsOptional()

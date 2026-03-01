@@ -12,13 +12,13 @@ export class CreateRbacDto {
   @IsInt({ message: ExceptionDict.isInt() })
   @IsNotEmpty({ message: ExceptionDict.isNotEmpty() })
   @Type(() => Number)
-  roleId: number;
+  roleId!: number;
 
   @IsEnum(Module, { message: ExceptionDict.isEnum(Module) })
   @IsNotEmpty({ message: ExceptionDict.isNotEmpty() })
-  module: Module;
+  module!: Module;
 
   @IsEnum(Action, { message: ExceptionDict.isEnum(Action) })
   @IsNotEmpty({ message: ExceptionDict.isNotEmpty() })
-  action: Action;
+  action!: Action;
 }

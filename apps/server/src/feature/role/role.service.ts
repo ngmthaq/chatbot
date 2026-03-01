@@ -22,8 +22,8 @@ export class RoleService {
     builder.where = { OR: [] };
 
     if (params.search) {
-      builder.where.OR.push({ name: { contains: params.search } });
-      builder.where.OR.push({ description: { contains: params.search } });
+      builder.where.OR!.push({ name: { contains: params.search } });
+      builder.where.OR!.push({ description: { contains: params.search } });
     }
 
     if (params.name !== undefined) {

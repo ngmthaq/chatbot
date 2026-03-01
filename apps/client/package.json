@@ -1,15 +1,15 @@
 {
   "name": "@chatbot/client",
-  "private": true,
   "version": "0.0.1",
+  "private": true,
   "type": "module",
   "scripts": {
     "build": "vite build",
+    "check-types": "tsc --noEmit",
+    "debug": "vite --host",
     "dev": "vite --host",
     "lint": "eslint . --fix",
-    "debug": "vite --host",
-    "prod": "vite build && vite preview --host",
-    "check-types": "tsc --noEmit"
+    "prod": "vite build && vite preview --host"
   },
   "dependencies": {
     "react": "^19.2.0",

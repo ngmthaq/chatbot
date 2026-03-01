@@ -10,5 +10,5 @@ export class RbacMultipleIdsParamDto {
   @Validate(MultipleIdsWithCsvStringFormat)
   @IsTrimmedString({ message: ExceptionDict.isString() })
   @IsNotEmpty({ message: ExceptionDict.isNotEmpty() })
-  ids: string;
+  ids!: string;
 }

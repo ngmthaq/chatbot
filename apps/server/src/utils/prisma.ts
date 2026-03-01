@@ -1,4 +1,3 @@
-import { Prisma } from '../../prisma-generated/client';
 import { GetListDto } from '../core/dto/get-list.dto';
 
 type GenericObject = Record<string, unknown>;
@@ -8,7 +7,7 @@ export function buildPrismaGetListQuery<T extends GenericObject>(
   currentConditions?: T,
 ) {
   // Initialize conditions
-  const initialConditions: Prisma.UserFindManyArgs = {
+  const initialConditions = {
     where: undefined,
     select: undefined,
     omit: undefined,
@@ -41,7 +40,7 @@ export function buildPrismaGetListQuery<T extends GenericObject>(
         return result;
       }
       return { [current]: result };
-    }, {});
+    }, {} as GenericObject);
 
     conditions['orderBy'] = nestedOrderBy;
   }
@@ -51,7 +50,7 @@ export function buildPrismaGetListQuery<T extends GenericObject>(
 
 export function buildPrismaQuery<T extends GenericObject>(): T {
   // Initialize conditions
-  const initialConditions: Prisma.UserFindFirstArgs = {
+  const initialConditions = {
     where: undefined,
     select: undefined,
     omit: undefined,
@@ -68,7 +67,7 @@ export function buildPrismaQuery<T extends GenericObject>(): T {
 
 export function buildPrismaUpdateQuery<T extends GenericObject>(): T {
   // Initialize conditions
-  const initialConditions: Prisma.UserUpdateArgs = {
+  const initialConditions = {
     where: undefined,
     data: undefined,
     select: undefined,
@@ -81,7 +80,7 @@ export function buildPrismaUpdateQuery<T extends GenericObject>(): T {
 
 export function buildPrismaUpdateManyQuery<T extends GenericObject>(): T {
   // Initialize conditions
-  const initialConditions: Prisma.UserUpdateManyArgs = {
+  const initialConditions = {
     where: undefined,
     data: undefined,
     limit: undefined,
@@ -92,7 +91,7 @@ export function buildPrismaUpdateManyQuery<T extends GenericObject>(): T {
 
 export function buildPrismaUpsertQuery<T extends GenericObject>(): T {
   // Initialize conditions
-  const initialConditions: Prisma.UserUpsertArgs = {
+  const initialConditions = {
     where: undefined,
     create: undefined,
     update: undefined,
@@ -106,7 +105,7 @@ export function buildPrismaUpsertQuery<T extends GenericObject>(): T {
 
 export function buildPrismaDeleteQuery<T extends GenericObject>(): T {
   // Initialize conditions
-  const initialConditions: Prisma.UserDeleteArgs = {
+  const initialConditions = {
     where: undefined,
     select: undefined,
     omit: undefined,
@@ -118,7 +117,7 @@ export function buildPrismaDeleteQuery<T extends GenericObject>(): T {
 
 export function buildPrismaDeleteManyQuery<T extends GenericObject>(): T {
   // Initialize conditions
-  const initialConditions: Prisma.UserDeleteManyArgs = {
+  const initialConditions = {
     where: undefined,
     limit: undefined,
   };

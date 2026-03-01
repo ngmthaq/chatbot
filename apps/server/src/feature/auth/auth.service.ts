@@ -56,7 +56,7 @@ export class AuthService {
         userId: user.id,
         token: refreshToken,
         tokenType: TokenType.REFRESH_TOKEN,
-        expiredAt: expiredAt(),
+        expiredAt: expiredAt!(),
       },
     });
     return ResponseBuilder.data({
@@ -74,7 +74,7 @@ export class AuthService {
     });
     const user = await this.prismaService.user.findFirst({
       where: {
-        id: storedToken.userId,
+        id: storedToken!.userId,
         lockedAt: null,
         activatedAt: { not: null },
       },
@@ -84,7 +84,7 @@ export class AuthService {
     const token = await this.jwtService.signAsync(payload);
     const newRefreshToken = generateToken();
     await this.prismaService.token.update({
-      where: { id: storedToken.id },
+      where: { id: storedToken!.id },
       data: {
         token: newRefreshToken,
       },
@@ -108,7 +108,7 @@ export class AuthService {
     const user = await transaction.user.create({
       data: {
         ...registerDto,
-        roleId: userRole.id,
+        roleId: userRole!.id,
         password: hashedPassword,
       },
     });
@@ -121,7 +121,7 @@ export class AuthService {
         userId: user.id,
         tokenType: TokenType.ACTIVATION_TOKEN,
         token: activateToken,
-        expiredAt: expiredAt(),
+        expiredAt: expiredAt!(),
       },
     });
     this.logger.log(
@@ -138,10 +138,10 @@ export class AuthService {
       where: { token, tokenType: TokenType.ACTIVATION_TOKEN },
     });
     const user = await transaction.user.update({
-      where: { id: tokenRecord.userId },
+      where: { id: tokenRecord!.userId },
       data: { activatedAt: dayjs().toDate() },
     });
-    await transaction.token.delete({ where: { id: tokenRecord.id } });
+    await transaction.token.delete({ where: { id: tokenRecord!.id } });
     return ResponseBuilder.data(new UserEntity(user));
   }
 
@@ -153,14 +153,14 @@ export class AuthService {
     >('resetPasswordTokenExpiration');
     await this.prismaService.token.create({
       data: {
-        userId: user.id,
+        userId: user!.id,
         tokenType: TokenType.RESET_PASSWORD_TOKEN,
         token: resetToken,
-        expiredAt: expiredAt(),
+        expiredAt: expiredAt!(),
       },
     });
     this.logger.log(
-      `Reset password token created for user ${user.email}: ${resetToken}`,
+      `Reset password token created for user ${user!.email}: ${resetToken}`,
     );
     return ResponseBuilder.success(true);
   }
@@ -179,10 +179,10 @@ export class AuthService {
       resetPasswordDto.newPassword,
     );
     await transaction.user.update({
-      where: { id: tokenRecord.userId },
+      where: { id: tokenRecord!.userId },
       data: { password: hashedPassword },
     });
-    await transaction.token.delete({ where: { id: tokenRecord.id } });
+    await transaction.token.delete({ where: { id: tokenRecord!.id } });
     return ResponseBuilder.success(true);
   }
 
@@ -190,7 +190,7 @@ export class AuthService {
     const user = await this.prismaService.user.findFirst({
       where: { id: userId },
     });
-    return ResponseBuilder.data(new UserEntity(user));
+    return ResponseBuilder.data(new UserEntity(user!));
   }
 
   public async getRole(userId: number) {
@@ -198,7 +198,7 @@ export class AuthService {
       where: { id: userId },
       select: { role: true },
     });
-    return ResponseBuilder.data(user.role);
+    return ResponseBuilder.data(user!.role);
   }
 
   public async getRbac(userId: number) {
@@ -212,6 +212,6 @@ export class AuthService {
         },
       },
     });
-    return ResponseBuilder.data(user.role.rbac);
+    return ResponseBuilder.data(user!.role.rbac);
   }
 }

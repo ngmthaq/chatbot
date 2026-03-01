@@ -13,5 +13,5 @@ export class RoleIdParamForDeleteDto {
   @IsInt({ message: ExceptionDict.isInt() })
   @IsNotEmpty({ message: ExceptionDict.isNotEmpty() })
   @Type(() => Number)
-  id: number;
+  id!: number;
 }

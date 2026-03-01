@@ -6,9 +6,9 @@ import { ExceptionDict } from '../../core/exception/exception-dict';
 export class LoginDto {
   @IsEmail({}, { message: ExceptionDict.isEmail() })
   @IsNotEmpty({ message: ExceptionDict.isNotEmpty() })
-  email: string;
+  email!: string;
 
   @IsTrimmedString({ message: ExceptionDict.isString() })
   @IsNotEmpty({ message: ExceptionDict.isNotEmpty() })
-  password: string;
+  password!: string;
 }

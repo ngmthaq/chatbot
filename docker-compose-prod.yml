@@ -1,15 +1,38 @@
 services:
-  app:
+  client:
     build:
       context: .
       dockerfile: Dockerfile
       args:
         FRONTEND_PORT: ${VITE_APP_PORT}
         BACKEND_PORT: ${NEST_APP_PORT}
-    container_name: turbo-app
+    container_name: chatbot-client
     restart: unless-stopped
+    command: nginx -g "daemon off;"
     environment:
       NODE_ENV: production
     ports:
-      - '${VITE_APP_PORT}:${VITE_APP_PORT}'
+      - '${VITE_APP_PORT}:80'
+    networks:
+      - chatbot-network
+
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        FRONTEND_PORT: ${VITE_APP_PORT}
+        BACKEND_PORT: ${NEST_APP_PORT}
+    container_name: chatbot-server
+    restart: unless-stopped
+    command: node /app/apps/server/dist/src/main
+    environment:
+      NODE_ENV: production
+    ports:
       - '${NEST_APP_PORT}:${NEST_APP_PORT}'
+    networks:
+      - chatbot-network
+
+networks:
+  chatbot-network:
+    driver: bridge

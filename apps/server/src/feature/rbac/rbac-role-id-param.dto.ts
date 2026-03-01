@@ -9,5 +9,5 @@ export class RbacRoleIdParamDto {
   @IsInt({ message: ExceptionDict.isInt() })
   @IsNotEmpty({ message: ExceptionDict.isNotEmpty() })
   @Type(() => Number)
-  roleId: number;
+  roleId!: number;
 }

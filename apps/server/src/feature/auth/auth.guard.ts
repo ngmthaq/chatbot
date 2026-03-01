@@ -10,7 +10,7 @@ import { PrismaService } from '../../core/database/prisma.service';
 import { ExceptionBuilder } from '../../core/exception/exception-builder';
 import { ExceptionDict } from '../../core/exception/exception-dict';
 
-import { JwtPayload } from './auth-type';
+import { AuthRequest, JwtPayload } from './auth-type';
 import { IS_PUBLIC_KEY } from './public.decorator';
 
 @Injectable()
@@ -31,7 +31,7 @@ export class AuthGuard implements CanActivate {
 
       if (isPublic) return true;
 
-      const request = context.switchToHttp().getRequest<Request>();
+      const request = context.switchToHttp().getRequest<AuthRequest>();
       const token = this.extractTokenFromHeader(request);
       if (!token) throw new Error('No token found');
 

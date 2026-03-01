@@ -19,6 +19,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
       database: configService.get<ConfigType['databaseName']>('databaseName'),
       allowPublicKeyRetrieval: true,
     });
+
     super({
       adapter: adapter,
       log: [
@@ -32,18 +33,26 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
 
   public async onModuleInit() {
     await this.$connect();
-    this.$on('query', (event) => {
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this.$on('query' as never, (event: any) => {
       this.logger.log(
         `Query: ${event.query} | Params: ${event.params} | Duration: ${event.duration}ms`,
       );
     });
-    this.$on('error', (event) => {
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this.$on('error' as never, (event: any) => {
       this.logger.error(`Error: ${event.message}`);
     });
-    this.$on('info', (event) => {
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this.$on('info' as never, (event: any) => {
       this.logger.log(`Info: ${event.message}`);
     });
-    this.$on('warn', (event) => {
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this.$on('warn' as never, (event: any) => {
       this.logger.warn(`Warn: ${event.message}`);
     });
   }

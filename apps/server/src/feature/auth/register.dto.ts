@@ -14,12 +14,12 @@ export class RegisterDto {
   @Validate(UserEmailShouldNotExist)
   @IsEmail({}, { message: ExceptionDict.isEmail() })
   @IsNotEmpty({ message: ExceptionDict.isNotEmpty() })
-  email: string;
+  email!: string;
 
   @IsStrongPassword(strongPasswordConfig, {
     message: ExceptionDict.isStrongPassword(strongPasswordConfig),
   })
   @IsTrimmedString({ message: ExceptionDict.isString() })
   @IsNotEmpty({ message: ExceptionDict.isNotEmpty() })
-  password: string;
+  password!: string;
 }

@@ -23,9 +23,9 @@ export class RbacService {
     builder.where = { OR: [] };
 
     if (params.search) {
-      builder.where.OR.push({ module: { contains: params.search } });
-      builder.where.OR.push({ action: { contains: params.search } });
-      builder.where.OR.push({ role: { name: { contains: params.search } } });
+      builder.where.OR!.push({ module: { contains: params.search } });
+      builder.where.OR!.push({ action: { contains: params.search } });
+      builder.where.OR!.push({ role: { name: { contains: params.search } } });
     }
 
     if (params.roleId !== undefined) {

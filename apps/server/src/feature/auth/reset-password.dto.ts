@@ -9,12 +9,12 @@ export class ResetPasswordDto {
   @Validate(TokenShouldExist)
   @IsTrimmedString({ message: ExceptionDict.isString() })
   @IsNotEmpty({ message: ExceptionDict.isNotEmpty() })
-  token: string;
+  token!: string;
 
   @IsStrongPassword(strongPasswordConfig, {
     message: ExceptionDict.isStrongPassword(strongPasswordConfig),
   })
   @IsTrimmedString({ message: ExceptionDict.isString() })
   @IsNotEmpty({ message: ExceptionDict.isNotEmpty() })
-  newPassword: string;
+  newPassword!: string;
 }

@@ -21,15 +21,15 @@ RUN yarn install --frozen-lockfile
 COPY . .
 
 # Migrate database (optional, depending on your setup)
-RUN yarn db:migrate-prod
+# RUN yarn db:migrate-prod
 
 # Seed database (optional, depending on your setup)
-RUN yarn db:seed
+# RUN yarn db:seed
 
 # Generate Prisma Client
 RUN yarn db:generate
 
-# Build both applications
+# Build all applications
 RUN yarn build
 
 # Production stage
@@ -56,13 +56,4 @@ COPY .env /app/.env
 # Configure nginx to serve frontend and proxy API
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# Create entrypoint script to run both services
-RUN echo '#!/bin/bash\n\
-set -e\n\
-sed -i "s/listen 80;/listen $FRONTEND_PORT;/" /etc/nginx/nginx.conf\n\
-nginx -g "daemon off;" &\n\
-exec node /app/apps/server/dist/src/main\n\
-' > /entrypoint.sh && chmod +x /entrypoint.sh
-
 EXPOSE ${FRONTEND_PORT} ${BACKEND_PORT}
-CMD ["/entrypoint.sh"]

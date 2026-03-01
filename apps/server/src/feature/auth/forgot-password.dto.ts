@@ -7,5 +7,5 @@ export class ForgotPasswordDto {
   @Validate(UserEmailShouldExist)
   @IsEmail({}, { message: ExceptionDict.isEmail() })
   @IsNotEmpty({ message: ExceptionDict.isNotEmpty() })
-  email: string;
+  email!: string;
 }

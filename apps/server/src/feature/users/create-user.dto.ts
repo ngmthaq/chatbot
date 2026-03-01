@@ -21,12 +21,12 @@ export class CreateUserDto {
   @Validate(UserEmailShouldNotExist)
   @IsEmail({}, { message: ExceptionDict.isEmail() })
   @IsNotEmpty({ message: ExceptionDict.isNotEmpty() })
-  email: string;
+  email!: string;
 
   @Validate(RoleIdShouldExist)
   @IsInt({ message: ExceptionDict.isInt() })
   @IsNotEmpty({ message: ExceptionDict.isNotEmpty() })
-  roleId: number;
+  roleId!: number;
 
   @IsTrimmedString({ message: ExceptionDict.isString() })
   @IsOptional()

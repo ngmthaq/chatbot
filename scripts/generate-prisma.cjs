@@ -3,7 +3,7 @@ const { resolve } = require('node:path');
 const { execPromise } = require('./helpers.cjs');
 
 const mainBackendApp = 'apps/server';
-const subBackendApps = ['apps/server-2'];
+const subBackendApps = [];
 
 function getPrismaGeneratedPath(appPath) {
   return resolve(__dirname, '..', appPath, 'prisma-generated');

@@ -11,7 +11,7 @@ export const config = () => ({
   databaseHost: process.env.MYSQL_HOST || 'localhost',
 
   // MYSQL_PORT
-  databasePort: parseInt(process.env.MYSQL_PORT, 10) || 3306,
+  databasePort: parseInt(process.env.MYSQL_PORT!, 10) || 3306,
 
   // MYSQL_DATABASE
   databaseName: process.env.MYSQL_DATABASE || 'app_db',
@@ -24,22 +24,28 @@ export const config = () => ({
 
   // MESSAGE_QUEUE_REDIS_PORT
   messageQueueRedisPort:
-    parseInt(process.env.MESSAGE_QUEUE_REDIS_PORT, 10) || 6378,
+    parseInt(process.env.MESSAGE_QUEUE_REDIS_PORT!, 10) || 6378,
 
   // CACHE_REDIS_HOST
   cacheRedisHost: process.env.CACHE_REDIS_HOST || 'localhost',
 
   // CACHE_REDIS_PORT
-  cacheRedisPort: parseInt(process.env.CACHE_REDIS_PORT, 10) || 6379,
+  cacheRedisPort: parseInt(process.env.CACHE_REDIS_PORT!, 10) || 6379,
+
+  // OLLAMA_HOST
+  ollamaHost: process.env.OLLAMA_HOST || 'localhost',
+
+  // OLLAMA_PORT
+  ollamaPort: parseInt(process.env.OLLAMA_PORT!, 10) || 11434,
 
   // NEST_APP_PORT
-  port: parseInt(process.env.NEST_APP_PORT, 10) || 3000,
+  port: parseInt(process.env.NEST_APP_PORT!, 10) || 3000,
 
   // NEST_APP_CACHE_TTL
-  cacheTtl: parseInt(process.env.NEST_APP_CACHE_TTL, 10) || 60000,
+  cacheTtl: parseInt(process.env.NEST_APP_CACHE_TTL!, 10) || 60000,
 
   // NEST_APP_CACHE_LRU_SIZE
-  cacheLruSize: parseInt(process.env.NEST_APP_CACHE_LRU_SIZE, 10) || 5000,
+  cacheLruSize: parseInt(process.env.NEST_APP_CACHE_LRU_SIZE!, 10) || 5000,
 
   // NEST_APP_CRYPTO_ALGORITHM
   cryptoAlgorithm: process.env.NEST_APP_CRYPTO_ALGORITHM || 'aes-256-cbc',
@@ -48,7 +54,7 @@ export const config = () => ({
   cryptoSecret: process.env.NEST_APP_CRYPTO_SECRET || 'your-secret-key',
 
   // NEST_APP_SALT_ROUNDS
-  saltRounds: parseInt(process.env.NEST_APP_SALT_ROUNDS, 10) || 10,
+  saltRounds: parseInt(process.env.NEST_APP_SALT_ROUNDS!, 10) || 10,
 
   // NEST_APP_JWT_SECRET
   jwtSecret: process.env.NEST_APP_JWT_SECRET || 'your-jwt-secret',
@@ -58,7 +64,7 @@ export const config = () => ({
 
   // NEST_APP_RT_EXPIRATION_NUMBER
   refreshTokenExpirationNumber:
-    parseInt(process.env.NEST_APP_RT_EXPIRATION_NUMBER, 10) || 30,
+    parseInt(process.env.NEST_APP_RT_EXPIRATION_NUMBER!, 10) || 30,
 
   // NEST_APP_RT_EXPIRATION_UNIT
   refreshTokenExpirationUnit: process.env.NEST_APP_RT_EXPIRATION_UNIT || 'days',
@@ -67,7 +73,7 @@ export const config = () => ({
   refreshTokenExpiration: () => {
     return dayjs()
       .add(
-        parseInt(process.env.NEST_APP_RT_EXPIRATION_NUMBER, 10) || 30,
+        parseInt(process.env.NEST_APP_RT_EXPIRATION_NUMBER!, 10) || 30,
         (process.env.NEST_APP_RT_EXPIRATION_UNIT ||
           'days') as dayjs.ManipulateType,
       )
@@ -76,7 +82,7 @@ export const config = () => ({
 
   // NEST_APP_AT_EXPIRATION_NUMBER
   activationTokenExpirationNumber:
-    parseInt(process.env.NEST_APP_AT_EXPIRATION_NUMBER, 10) || 1,
+    parseInt(process.env.NEST_APP_AT_EXPIRATION_NUMBER!, 10) || 1,
 
   // NEST_APP_AT_EXPIRATION_UNIT
   activationTokenExpirationUnit:
@@ -86,7 +92,7 @@ export const config = () => ({
   activationTokenExpiration: () => {
     return dayjs()
       .add(
-        parseInt(process.env.NEST_APP_AT_EXPIRATION_NUMBER, 10) || 1,
+        parseInt(process.env.NEST_APP_AT_EXPIRATION_NUMBER!, 10) || 1,
         (process.env.NEST_APP_AT_EXPIRATION_UNIT ||
           'days') as dayjs.ManipulateType,
       )
@@ -95,7 +101,7 @@ export const config = () => ({
 
   // NEST_APP_RPT_EXPIRATION_NUMBER
   resetPasswordTokenExpirationNumber:
-    parseInt(process.env.NEST_APP_RPT_EXPIRATION_NUMBER, 10) || 1,
+    parseInt(process.env.NEST_APP_RPT_EXPIRATION_NUMBER!, 10) || 1,
 
   // NEST_APP_RPT_EXPIRATION_UNIT
   resetPasswordTokenExpirationUnit:
@@ -105,7 +111,7 @@ export const config = () => ({
   resetPasswordTokenExpiration: () => {
     return dayjs()
       .add(
-        parseInt(process.env.NEST_APP_RPT_EXPIRATION_NUMBER, 10) || 1,
+        parseInt(process.env.NEST_APP_RPT_EXPIRATION_NUMBER!, 10) || 1,
         (process.env.NEST_APP_RPT_EXPIRATION_UNIT ||
           'hours') as dayjs.ManipulateType,
       )

@@ -30,11 +30,11 @@ export class UsersService {
     builder.include = { role: true };
     builder.where = { OR: [] };
     if (params.search) {
-      builder.where.OR.push({ name: { contains: params.search } });
-      builder.where.OR.push({ email: { contains: params.search } });
-      builder.where.OR.push({ phone: { contains: params.search } });
-      builder.where.OR.push({ address: { contains: params.search } });
-      builder.where.OR.push({ role: { name: { contains: params.search } } });
+      builder.where.OR!.push({ name: { contains: params.search } });
+      builder.where.OR!.push({ email: { contains: params.search } });
+      builder.where.OR!.push({ phone: { contains: params.search } });
+      builder.where.OR!.push({ address: { contains: params.search } });
+      builder.where.OR!.push({ role: { name: { contains: params.search } } });
     }
     if (params.isActivated !== undefined) {
       builder.where.activatedAt = params.isActivated ? { not: null } : null;

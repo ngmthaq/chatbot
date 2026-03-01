@@ -1,5 +1,5 @@
 {
-  "extends": "@turbo-repo/typescript-config/base.json",
+  "extends": "@chatbot/typescript-config/base.json",
   "compilerOptions": {
     "module": "commonjs",
     "target": "ES2021",

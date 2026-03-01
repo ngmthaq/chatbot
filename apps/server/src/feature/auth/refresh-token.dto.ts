@@ -8,5 +8,5 @@ export class RefreshTokenDto {
   @Validate(TokenShouldExist)
   @IsTrimmedString({ message: ExceptionDict.isString() })
   @IsNotEmpty({ message: ExceptionDict.isNotEmpty() })
-  refreshToken: string;
+  refreshToken!: string;
 }

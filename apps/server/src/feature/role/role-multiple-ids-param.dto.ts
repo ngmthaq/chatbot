@@ -8,5 +8,5 @@ export class RoleMultipleIdsParamDto {
   @Validate(MultipleRoleIdsShouldExist)
   @IsTrimmedString({ message: ExceptionDict.isString() })
   @IsNotEmpty({ message: ExceptionDict.isNotEmpty() })
-  ids: string;
+  ids!: string;
 }

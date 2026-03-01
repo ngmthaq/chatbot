@@ -121,7 +121,7 @@ async function start(app: NestExpressApplication) {
   const configService = app.get(ConfigService);
   const port = configService.get<ConfigType['port']>('port');
   const startTime = dayjs().valueOf();
-  await app.listen(port, () => handleListenApp(port, startTime));
+  await app.listen(port!, () => handleListenApp(port!, startTime));
 }
 
 /**
