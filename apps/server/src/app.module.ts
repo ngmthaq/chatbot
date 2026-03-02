@@ -5,6 +5,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CoreCacheModule } from './core/cache/cache.module';
 import { CoreConfigModule } from './core/config/config.module';
 import { CoreDatabaseModule } from './core/database/database.module';
+import { EmailModule } from './core/email/email.module';
 import { CoreEncryptModule } from './core/encrypt/encrypt.module';
 import { CoreEventModule } from './core/event/event.module';
 import { CoreQueueModule } from './core/queue/queue.module';
@@ -30,6 +31,7 @@ import { UsersModule } from './feature/users/users.module';
 const coreModules = [
   CoreConfigModule,
   CoreEncryptModule,
+  EmailModule,
   CoreCacheModule,
   CoreScheduleModule,
   CoreQueueModule,

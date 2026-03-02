@@ -1,7 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 import { Prisma } from '../../../prisma-generated/client';
+import { ConfigType } from '../../core/config/config-type';
 import { PrismaService } from '../../core/database/prisma.service';
+import { EmailService } from '../../core/email/email.service';
 import { EncryptService } from '../../core/encrypt/encrypt.service';
 import { ResponseBuilder } from '../../core/response/response-builder';
 import dayjs from '../../utils/date';
@@ -23,6 +26,8 @@ export class UsersService {
   public constructor(
     private readonly prismaService: PrismaService,
     private readonly encryptionService: EncryptService,
+    private readonly emailService: EmailService,
+    private readonly configService: ConfigService,
   ) {}
 
   public async getUsers(params: GetUserListDto) {
@@ -66,8 +71,25 @@ export class UsersService {
         activatedAt: dayjs().toDate(),
       },
     });
+
+    // Send welcome email with credentials
+    try {
+      await this.emailService.sendWelcomeEmail(user.email, {
+        name: user.name || 'User',
+      });
+
+      this.logger.log(
+        `Welcome email sent to ${user.email} with temporary password`,
+      );
+    } catch (error) {
+      this.logger.error(
+        `Failed to send welcome email: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      );
+      // Don't fail user creation if email fails
+    }
+
     this.logger.log(
-      `TODO: Send activation email to user with email: ${user.email} and password: ${password}`,
+      `User created with email: ${user.email} and password: ${password}`,
     );
     return ResponseBuilder.data(new UserEntity(user));
   }

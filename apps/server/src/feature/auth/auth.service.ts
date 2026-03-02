@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Prisma } from '../../../prisma-generated/client';
 import { ConfigType } from '../../core/config/config-type';
 import { PrismaService } from '../../core/database/prisma.service';
+import { EmailService } from '../../core/email/email.service';
 import { EncryptService } from '../../core/encrypt/encrypt.service';
 import { ExceptionBuilder } from '../../core/exception/exception-builder';
 import { ResponseBuilder } from '../../core/response/response-builder';
@@ -29,6 +30,7 @@ export class AuthService {
     private readonly encryptionService: EncryptService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly emailService: EmailService,
   ) {}
 
   public async login(loginDto: LoginDto) {
@@ -127,6 +129,27 @@ export class AuthService {
     this.logger.log(
       `Activation token created for user ${user.email}: ${activateToken}`,
     );
+
+    // Send activation email
+    try {
+      const appUrl =
+        this.configService.get<ConfigType['appClientUrl']>('appClientUrl');
+      const activationUrl = `${appUrl}/activate?token=${activateToken}`;
+
+      await this.emailService.sendActivationEmail(user.email, {
+        name: user.name || 'User',
+        activationToken: activateToken,
+        activationUrl,
+      });
+
+      this.logger.log(`Activation email sent to ${user.email}`);
+    } catch (error) {
+      this.logger.error(
+        `Failed to send activation email: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      );
+      // Don't fail registration if email fails
+    }
+
     return ResponseBuilder.data(new UserEntity(user));
   }
 
@@ -142,6 +165,20 @@ export class AuthService {
       data: { activatedAt: dayjs().toDate() },
     });
     await transaction.token.delete({ where: { id: tokenRecord!.id } });
+
+    // Send welcome email
+    try {
+      await this.emailService.sendWelcomeEmail(user.email, {
+        name: user.name || 'User',
+      });
+      this.logger.log(`Welcome email sent to ${user.email}`);
+    } catch (error) {
+      this.logger.error(
+        `Failed to send welcome email: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      );
+      // Don't fail activation if email fails
+    }
+
     return ResponseBuilder.data(new UserEntity(user));
   }
 
@@ -162,6 +199,27 @@ export class AuthService {
     this.logger.log(
       `Reset password token created for user ${user!.email}: ${resetToken}`,
     );
+
+    // Send password reset email
+    try {
+      const appUrl =
+        this.configService.get<ConfigType['appClientUrl']>('appClientUrl');
+      const resetUrl = `${appUrl}/reset-password?token=${resetToken}`;
+
+      await this.emailService.sendPasswordResetEmail(user!.email, {
+        name: user!.name || 'User',
+        resetToken,
+        resetUrl,
+      });
+
+      this.logger.log(`Password reset email sent to ${user!.email}`);
+    } catch (error) {
+      this.logger.error(
+        `Failed to send password reset email: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      );
+      // Don't fail the request if email fails
+    }
+
     return ResponseBuilder.success(true);
   }
 
@@ -178,11 +236,25 @@ export class AuthService {
     const hashedPassword = await this.encryptionService.hash(
       resetPasswordDto.newPassword,
     );
-    await transaction.user.update({
+    const user = await transaction.user.update({
       where: { id: tokenRecord!.userId },
       data: { password: hashedPassword },
     });
     await transaction.token.delete({ where: { id: tokenRecord!.id } });
+
+    // Send password changed email
+    try {
+      await this.emailService.sendPasswordChangedEmail(user.email, {
+        name: user.name || 'User',
+      });
+      this.logger.log(`Password changed email sent to ${user.email}`);
+    } catch (error) {
+      this.logger.error(
+        `Failed to send password changed email: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      );
+      // Don't fail password reset if email fails
+    }
+
     return ResponseBuilder.success(true);
   }
 

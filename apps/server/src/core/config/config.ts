@@ -98,6 +98,12 @@ export const config = () => ({
   // NEST_APP_PORT
   port: parseInt(process.env.NEST_APP_PORT!, 10) || 3000,
 
+  // NEST_APP_NAME
+  appName: process.env.NEST_APP_NAME || 'Chatbot App',
+
+  // NEST_APP_CLIENT_URL
+  appClientUrl: process.env.NEST_APP_CLIENT_URL || 'http://localhost:3000',
+
   // NEST_APP_CACHE_TTL
   cacheTtl: parseInt(process.env.NEST_APP_CACHE_TTL!, 10) || 60000,
 
@@ -174,4 +180,28 @@ export const config = () => ({
       )
       .toDate();
   },
+
+  // MAIL_MAILER
+  mailMailer: process.env.MAIL_MAILER || 'smtp',
+
+  // MAIL_HOST
+  mailHost: process.env.MAIL_HOST || 'localhost',
+
+  // MAIL_PORT
+  mailPort: parseInt(process.env.MAIL_PORT!, 10) || 587,
+
+  // MAIL_USERNAME
+  mailUsername: process.env.MAIL_USERNAME || '',
+
+  // MAIL_PASSWORD
+  mailPassword: process.env.MAIL_PASSWORD || '',
+
+  // MAIL_ENCRYPTION
+  mailEncryption: process.env.MAIL_ENCRYPTION || 'tls',
+
+  // MAIL_FROM_ADDRESS
+  mailFromAddress: process.env.MAIL_FROM_ADDRESS || 'noreply@example.com',
+
+  // MAIL_FROM_NAME
+  mailFromName: process.env.MAIL_FROM_NAME || 'Chatbot App',
 });
