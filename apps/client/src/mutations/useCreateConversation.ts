@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSetAtom } from 'jotai';
+import { useTranslation } from 'react-i18next';
 
 import { CHAT_ROUTES } from '../constants/api-routes';
 import { APP_CONFIG } from '../constants/app-config';
@@ -12,6 +13,7 @@ import { showSuccessToast } from '../utils/error-handler';
 export function useCreateConversation() {
   const queryClient = useQueryClient();
   const setSelectedConversationId = useSetAtom(selectedConversationIdAtom);
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (data?: CreateConversationDto) => {
@@ -31,7 +33,7 @@ export function useCreateConversation() {
     onSuccess: (conversation) => {
       queryClient.invalidateQueries({ queryKey: ['conversations'] });
       setSelectedConversationId(conversation.id);
-      showSuccessToast('New conversation created');
+      showSuccessToast(t('chat:actions.created'));
     },
   });
 }

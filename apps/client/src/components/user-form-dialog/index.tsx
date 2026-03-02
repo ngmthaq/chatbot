@@ -11,8 +11,8 @@ import { Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
 import { useUserForm } from '../../forms/useUserForm';
-import { CreateUserDto, UpdateUserDto } from '../../types/admin-types';
-import { Role } from '../../types/auth-types';
+import type { CreateUserDto, UpdateUserDto } from '../../types/admin-types';
+import type { Role } from '../../types/auth-types';
 
 interface UserFormDialogProps {
   open: boolean;

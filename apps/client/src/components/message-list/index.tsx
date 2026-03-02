@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { currentStreamAtom } from '../../stores/streaming-store';
-import { Message } from '../../types/chat-types';
+import type { Message } from '../../types/chat-types';
 import EmptyState from '../empty-state';
 import MessageBubble from '../message-bubble';
 

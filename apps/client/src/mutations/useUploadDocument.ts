@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 
 import { DOCUMENTS_ROUTES } from '../constants/api-routes';
 import type { ApiResponse } from '../types/api-types';
@@ -8,6 +9,7 @@ import { showSuccessToast } from '../utils/error-handler';
 
 export function useUploadDocument() {
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (formData: FormData) => {
@@ -24,7 +26,7 @@ export function useUploadDocument() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['documents'] });
-      showSuccessToast('Document uploaded successfully');
+      showSuccessToast(t('documents:upload.success'));
     },
   });
 }

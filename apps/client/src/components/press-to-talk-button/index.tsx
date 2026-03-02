@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useSpeechToText } from '../../hooks/useSpeechToText';
 import { isListeningAtom, voiceStateAtom } from '../../stores/voice-store';
-import { VoiceState } from '../../types/voice-types';
+import type { VoiceState } from '../../types/voice-types';
 
 interface PressToTalkButtonProps {
   disabled?: boolean;

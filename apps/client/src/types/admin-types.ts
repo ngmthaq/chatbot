@@ -19,6 +19,11 @@ export enum Action {
   LOCK_UNLOCK = 'LOCK_UNLOCK',
 }
 
+export interface Permission {
+  module: Module;
+  action: Action;
+}
+
 export interface Rbac {
   id: number;
   roleId: number;

@@ -17,7 +17,7 @@ import {
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { UserWithRole } from '../../types/admin-types';
+import type { UserWithRole } from '../../types/admin-types';
 import { formatDate } from '../../utils/formatters';
 import ConfirmDialog from '../confirm-dialog';
 import EmptyState from '../empty-state';
@@ -128,7 +128,7 @@ export default function UserManagement({
                   <TableCell>{user.email}</TableCell>
                   <TableCell>
                     <Chip
-                      label={user.role?.name || 'No Role'}
+                      label={user.role?.name || t('users.noRole')}
                       size="small"
                       color={user.role?.name === 'ADMIN' ? 'error' : 'default'}
                     />

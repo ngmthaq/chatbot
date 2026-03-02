@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 
 import { USERS_ROUTES } from '../constants/api-routes';
 import type { UpdateUserDto, UserWithRole } from '../types/admin-types';
@@ -8,6 +9,7 @@ import { showSuccessToast } from '../utils/error-handler';
 
 export function useUpdateUser() {
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (data: UpdateUserDto) => {
@@ -20,7 +22,7 @@ export function useUpdateUser() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'users'] });
-      showSuccessToast('User updated successfully');
+      showSuccessToast(t('admin:users.updated'));
     },
   });
 }

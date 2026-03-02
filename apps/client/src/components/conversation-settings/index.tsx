@@ -12,7 +12,7 @@ import {
 import { useTranslation } from 'react-i18next';
 
 import { useConversationForm } from '../../forms/useConversationForm';
-import { ConversationSettings as ConversationSettingsType } from '../../types/chat-types';
+import type { ConversationSettings as ConversationSettingsType } from '../../types/chat-types';
 
 interface ConversationSettingsProps {
   open: boolean;

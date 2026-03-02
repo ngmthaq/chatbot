@@ -2,7 +2,7 @@ import { CheckCircle, Error, HourglassEmpty, Sync } from '@mui/icons-material';
 import { Chip } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
-import { DocumentStatus } from '../../types/document-types';
+import type { DocumentStatus } from '../../types/document-types';
 
 interface DocumentStatusBadgeProps {
   status: DocumentStatus;

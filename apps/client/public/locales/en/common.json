@@ -56,7 +56,8 @@
   "theme": {
     "light": "Light",
     "dark": "Dark",
-    "toggleTheme": "Toggle theme"
+    "toggleTheme": "Toggle theme",
+    "toggle": "Toggle theme"
   },
   "pagination": {
     "page": "Page",

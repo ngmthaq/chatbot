@@ -17,7 +17,7 @@ import {
   selectedMessageForCitationAtom,
   isCitationPanelOpenAtom,
 } from '../../stores/conversation-store';
-import { Message } from '../../types/chat-types';
+import type { Message } from '../../types/chat-types';
 
 interface CitationPanelProps {
   messages: Message[];
@@ -92,7 +92,11 @@ export default function CitationPanel({ messages }: CitationPanelProps) {
                             {citation.documentTitle}
                           </Typography>
                           <Chip
-                            label={`p.${citation.pageNumber || 'N/A'}`}
+                            label={
+                              citation.pageNumber
+                                ? t('citations.page', { number: citation.pageNumber })
+                                : t('citations.pageNA')
+                            }
                             size="small"
                             variant="outlined"
                           />

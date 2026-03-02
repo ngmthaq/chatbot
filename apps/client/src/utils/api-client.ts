@@ -109,7 +109,7 @@ apiClient.interceptors.response.use(
         }
         return apiClient(originalRequest);
       } catch (refreshError) {
-        processQueue(refreshError, null);
+        processQueue(refreshError as Error, null);
         isRefreshing = false;
         clearTokens();
         window.location.href = '/login';

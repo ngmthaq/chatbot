@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import ReactMarkdown from 'react-markdown';
 
 import { useTextToSpeech } from '../../hooks/useTextToSpeech';
-import { Message } from '../../types/chat-types';
+import type { Message } from '../../types/chat-types';
 import { showSuccessToast } from '../../utils/error-handler';
 import { formatDateRelative } from '../../utils/formatters';
 import CodeBlock from '../code-block';

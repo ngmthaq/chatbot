@@ -18,7 +18,8 @@
     "pageCount": "Pages",
     "chunkCount": "Chunks",
     "uploadedAt": "Uploaded At",
-    "actions": "Actions"
+    "actions": "Actions",
+    "noDocuments": "No documents found"
   },
   "status": {
     "pending": "Pending",
@@ -29,6 +30,7 @@
   "actions": {
     "view": "View",
     "delete": "Delete",
+    "download": "Download document",
     "deleteConfirm": "Are you sure you want to delete this document?",
     "deleted": "Document deleted successfully"
   },

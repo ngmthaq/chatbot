@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 
 import { USERS_ROUTES } from '../constants/api-routes';
 import type { CreateUserDto, UserWithRole } from '../types/admin-types';
@@ -8,6 +9,7 @@ import { showSuccessToast } from '../utils/error-handler';
 
 export function useCreateUser() {
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (data: CreateUserDto) => {
@@ -19,7 +21,7 @@ export function useCreateUser() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'users'] });
-      showSuccessToast('User created successfully');
+      showSuccessToast(t('admin:users.created'));
     },
   });
 }

@@ -18,14 +18,14 @@ import { useUpdateUser } from '../mutations/useUpdateUser';
 import { useGetAdminUsers } from '../queries/useGetAdminUsers';
 import { useGetRoles } from '../queries/useGetRoles';
 import { Module, Action } from '../types/admin-types';
-import {
+import type {
   UserWithRole,
   CreateUserDto,
   UpdateUserDto,
   CreateRoleDto,
   UpdateRoleDto,
 } from '../types/admin-types';
-import { Role } from '../types/auth-types';
+import type { Role } from '../types/auth-types';
 
 export const Route = createFileRoute('/_authenticated/admin')({
   component: Admin,
@@ -66,15 +66,12 @@ function Admin() {
 
   const handleUserSubmit = (data: CreateUserDto | UpdateUserDto) => {
     if (editingUser) {
-      updateUser(
-        { id: editingUser.id, data },
-        {
-          onSuccess: () => {
-            setUserDialogOpen(false);
-            setEditingUser(null);
-          },
+      updateUser(data as UpdateUserDto, {
+        onSuccess: () => {
+          setUserDialogOpen(false);
+          setEditingUser(null);
         },
-      );
+      });
     } else {
       createUser(data as CreateUserDto, {
         onSuccess: () => {
@@ -96,15 +93,12 @@ function Admin() {
 
   const handleRoleSubmit = (data: CreateRoleDto | UpdateRoleDto) => {
     if (editingRole) {
-      updateRole(
-        { id: editingRole.id, data },
-        {
-          onSuccess: () => {
-            setRoleDialogOpen(false);
-            setEditingRole(null);
-          },
+      updateRole(data as UpdateRoleDto, {
+        onSuccess: () => {
+          setRoleDialogOpen(false);
+          setEditingRole(null);
         },
-      );
+      });
     } else {
       createRole(data as CreateRoleDto, {
         onSuccess: () => {
@@ -152,6 +146,7 @@ function Admin() {
               initialData={
                 editingUser
                   ? {
+                      id: editingUser.id,
                       email: editingUser.email,
                       name: editingUser.name || '',
                       roleId: editingUser.roleId,
@@ -188,6 +183,7 @@ function Admin() {
               initialData={
                 editingRole
                   ? {
+                      id: editingRole.id,
                       name: editingRole.name,
                       description: editingRole.description || '',
                     }

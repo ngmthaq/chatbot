@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 
 import { ROLES_ROUTES } from '../constants/api-routes';
 import type { CreateRoleDto, Role } from '../types/admin-types';
@@ -8,6 +9,7 @@ import { showSuccessToast } from '../utils/error-handler';
 
 export function useCreateRole() {
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (data: CreateRoleDto) => {
@@ -19,7 +21,7 @@ export function useCreateRole() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['roles'] });
-      showSuccessToast('Role created successfully');
+      showSuccessToast(t('admin:roles.created'));
     },
   });
 }

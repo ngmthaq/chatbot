@@ -16,7 +16,7 @@ import {
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Role } from '../../types/auth-types';
+import type { Role } from '../../types/auth-types';
 import { formatDate } from '../../utils/formatters';
 import ConfirmDialog from '../confirm-dialog';
 import EmptyState from '../empty-state';

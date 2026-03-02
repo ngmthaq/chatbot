@@ -2,9 +2,10 @@ import { Block } from '@mui/icons-material';
 import { Box, Typography, Container, Paper } from '@mui/material';
 import { Navigate } from '@tanstack/react-router';
 import { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useAuth } from '../../hooks/useAuth';
-import { Permission } from '../../types/admin-types';
+import type { Permission } from '../../types/admin-types';
 import LoadingSpinner from '../loading-spinner';
 
 interface ProtectedRouteProps {
@@ -19,9 +20,10 @@ export default function ProtectedRoute({
   requireAll = false,
 }: ProtectedRouteProps) {
   const { isAuthenticated, checkPermission, isLoading } = useAuth();
+  const { t } = useTranslation();
 
   if (isLoading) {
-    return <LoadingSpinner fullScreen message="Checking authentication..." />;
+    return <LoadingSpinner fullScreen message={t('admin:loading.checkingAuth')} />;
   }
 
   if (!isAuthenticated) {
@@ -55,10 +57,10 @@ export default function ProtectedRoute({
             >
               <Block sx={{ fontSize: 64, color: 'error.main', mb: 2 }} />
               <Typography variant="h5" gutterBottom fontWeight={600}>
-                Access Denied
+                {t('admin:noPermission.title')}
               </Typography>
               <Typography variant="body1" color="text.secondary">
-                You don't have permission to access this page.
+                {t('admin:noPermission.message')}
               </Typography>
             </Paper>
           </Box>

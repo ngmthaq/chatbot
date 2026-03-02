@@ -5,7 +5,7 @@ import {
   isAuthenticatedAtom,
   permissionsAtom,
 } from '../stores/auth-store';
-import { Permission } from '../types/admin-types';
+import type { Permission } from '../types/admin-types';
 import { hasPermission } from '../utils/permissions';
 
 export function useAuth() {

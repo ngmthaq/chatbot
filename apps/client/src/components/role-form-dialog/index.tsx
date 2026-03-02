@@ -10,7 +10,7 @@ import {
 import { useTranslation } from 'react-i18next';
 
 import { useRoleForm } from '../../forms/useRoleForm';
-import { CreateRoleDto, UpdateRoleDto } from '../../types/admin-types';
+import type { CreateRoleDto, UpdateRoleDto } from '../../types/admin-types';
 
 interface RoleFormDialogProps {
   open: boolean;

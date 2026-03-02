@@ -19,7 +19,7 @@ import {
 import { useState, MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Conversation } from '../../types/chat-types';
+import type { Conversation } from '../../types/chat-types';
 import { formatDateRelative } from '../../utils/formatters';
 import EmptyState from '../empty-state';
 import LoadingSpinner from '../loading-spinner';

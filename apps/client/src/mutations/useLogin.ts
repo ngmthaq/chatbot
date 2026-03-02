@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { useSetAtom } from 'jotai';
+import { useTranslation } from 'react-i18next';
 
 import { AUTH_ROUTES } from '../constants/api-routes';
 import { userAtom, permissionsAtom } from '../stores/auth-store';
@@ -13,6 +14,7 @@ import { setTokens } from '../utils/token-manager';
 export function useLogin() {
   const setUser = useSetAtom(userAtom);
   const setPermissions = useSetAtom(permissionsAtom);
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (data: LoginDto) => {
@@ -40,7 +42,7 @@ export function useLogin() {
       const permissions = unwrapResponse(permissionsResponse);
       setPermissions(permissions);
 
-      showSuccessToast('Login successful');
+      showSuccessToast(t('auth:login.success'));
     },
   });
 }

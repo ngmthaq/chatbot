@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
-import { Document } from '../../types/document-types';
+import type { Document } from '../../types/document-types';
 import { formatDate, formatFileSize } from '../../utils/formatters';
 import DocumentStatusBadge from '../document-status-badge';
 import EmptyState from '../empty-state';
