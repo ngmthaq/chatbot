@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 
 import { ROLES_ROUTES } from '../constants/api-routes';
 import type { UpdateRoleDto } from '../types/admin-types';
-import type { Role } from '../types/auth-types';
 import type { ApiResponse } from '../types/api-types';
+import type { Role } from '../types/auth-types';
 import apiClient, { unwrapResponse } from '../utils/api-client';
 import { showSuccessToast } from '../utils/error-handler';
 

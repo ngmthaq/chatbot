@@ -30,7 +30,7 @@ export default function ForgotPasswordForm() {
 
   if (isSubmitted) {
     return (
-      <Paper elevation={3} sx={{ p: 4, maxWidth: 400, width: '100%' }}>
+      <Paper elevation={3} sx={{ p: 4, maxWidth: 500, width: '100%' }}>
         <Typography
           variant="h5"
           fontWeight={600}
@@ -59,7 +59,7 @@ export default function ForgotPasswordForm() {
   }
 
   return (
-    <Paper elevation={3} sx={{ p: 4, maxWidth: 400, width: '100%' }}>
+    <Paper elevation={3} sx={{ p: 4, maxWidth: 500, width: '100%' }}>
       <Typography variant="h5" fontWeight={600} gutterBottom textAlign="center">
         {t('auth:forgotPassword.title')}
       </Typography>

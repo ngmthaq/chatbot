@@ -1,13 +1,15 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
 
 import AppLayout from '../../layouts/app-layout';
-import { getTokens } from '../../utils/token-manager';
+import { getAccessToken } from '../../utils/token-manager';
 
 export const Route = createFileRoute('/_authenticated')({
   beforeLoad: async ({ location }) => {
-    const tokens = getTokens();
+    const accessToken = getAccessToken();
 
-    if (!tokens.accessToken) {
+    // No access token - redirect to login
+    // Token refresh will be handled by API client interceptor on 401 errors
+    if (!accessToken) {
       throw redirect({
         to: '/login',
         search: {

@@ -42,7 +42,7 @@ export default function CitationPanel({ messages }: CitationPanelProps) {
       onClose={handleClose}
       sx={{
         '& .MuiDrawer-paper': {
-          width: { xs: '100%', sm: 400 },
+          width: { xs: '100%', sm: 500 },
         },
       }}
     >

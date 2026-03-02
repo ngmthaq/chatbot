@@ -16,7 +16,7 @@ import {
   Menu,
   MenuItem,
 } from '@mui/material';
-import { useState, MouseEvent } from 'react';
+import { useState, type MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { Conversation } from '../../types/chat-types';
@@ -133,7 +133,7 @@ export default function ConversationList({
                   secondary={formatDateRelative(conversation.updatedAt)}
                   primaryTypographyProps={{
                     noWrap: true,
-                    fontWeight: selectedId === conversation.id ? 600 : 400,
+                    fontWeight: selectedId === conversation.id ? 600 : 500,
                   }}
                 />
                 <IconButton

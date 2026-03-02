@@ -74,7 +74,9 @@ export default function DocumentUpload({
         {t('upload.supportedFormats')}: PDF, DOC, DOCX, TXT
       </Typography>
       <Typography variant="caption" color="text.secondary" display="block">
-        {t('upload.maxSize')}: {formatFileSize(APP_CONFIG.FILE_MAX_SIZE)}
+        {t('upload.maxSize', {
+          size: formatFileSize(APP_CONFIG.FILE_MAX_SIZE),
+        })}
       </Typography>
 
       {isUploading && (

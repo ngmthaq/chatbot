@@ -50,7 +50,10 @@ export class AdminController {
   @ApiResponse({ status: 200, description: 'Users retrieved successfully' })
   @ApiResponse({ status: 403, description: 'Admin access required' })
   async getAllUsers(@Query('page') page = 1, @Query('limit') limit = 20) {
-    const result = await this.adminService.getAllUsers(page, limit);
+    const result = await this.adminService.getAllUsers(
+      Number(page),
+      Number(limit),
+    );
 
     return ResponseBuilder.pagination(result.data, result.pagination);
   }
@@ -124,7 +127,11 @@ export class AdminController {
     @Query('limit') limit = 20,
     @Query('status') status?: string,
   ) {
-    const result = await this.adminService.getAllDocuments(page, limit, status);
+    const result = await this.adminService.getAllDocuments(
+      Number(page),
+      Number(limit),
+      status,
+    );
 
     return ResponseBuilder.pagination(result.data, result.pagination);
   }

@@ -20,6 +20,11 @@ export interface Role {
   description?: string;
   createdAt: string;
   updatedAt: string;
+  isDefault?: boolean;
+  _count?: {
+    users: number;
+    rbac: number;
+  };
 }
 
 export interface LoginDto {

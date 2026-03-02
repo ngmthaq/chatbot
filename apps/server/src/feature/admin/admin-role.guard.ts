@@ -4,6 +4,7 @@ import { PrismaService } from '../../core/database/prisma.service';
 import { ExceptionBuilder } from '../../core/exception/exception-builder';
 import { ExceptionDict } from '../../core/exception/exception-dict';
 import { AuthRequest } from '../auth/auth-type';
+import { DefaultRole } from '../role/default-role';
 
 @Injectable()
 export class AdminRoleGuard implements CanActivate {
@@ -24,7 +25,8 @@ export class AdminRoleGuard implements CanActivate {
       include: { role: true },
     });
 
-    if (!user || user.role.name !== 'ADMIN') {
+    const adminRoles = [DefaultRole.ADMIN, DefaultRole.SUPER_ADMIN];
+    if (!user || !adminRoles.includes(user.role.name as DefaultRole)) {
       throw ExceptionBuilder.forbidden({
         errors: [ExceptionDict.adminRoleRequired()],
       });

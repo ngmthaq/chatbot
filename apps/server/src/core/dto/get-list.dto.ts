@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import { IsEnum, IsInt, IsOptional } from 'class-validator';
 
 import { IsTrimmedString } from '../decorator/is-trimmed-string.decorator';
@@ -21,10 +22,12 @@ export class GetListDto {
   @IsOptional()
   sortOrder?: SortOrder;
 
+  @Type(() => Number)
   @IsInt({ message: ExceptionDict.isInt() })
   @IsOptional()
   page?: number;
 
+  @Type(() => Number)
   @IsInt({ message: ExceptionDict.isInt() })
   @IsOptional()
   limit?: number;

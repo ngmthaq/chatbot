@@ -32,16 +32,23 @@ export class UsersService {
   public async getUsers(params: GetUserListDto) {
     const builder = buildPrismaGetListQuery<Prisma.UserFindManyArgs>(params);
     builder.include = { role: true };
-    builder.where = { OR: [] };
-    if (params.search) {
-      builder.where.OR!.push({ name: { contains: params.search } });
-      builder.where.OR!.push({ email: { contains: params.search } });
-      builder.where.OR!.push({ phone: { contains: params.search } });
-      builder.where.OR!.push({ address: { contains: params.search } });
-      builder.where.OR!.push({ role: { name: { contains: params.search } } });
-    }
-    if (params.isActivated !== undefined) {
-      builder.where.activatedAt = params.isActivated ? { not: null } : null;
+
+    if (params.search || params.isActivated !== undefined) {
+      builder.where = {};
+
+      if (params.search) {
+        builder.where.OR = [
+          { name: { contains: params.search } },
+          { email: { contains: params.search } },
+          { phone: { contains: params.search } },
+          { address: { contains: params.search } },
+          { role: { name: { contains: params.search } } },
+        ];
+      }
+
+      if (params.isActivated !== undefined) {
+        builder.where.activatedAt = params.isActivated ? { not: null } : null;
+      }
     }
 
     const users = await this.prismaService.user.findMany(builder);

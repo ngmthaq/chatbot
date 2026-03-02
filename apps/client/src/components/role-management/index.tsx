@@ -48,6 +48,17 @@ export default function RoleManagement({
     role.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
+  const canDeleteRole = (role: Role): boolean => !role.isDefault;
+
+  const canEditRole = (role: Role): boolean => !role.isDefault;
+
+  const getActionTooltip = (role: Role): string => {
+    if (role.isDefault) {
+      return t('roles.cannotModifyDefault');
+    }
+    return '';
+  };
+
   const handleDeleteClick = (roleId: number) => {
     setSelectedRoleId(roleId);
     setDeleteConfirmOpen(true);
@@ -113,6 +124,7 @@ export default function RoleManagement({
               <TableRow>
                 <TableCell>{t('roles.name')}</TableCell>
                 <TableCell>{t('roles.description')}</TableCell>
+                <TableCell>{t('roles.isDefault')}</TableCell>
                 <TableCell>{t('roles.createdAt')}</TableCell>
                 <TableCell align="right">{t('roles.actions')}</TableCell>
               </TableRow>
@@ -122,21 +134,45 @@ export default function RoleManagement({
                 <TableRow key={role.id} hover>
                   <TableCell>{role.name}</TableCell>
                   <TableCell>{role.description || '-'}</TableCell>
+                  <TableCell>
+                    {role.isDefault ? t('roles.yes') : t('roles.no')}
+                  </TableCell>
                   <TableCell>{formatDate(role.createdAt)}</TableCell>
                   <TableCell align="right">
-                    <Tooltip title={t('roles.edit')}>
-                      <IconButton size="small" onClick={() => onEditRole(role)}>
-                        <Edit />
-                      </IconButton>
+                    <Tooltip
+                      title={
+                        canEditRole(role)
+                          ? t('roles.edit')
+                          : getActionTooltip(role)
+                      }
+                    >
+                      <span>
+                        <IconButton
+                          size="small"
+                          onClick={() => onEditRole(role)}
+                          disabled={!canEditRole(role)}
+                        >
+                          <Edit />
+                        </IconButton>
+                      </span>
                     </Tooltip>
-                    <Tooltip title={t('roles.delete')}>
-                      <IconButton
-                        size="small"
-                        color="error"
-                        onClick={() => handleDeleteClick(role.id)}
-                      >
-                        <Delete />
-                      </IconButton>
+                    <Tooltip
+                      title={
+                        canDeleteRole(role)
+                          ? t('roles.delete')
+                          : getActionTooltip(role)
+                      }
+                    >
+                      <span>
+                        <IconButton
+                          size="small"
+                          color="error"
+                          onClick={() => handleDeleteClick(role.id)}
+                          disabled={!canDeleteRole(role)}
+                        >
+                          <Delete />
+                        </IconButton>
+                      </span>
                     </Tooltip>
                   </TableCell>
                 </TableRow>

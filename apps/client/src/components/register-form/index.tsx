@@ -38,7 +38,7 @@ export default function RegisterForm() {
   );
 
   return (
-    <Paper elevation={3} sx={{ p: 4, maxWidth: 400, width: '100%' }}>
+    <Paper elevation={3} sx={{ p: 4, maxWidth: 500, width: '100%' }}>
       <Typography variant="h5" fontWeight={600} gutterBottom textAlign="center">
         {t('auth:register.title')}
       </Typography>

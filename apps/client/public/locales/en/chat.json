@@ -38,11 +38,13 @@
     "regenerate": "Regenerate",
     "tokens": "{{count}} tokens used",
     "noMessages": "No messages yet",
-    "selectConversation": "Select a conversation to start chatting"
+    "selectConversation": "Select a conversation to start chatting",
+    "startConversation": "No conversations yet. Start a new chat!"
   },
   "conversation": {
     "title": "Conversations",
     "new": "New conversation",
+    "newTitle": "New Conversation",
     "empty": "No conversations yet",
     "createFirst": "Create your first conversation to get started",
     "edit": "Edit conversation",

@@ -1,10 +1,16 @@
 {
   "title": "Documents",
+  "subtitle": "Manage your uploaded documents",
+  "loading": "Loading documents...",
   "upload": {
     "title": "Upload Document",
     "button": "Upload",
     "dropzone": "Drag and drop files here, or click to select",
+    "dragDrop": "Drag and drop files here",
+    "or": "or",
+    "browse": "browse your files",
     "acceptedTypes": "Accepted: PDF, DOCX, TXT (Max 50MB)",
+    "supportedFormats": "Supported formats: PDF, DOCX, TXT",
     "maxSize": "Maximum file size: {{size}}",
     "uploading": "Uploading...",
     "processing": "Processing document...",
@@ -19,7 +25,8 @@
     "chunkCount": "Chunks",
     "uploadedAt": "Uploaded At",
     "actions": "Actions",
-    "noDocuments": "No documents found"
+    "noDocuments": "No documents found",
+    "uploadFirst": "Upload your first document to get started"
   },
   "status": {
     "pending": "Pending",

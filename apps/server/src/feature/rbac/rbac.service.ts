@@ -20,24 +20,34 @@ export class RbacService {
 
   public async getRbacList(params: GetRbacListDto) {
     const builder = buildPrismaGetListQuery<Prisma.RbacFindManyArgs>(params);
-    builder.where = { OR: [] };
 
-    if (params.search) {
-      builder.where.OR!.push({ module: { contains: params.search } });
-      builder.where.OR!.push({ action: { contains: params.search } });
-      builder.where.OR!.push({ role: { name: { contains: params.search } } });
-    }
+    if (
+      params.search ||
+      params.roleId !== undefined ||
+      params.module !== undefined ||
+      params.action !== undefined
+    ) {
+      builder.where = {};
 
-    if (params.roleId !== undefined) {
-      builder.where.roleId = params.roleId;
-    }
+      if (params.search) {
+        builder.where.OR = [
+          { module: { contains: params.search } },
+          { action: { contains: params.search } },
+          { role: { name: { contains: params.search } } },
+        ];
+      }
 
-    if (params.module !== undefined) {
-      builder.where.module = params.module;
-    }
+      if (params.roleId !== undefined) {
+        builder.where.roleId = params.roleId;
+      }
 
-    if (params.action !== undefined) {
-      builder.where.action = params.action;
+      if (params.module !== undefined) {
+        builder.where.module = params.module;
+      }
+
+      if (params.action !== undefined) {
+        builder.where.action = params.action;
+      }
     }
 
     const rbacList = await this.prismaService.rbac.findMany(builder);
