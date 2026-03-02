@@ -1,5 +1,8 @@
 import * as fs from 'fs/promises';
 
+import { DocxLoader } from '@langchain/community/document_loaders/fs/docx';
+import { PDFLoader } from '@langchain/community/document_loaders/fs/pdf';
+import type { Document } from '@langchain/core/documents';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Injectable, Logger } from '@nestjs/common';
 import { Queue } from 'bullmq';
@@ -48,23 +51,57 @@ export class DocumentsService {
         },
       });
 
-      // Extract text from file
+      // Extract text from file using LangChain document loaders
       let text = '';
       try {
-        if (file.mimetype === 'text/plain') {
-          text = await fs.readFile(file.path, 'utf-8');
-        } else {
-          // PDF and DOCX parsing would require additional libraries
-          // For now, log that they need to be implemented
-          this.logger.warn(
-            `PDF/DOCX parsing not yet implemented for file ${file.originalname}`,
+        // Select appropriate loader based on MIME type
+        switch (file.mimetype) {
+          case 'text/plain': {
+            // For text files, simply read the file
+            text = await fs.readFile(file.path, 'utf-8');
+            break;
+          }
+
+          case 'application/pdf': {
+            const pdfLoader = new PDFLoader(file.path, {
+              splitPages: false, // Keep entire document as one
+            });
+            const docs = await pdfLoader.load();
+            text = docs.map((doc: Document) => doc.pageContent).join('\n\n');
+            break;
+          }
+
+          case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document': {
+            const docxLoader = new DocxLoader(file.path);
+            const docs = await docxLoader.load();
+            text = docs.map((doc: Document) => doc.pageContent).join('\n\n');
+            break;
+          }
+
+          default:
+            this.logger.warn(
+              `Unsupported file type: ${file.mimetype} for file ${file.originalname}`,
+            );
+            text = '';
+        }
+
+        if (text) {
+          this.logger.debug(
+            `Extracted ${text.length} characters from ${file.originalname}`,
           );
-          text = '';
         }
       } catch (error) {
         this.logger.error(
           `Failed to extract text: ${error instanceof Error ? error.message : 'Unknown error'}`,
         );
+        // Update document status to failed
+        await this.prismaService.document.update({
+          where: { id: document.id },
+          data: { status: 'failed' },
+        });
+        throw ExceptionBuilder.badRequest({
+          errors: [ExceptionDict.documentProcessingFailed()],
+        });
       }
 
       // Queue document processing
