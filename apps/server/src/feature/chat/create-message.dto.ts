@@ -4,9 +4,9 @@ import { ExceptionDict } from '../../core/exception/exception-dict';
 
 export class CreateMessageDto {
   @IsNumber({}, { message: ExceptionDict.isNumber() })
-  conversationId: number;
+  conversationId!: number;
 
   @IsString({ message: ExceptionDict.isString() })
   @MaxLength(8000, { message: ExceptionDict.messageTooLong() })
-  content: string;
+  content!: string;
 }

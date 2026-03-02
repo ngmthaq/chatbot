@@ -15,16 +15,14 @@ import {
 @Injectable()
 export class QdrantService {
   private readonly logger = new Logger(QdrantService.name);
-  private readonly baseUrl: string;
+  private readonly baseUrl?: string;
   private apiKey?: string;
 
   constructor(
     private readonly configService: ConfigService,
     private readonly httpService: HttpService,
   ) {
-    this.baseUrl =
-      this.configService.get<ConfigType['qdrantUrl']>('qdrantUrl') ||
-      'http://localhost:6333';
+    this.baseUrl = this.configService.get<ConfigType['qdrantUrl']>('qdrantUrl');
     this.apiKey =
       this.configService.get<ConfigType['qdrantApiKey']>('qdrantApiKey');
   }
@@ -131,6 +129,7 @@ export class QdrantService {
     const url = `${this.baseUrl}/collections/documents/points/search`;
     const headers = this.getHeaders();
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const payload: any = {
       vector: queryVector,
       limit: topK,
@@ -154,6 +153,8 @@ export class QdrantService {
       const results =
         (response as { data: { result?: QdrantSearchResult[] } }).data.result ||
         [];
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return results.map((item: any) => ({
         id: item.id,
         score: item.score,
@@ -206,6 +207,7 @@ export class QdrantService {
   /**
    * Get collection info
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async getCollectionInfo(collectionName: string): Promise<any> {
     const url = `${this.baseUrl}/collections/${collectionName}`;
     const headers = this.getHeaders();

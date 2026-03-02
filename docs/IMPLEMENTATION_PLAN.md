@@ -11,16 +11,16 @@
 1. [Overview](#overview)
 2. [Architecture](#architecture)
 3. [Database Schema](#database-schema)
-4. [Module Structure](#module-structure)
+4. [Module Structure Flattened](#module-structure-flattened)
 5. [Implementation Phases](#implementation-phases)
 6. [File Checklist](#file-checklist)
-7. [Testing Strategy](#testing-strategy)
 
 ---
 
 ## Overview
 
 Build a production-ready RAG (Retrieval-Augmented Generation) LLM backend with:
+
 - Document ingestion (PDF/DOCX/TXT) with chunking
 - Vector embeddings via local Ollama
 - Similarity search via Qdrant
@@ -37,7 +37,7 @@ Build a production-ready RAG (Retrieval-Augmented Generation) LLM backend with:
 
 ### Data Flow: RAG Query
 
-```
+```text
 User Query
     ↓
 [AuthGuard] Validate JWT
@@ -61,7 +61,7 @@ User Query
 
 ### Data Flow: Document Ingestion
 
-```
+```text
 Upload File
     ↓
 [FileValidationGuard] Validate MIME + size
@@ -175,7 +175,7 @@ model DocumentChunk {
 ### Feature Modules
 
 | Module | Files | Responsibility |
-|--------|-------|-----------------|
+| --- | --- | --- |
 | **ollama** | ollama.service.ts, ollama.module.ts, ollama-response.type.ts | LLM + embeddings + vision model HTTP client |
 | **qdrant** | qdrant.service.ts, qdrant.module.ts, qdrant-payload.type.ts | Vector search + storage client |
 | **rag** | rag.service.ts, rag.module.ts, document-chunking.service.ts, embedding.service.ts, vector-retrieval.service.ts, prompt-construction.service.ts, prompt-injection.guard.ts | RAG pipeline orchestration |
@@ -191,6 +191,7 @@ model DocumentChunk {
 ## Implementation Phases
 
 ### Phase 1: Foundation (Days 1-2)
+
 - [x] Database schema design
 - [ ] Create Prisma migrations
 - [ ] Setup Ollama module + service
@@ -199,6 +200,7 @@ model DocumentChunk {
 - [ ] Update app.module.ts
 
 ### Phase 2: RAG Pipeline (Days 3-4)
+
 - [ ] Implement document chunking service
 - [ ] Implement embedding service
 - [ ] Implement vector retrieval service
@@ -207,6 +209,7 @@ model DocumentChunk {
 - [ ] Setup processors module (BullMQ)
 
 ### Phase 3: Chat Module (Days 5-6)
+
 - [ ] Create conversation entity + DTOs
 - [ ] Create message entity + DTOs
 - [ ] Implement chat service (CRUD)
@@ -215,6 +218,7 @@ model DocumentChunk {
 - [ ] Add prompt injection guard
 
 ### Phase 4: Document Management (Days 7-8)
+
 - [ ] Create document entity + DTOs
 - [ ] Create document chunk entity
 - [ ] Implement documents controller
@@ -223,6 +227,7 @@ model DocumentChunk {
 - [ ] Queue document processing jobs
 
 ### Phase 5: Advanced Features (Days 9-10)
+
 - [ ] Implement images module + controller
 - [ ] Implement audio gateway + services
 - [ ] Implement admin controller + service
@@ -230,6 +235,7 @@ model DocumentChunk {
 - [ ] Setup admin monitoring endpoints
 
 ### Phase 6: Polish & Deploy (Days 11-12)
+
 - [ ] Security: rate limiting, input validation
 - [ ] Performance: caching, query optimization
 - [ ] Monitoring: logging, metrics

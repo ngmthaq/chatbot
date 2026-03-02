@@ -11,7 +11,7 @@ import {
   Delete,
   Query,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
 import { ExceptionBuilder } from '../../core/exception/exception-builder';
 import { ResponseBuilder } from '../../core/response/response-builder';
@@ -30,7 +30,7 @@ import { CreateMessageDto } from './create-message.dto';
 import { GetConversationListDto } from './get-conversation-list.dto';
 
 export interface AuthRequest extends Request {
-  authentication?: { sub: number };
+  authentication: { sub: number };
 }
 
 @Controller('chat')
@@ -48,7 +48,7 @@ export class ChatController {
   @Rbac(Module.CHAT, Action.CREATE)
   async createConversation(
     @Body() dto: CreateConversationDto,
-    @Req() req: any,
+    @Req() req: AuthRequest,
   ) {
     const conversation = await this.chatService.createConversation(
       req.authentication.sub,
@@ -65,7 +65,7 @@ export class ChatController {
   @Rbac(Module.CHAT, Action.READ)
   async getConversations(
     @Query() dto: GetConversationListDto,
-    @Req() req: any,
+    @Req() req: AuthRequest,
   ) {
     const result = await this.chatService.getConversations(
       req.authentication.sub,
@@ -99,7 +99,7 @@ export class ChatController {
     @Param('conversationId') conversationId: string,
     @Body() dto: CreateMessageDto,
     @Res() res: Response,
-    @Req() req: any,
+    @Req() req: AuthRequest,
   ) {
     const userId = req.authentication.sub;
     const convId = Number(conversationId);
@@ -144,7 +144,7 @@ export class ChatController {
           userId,
           'assistant',
           fullResponse,
-          null,
+          undefined,
           0, // TODO: implement token counting
         );
 

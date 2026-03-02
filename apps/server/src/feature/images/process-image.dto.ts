@@ -5,8 +5,8 @@ import { ExceptionDict } from '../../core/exception/exception-dict';
 export class ProcessImageDto {
   @IsString({ message: ExceptionDict.isString() })
   @IsBase64()
-  image: string;
+  image!: string;
 
   @IsString({ message: ExceptionDict.isString() })
-  prompt: string;
+  prompt!: string;
 }

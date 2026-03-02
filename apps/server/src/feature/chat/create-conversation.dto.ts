@@ -4,7 +4,7 @@ import { ExceptionDict } from '../../core/exception/exception-dict';
 
 export class CreateConversationDto {
   @IsString({ message: ExceptionDict.isString() })
-  title: string;
+  title!: string;
 
   @IsOptional()
   @IsString({ message: ExceptionDict.isString() })

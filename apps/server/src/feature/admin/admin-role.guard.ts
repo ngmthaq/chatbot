@@ -2,13 +2,14 @@ import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 
 import { PrismaService } from '../../core/database/prisma.service';
 import { ExceptionBuilder } from '../../core/exception/exception-builder';
+import { AuthRequest } from '../auth/auth-type';
 
 @Injectable()
 export class AdminRoleGuard implements CanActivate {
   constructor(private readonly prismaService: PrismaService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest<any>();
+    const request = context.switchToHttp().getRequest<AuthRequest>();
     const userId = request.authentication?.sub;
 
     if (!userId) {

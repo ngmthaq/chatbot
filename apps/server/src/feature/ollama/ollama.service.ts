@@ -23,9 +23,9 @@ export class OllamaService {
     private readonly configService: ConfigService,
     private readonly httpService: HttpService,
   ) {
-    this.baseUrl =
-      this.configService.get<ConfigType['ollamaBaseUrl']>('ollamaBaseUrl') ||
-      'http://localhost:11434';
+    const host = this.configService.get<ConfigType['ollamaHost']>('ollamaHost');
+    const port = this.configService.get<ConfigType['ollamaPort']>('ollamaPort');
+    this.baseUrl = `http://${host}:${port}`;
   }
 
   /**
@@ -69,8 +69,11 @@ export class OllamaService {
     this.logger.debug(`Generating embedding for text length: ${text.length}`);
 
     const request = {
-      model: 'nomic-embed-text',
       prompt: text,
+      model:
+        this.configService.get<ConfigType['ollamaEmbedModel']>(
+          'ollamaEmbedModel',
+        ),
     };
 
     for (let attempt = 0; attempt < this.retryAttempts; attempt++) {

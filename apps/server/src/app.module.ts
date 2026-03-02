@@ -12,7 +12,6 @@ import { CoreScheduleModule } from './core/schedule/schedule.module';
 import { CoreStorageModule } from './core/storage/storage.module';
 import { CoreThrottlerModule } from './core/throttler/throttler.module';
 import { CoreValidatorModule } from './core/validator/validator.module';
-// Existing feature modules
 import { AdminModule } from './feature/admin/admin.module';
 import { AudioModule } from './feature/audio/audio.module';
 import { AuthModule } from './feature/auth/auth.module';
@@ -28,8 +27,6 @@ import { RoleModule } from './feature/role/role.module';
 import { TokensModule } from './feature/tokens/tokens.module';
 import { UsersModule } from './feature/users/users.module';
 
-// New RAG feature modules
-
 const coreModules = [
   CoreConfigModule,
   CoreEncryptModule,
@@ -44,13 +41,11 @@ const coreModules = [
 ];
 
 const featureModules = [
-  // Existing modules
   UsersModule,
   AuthModule,
   TokensModule,
   RbacModule,
   RoleModule,
-  // New RAG modules
   OllamaModule,
   QdrantModule,
   RagModule,

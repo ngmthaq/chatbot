@@ -107,6 +107,7 @@ export class DocumentsService {
       this.prismaService.document.findMany({
         where: {
           userId,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ...(dto.status ? { status: dto.status as any } : {}),
         },
         skip,
@@ -116,6 +117,7 @@ export class DocumentsService {
       this.prismaService.document.count({
         where: {
           userId,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ...(dto.status ? { status: dto.status as any } : {}),
         },
       }),

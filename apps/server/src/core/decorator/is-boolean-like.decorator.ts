@@ -9,16 +9,11 @@ export function IsBooleanLike(
     Transform(({ value }) => {
       if (typeof value === 'boolean') return value;
       if (value === 'true') return true;
-      if (value === 'false') return false;
       if (value === 'TRUE') return true;
-      if (value === 'FALSE') return false;
       if (value === 'on') return true;
-      if (value === 'off') return false;
       if (value === '1') return true;
-      if (value === '0') return false;
       if (value === 1) return true;
-      if (value === 0) return false;
-      return value;
+      return false;
     }),
     IsBoolean(validationOptions),
   );

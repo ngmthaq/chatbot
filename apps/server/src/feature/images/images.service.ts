@@ -24,7 +24,9 @@ export class ImagesService {
 
       return response;
     } catch (error) {
-      this.logger.error(`Failed to process image: ${error.message}`);
+      this.logger.error(
+        `Failed to process image: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      );
       throw error;
     }
   }

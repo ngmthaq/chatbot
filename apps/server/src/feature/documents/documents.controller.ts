@@ -18,6 +18,7 @@ import { diskStorage } from 'multer';
 import { ExceptionBuilder } from '../../core/exception/exception-builder';
 import { ResponseBuilder } from '../../core/response/response-builder';
 import dayjs from '../../utils/date';
+import { AuthRequest } from '../auth/auth-type';
 import { AuthGuard } from '../auth/auth.guard';
 import { Action } from '../rbac/action';
 import { Module } from '../rbac/module';
@@ -60,7 +61,7 @@ export class DocumentsController {
   @Rbac(Module.DOCUMENTS, Action.CREATE)
   async uploadDocument(
     @UploadedFile() file: Express.Multer.File,
-    @Req() req: any,
+    @Req() req: AuthRequest,
   ) {
     if (!file) {
       throw ExceptionBuilder.badRequest({
@@ -84,7 +85,10 @@ export class DocumentsController {
    */
   @Get()
   @Rbac(Module.DOCUMENTS, Action.READ)
-  async getDocuments(@Query() dto: GetDocumentListDto, @Req() req: any) {
+  async getDocuments(
+    @Query() dto: GetDocumentListDto,
+    @Req() req: AuthRequest,
+  ) {
     const result = await this.documentsService.getDocuments(
       req.authentication.sub,
       dto,
@@ -98,7 +102,10 @@ export class DocumentsController {
    */
   @Get(':documentId')
   @Rbac(Module.DOCUMENTS, Action.READ)
-  async getDocument(@Param('documentId') documentId: string, @Req() req: any) {
+  async getDocument(
+    @Param('documentId') documentId: string,
+    @Req() req: AuthRequest,
+  ) {
     const document = await this.documentsService.getDocument(
       Number(documentId),
       req.authentication.sub,
@@ -114,7 +121,7 @@ export class DocumentsController {
   @Rbac(Module.DOCUMENTS, Action.DELETE)
   async deleteDocument(
     @Param('documentId') documentId: string,
-    @Req() req: any,
+    @Req() req: AuthRequest,
   ) {
     await this.documentsService.deleteDocument(
       Number(documentId),

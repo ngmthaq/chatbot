@@ -38,9 +38,6 @@ export const config = () => ({
   // OLLAMA_PORT
   ollamaPort: parseInt(process.env.OLLAMA_PORT!, 10) || 11434,
 
-  // OLLAMA_BASE_URL
-  ollamaBaseUrl: process.env.OLLAMA_BASE_URL || 'http://localhost:11434',
-
   // OLLAMA_CHAT_MODEL
   ollamaChatModel: process.env.OLLAMA_CHAT_MODEL || 'llama3',
 

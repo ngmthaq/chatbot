@@ -1,9 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 
 import { Prisma } from '../../../prisma-generated/client';
+import { PrismaService } from '../../core/database/prisma.service';
 import { ExceptionBuilder } from '../../core/exception/exception-builder';
 import { ExceptionDict } from '../../core/exception/exception-dict';
-import { PrismaService } from '../../core/database/prisma.service';
 
 import { CreateConversationDto } from './create-conversation.dto';
 import { GetConversationListDto } from './get-conversation-list.dto';
