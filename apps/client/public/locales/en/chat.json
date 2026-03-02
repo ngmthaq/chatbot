@@ -21,7 +21,13 @@
     "disableTTS": "Disable text-to-speech",
     "selectVoice": "Select voice",
     "selectLanguage": "Select language",
-    "settings": "Voice Settings"
+    "settings": "Voice Settings",
+    "settingsTitle": "Voice Settings",
+    "ttsSettings": "Text-to-Speech",
+    "sttSettings": "Speech-to-Text",
+    "testVoice": "Test Voice",
+    "language": "Language",
+    "done": "Done"
   },
   "message": {
     "user": "You",
@@ -31,17 +37,23 @@
     "speak": "Speak",
     "regenerate": "Regenerate",
     "tokens": "{{count}} tokens used",
-    "noMessages": "No messages yet"
+    "noMessages": "No messages yet",
+    "selectConversation": "Select a conversation to start chatting"
   },
   "conversation": {
     "new": "New conversation",
-    "empty": "No conversations yet"
+    "empty": "No conversations yet",
+    "loading": "Loading conversation..."
   },
   "streaming": {
     "connecting": "Connecting...",
     "streaming": "Streaming...",
     "complete": "Complete",
     "error": "Error occurred during streaming"
+  },
+  "citation": {
+    "title": "Citations",
+    "noCitations": "No citations available"
   },
   "citations": {
     "title": "Citations",

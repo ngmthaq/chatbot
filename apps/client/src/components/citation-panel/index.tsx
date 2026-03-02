@@ -94,7 +94,9 @@ export default function CitationPanel({ messages }: CitationPanelProps) {
                           <Chip
                             label={
                               citation.pageNumber
-                                ? t('citations.page', { number: citation.pageNumber })
+                                ? t('citations.page', {
+                                    number: citation.pageNumber,
+                                  })
                                 : t('citations.pageNA')
                             }
                             size="small"

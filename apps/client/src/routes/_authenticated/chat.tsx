@@ -5,21 +5,21 @@ import { useAtom, useSetAtom } from 'jotai';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import ChatInput from '../components/chat-input';
-import CitationPanel from '../components/citation-panel';
-import ConversationList from '../components/conversation-list';
-import LoadingSpinner from '../components/loading-spinner';
-import MessageList from '../components/message-list';
-import { useSSEChat } from '../hooks/useSSEChat';
-import { useCreateConversation } from '../mutations/useCreateConversation';
-import { useDeleteConversation } from '../mutations/useDeleteConversation';
-import { useGetConversation } from '../queries/useGetConversation';
-import { useGetConversations } from '../queries/useGetConversations';
+import ChatInput from '../../components/chat-input';
+import CitationPanel from '../../components/citation-panel';
+import ConversationList from '../../components/conversation-list';
+import LoadingSpinner from '../../components/loading-spinner';
+import MessageList from '../../components/message-list';
+import { useSSEChat } from '../../hooks/useSSEChat';
+import { useCreateConversation } from '../../mutations/useCreateConversation';
+import { useDeleteConversation } from '../../mutations/useDeleteConversation';
+import { useGetConversation } from '../../queries/useGetConversation';
+import { useGetConversations } from '../../queries/useGetConversations';
 import {
   selectedConversationIdAtom,
   selectedMessageForCitationAtom,
   isCitationPanelOpenAtom,
-} from '../stores/conversation-store';
+} from '../../stores/conversation-store';
 
 export const Route = createFileRoute('/_authenticated/chat')({
   component: Chat,

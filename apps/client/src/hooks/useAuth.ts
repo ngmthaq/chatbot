@@ -4,6 +4,8 @@ import {
   userAtom,
   isAuthenticatedAtom,
   permissionsAtom,
+  authLoadingAtom,
+  permissionsLoadedAtom,
 } from '../stores/auth-store';
 import type { Permission } from '../types/admin-types';
 import { hasPermission } from '../utils/permissions';
@@ -12,8 +14,13 @@ export function useAuth() {
   const [user, setUser] = useAtom(userAtom);
   const isAuthenticated = useAtomValue(isAuthenticatedAtom);
   const [permissions, setPermissions] = useAtom(permissionsAtom);
+  const isLoading = useAtomValue(authLoadingAtom);
+  const permissionsLoaded = useAtomValue(permissionsLoadedAtom);
 
   const checkPermission = (permission: Permission): boolean => {
+    if (!permission || !permission.module || !permission.action) {
+      return false;
+    }
     return hasPermission(permissions, permission.module, permission.action);
   };
 
@@ -26,11 +33,10 @@ export function useAuth() {
     user,
     setUser,
     isAuthenticated,
-    isLoading: false, // TODO: Add proper loading state when fetching user
+    isLoading: isLoading || !permissionsLoaded,
     permissions,
     setPermissions,
     checkPermission,
-    hasPermission: checkPermission, // Alias for backwards compatibility
     clearAuth,
   };
 }

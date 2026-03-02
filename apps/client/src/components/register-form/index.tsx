@@ -22,17 +22,20 @@ export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const { mutate: register, isPending } = useRegister({
-    onSuccess: () => {
-      setTimeout(() => {
-        navigate({ to: '/login' });
-      }, 2000);
-    },
-  });
+  const { mutate: register, isPending } = useRegister();
 
-  const formik = useRegisterForm((values) => {
-    register(values);
-  });
+  const formik = useRegisterForm(
+    { email: '', name: '', password: '', confirmPassword: '' },
+    (values) => {
+      register(values, {
+        onSuccess: () => {
+          setTimeout(() => {
+            navigate({ to: '/login' });
+          }, 2000);
+        },
+      });
+    },
+  );
 
   return (
     <Paper elevation={3} sx={{ p: 4, maxWidth: 400, width: '100%' }}>

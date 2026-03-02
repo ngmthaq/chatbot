@@ -3,29 +3,29 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import PageHeader from '../components/page-header';
-import ProtectedRoute from '../components/protected-route';
-import RoleFormDialog from '../components/role-form-dialog';
-import RoleManagement from '../components/role-management';
-import UserFormDialog from '../components/user-form-dialog';
-import UserManagement from '../components/user-management';
-import { useCreateRole } from '../mutations/useCreateRole';
-import { useCreateUser } from '../mutations/useCreateUser';
-import { useDeleteRole } from '../mutations/useDeleteRole';
-import { useDeleteUser } from '../mutations/useDeleteUser';
-import { useUpdateRole } from '../mutations/useUpdateRole';
-import { useUpdateUser } from '../mutations/useUpdateUser';
-import { useGetAdminUsers } from '../queries/useGetAdminUsers';
-import { useGetRoles } from '../queries/useGetRoles';
-import { Module, Action } from '../types/admin-types';
+import PageHeader from '../../components/page-header';
+import ProtectedRoute from '../../components/protected-route';
+import RoleFormDialog from '../../components/role-form-dialog';
+import RoleManagement from '../../components/role-management';
+import UserFormDialog from '../../components/user-form-dialog';
+import UserManagement from '../../components/user-management';
+import { useCreateRole } from '../../mutations/useCreateRole';
+import { useCreateUser } from '../../mutations/useCreateUser';
+import { useDeleteRole } from '../../mutations/useDeleteRole';
+import { useDeleteUser } from '../../mutations/useDeleteUser';
+import { useUpdateRole } from '../../mutations/useUpdateRole';
+import { useUpdateUser } from '../../mutations/useUpdateUser';
+import { useGetAdminUsers } from '../../queries/useGetAdminUsers';
+import { useGetRoles } from '../../queries/useGetRoles';
+import { Module, Action } from '../../types/admin-types';
 import type {
   UserWithRole,
   CreateUserDto,
   UpdateUserDto,
   CreateRoleDto,
   UpdateRoleDto,
-} from '../types/admin-types';
-import type { Role } from '../types/auth-types';
+} from '../../types/admin-types';
+import type { Role } from '../../types/auth-types';
 
 export const Route = createFileRoute('/_authenticated/admin')({
   component: Admin,

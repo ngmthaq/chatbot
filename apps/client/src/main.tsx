@@ -1,3 +1,4 @@
+import 'regenerator-runtime/runtime'; // Polyfill for react-speech-recognition
 import 'jotai-devtools/styles.css'; // Jotai DevTools styles
 import './utils/i18n'; // Initialize i18n
 import './assets/css/index.css'; // Global styles

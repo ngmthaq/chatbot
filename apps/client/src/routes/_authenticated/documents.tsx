@@ -3,13 +3,13 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import DocumentTable from '../components/document-table';
-import DocumentUpload from '../components/document-upload';
-import LoadingSpinner from '../components/loading-spinner';
-import PageHeader from '../components/page-header';
-import { useDeleteDocument } from '../mutations/useDeleteDocument';
-import { useUploadDocument } from '../mutations/useUploadDocument';
-import { useGetDocuments } from '../queries/useGetDocuments';
+import DocumentTable from '../../components/document-table';
+import DocumentUpload from '../../components/document-upload';
+import LoadingSpinner from '../../components/loading-spinner';
+import PageHeader from '../../components/page-header';
+import { useDeleteDocument } from '../../mutations/useDeleteDocument';
+import { useUploadDocument } from '../../mutations/useUploadDocument';
+import { useGetDocuments } from '../../queries/useGetDocuments';
 
 export const Route = createFileRoute('/_authenticated/documents')({
   component: Documents,

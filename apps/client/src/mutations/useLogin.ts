@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from '@tanstack/react-router';
 import { useSetAtom } from 'jotai';
 import { useTranslation } from 'react-i18next';
 
@@ -12,6 +13,7 @@ import { showSuccessToast } from '../utils/error-handler';
 import { setTokens } from '../utils/token-manager';
 
 export function useLogin() {
+  const navigate = useNavigate();
   const setUser = useSetAtom(userAtom);
   const setPermissions = useSetAtom(permissionsAtom);
   const { t } = useTranslation();
@@ -43,6 +45,9 @@ export function useLogin() {
       setPermissions(permissions);
 
       showSuccessToast(t('auth:login.success'));
+
+      // Navigate to chat page
+      navigate({ to: '/chat' });
     },
   });
 }

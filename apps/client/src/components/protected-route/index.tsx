@@ -1,7 +1,7 @@
 import { Block } from '@mui/icons-material';
 import { Box, Typography, Container, Paper } from '@mui/material';
 import { Navigate } from '@tanstack/react-router';
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useAuth } from '../../hooks/useAuth';
@@ -23,7 +23,9 @@ export default function ProtectedRoute({
   const { t } = useTranslation();
 
   if (isLoading) {
-    return <LoadingSpinner fullScreen message={t('admin:loading.checkingAuth')} />;
+    return (
+      <LoadingSpinner fullScreen message={t('admin:loading.checkingAuth')} />
+    );
   }
 
   if (!isAuthenticated) {

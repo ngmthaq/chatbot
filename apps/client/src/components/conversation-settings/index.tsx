@@ -31,9 +31,18 @@ export default function ConversationSettings({
 }: ConversationSettingsProps) {
   const { t } = useTranslation(['chat', 'forms']);
 
-  const formik = useConversationForm((values) => {
-    onSave(values);
-  }, initialSettings);
+  const formik = useConversationForm(
+    initialSettings || {
+      title: '',
+      model: '',
+      temperature: 0.7,
+      maxTokens: 2000,
+      contextWindow: 10,
+    },
+    (values) => {
+      onSave(values);
+    },
+  );
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>

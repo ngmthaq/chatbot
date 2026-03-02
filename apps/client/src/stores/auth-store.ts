@@ -17,24 +17,19 @@ export const isAuthenticatedAtom = atom((get) => {
   return user !== null;
 });
 
-// Permissions atom
-export const permissionsAtom = atom<Rbac[]>([]);
+// Permissions atom with localStorage persistence
+export const permissionsAtom = atomWithStorage<Rbac[]>(
+  APP_CONFIG.STORAGE_KEYS.PERMISSIONS,
+  [],
+);
 
 // Auth loading state
 export const authLoadingAtom = atom(false);
 
-// Helper atoms for common operations
-export const userIdAtom = atom((get) => {
+// Derived atom to check if permissions are loaded
+export const permissionsLoadedAtom = atom((get) => {
   const user = get(userAtom);
-  return user?.id || null;
-});
-
-export const userEmailAtom = atom((get) => {
-  const user = get(userAtom);
-  return user?.email || '';
-});
-
-export const userRoleAtom = atom((get) => {
-  const user = get(userAtom);
-  return user?.role || null;
+  const permissions = get(permissionsAtom);
+  // If user is authenticated, permissions should be loaded
+  return user === null || permissions.length > 0;
 });

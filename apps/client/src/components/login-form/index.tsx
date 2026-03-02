@@ -25,7 +25,7 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const { mutate: login, isPending } = useLogin();
 
-  const formik = useLoginForm((values) => {
+  const formik = useLoginForm({ email: '', password: '' }, (values) => {
     login(values);
   });
 

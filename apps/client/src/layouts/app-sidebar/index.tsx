@@ -13,7 +13,7 @@ import { useNavigate, useLocation } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 
 import { useAuth } from '../../hooks/useAuth';
-import type { Module, Action } from '../../types/admin-types';
+import { Module, Action } from '../../types/admin-types';
 
 const DRAWER_WIDTH = 240;
 

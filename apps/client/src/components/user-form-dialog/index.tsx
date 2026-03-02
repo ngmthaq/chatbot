@@ -35,9 +35,22 @@ export default function UserFormDialog({
 }: UserFormDialogProps) {
   const { t } = useTranslation(['admin', 'forms']);
 
-  const formik = useUserForm((values) => {
-    onSubmit(values);
-  }, initialData);
+  const formik = useUserForm(
+    initialData || {
+      email: '',
+      name: '',
+      roleId: 0,
+      password: '',
+      phone: '',
+      address: '',
+      gender: '',
+      dateOfBirth: '',
+    },
+    (values) => {
+      onSubmit(values);
+    },
+    mode === 'edit',
+  );
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>

@@ -1,6 +1,6 @@
 import { Box, Typography, Breadcrumbs, Link } from '@mui/material';
 import { Link as RouterLink } from '@tanstack/react-router';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 interface BreadcrumbItem {
   label: string;

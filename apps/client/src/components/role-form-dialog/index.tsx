@@ -31,9 +31,12 @@ export default function RoleFormDialog({
 }: RoleFormDialogProps) {
   const { t } = useTranslation(['admin', 'forms']);
 
-  const formik = useRoleForm((values) => {
-    onSubmit(values);
-  }, initialData);
+  const formik = useRoleForm(
+    initialData || { name: '', description: '' },
+    (values) => {
+      onSubmit(values);
+    },
+  );
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>

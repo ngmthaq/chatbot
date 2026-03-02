@@ -17,7 +17,6 @@ import {
 import { useAtom } from 'jotai';
 import { useTranslation } from 'react-i18next';
 
-import { APP_CONFIG } from '../../constants/app-config';
 import { useTextToSpeech } from '../../hooks/useTextToSpeech';
 import {
   isTTSEnabledAtom,
@@ -32,7 +31,7 @@ interface VoiceSettingsProps {
 
 export default function VoiceSettings({ open, onClose }: VoiceSettingsProps) {
   const { t } = useTranslation('chat');
-  const { availableVoices } = useTextToSpeech();
+  const { voices: availableVoices } = useTextToSpeech();
 
   const [isTTSEnabled, setIsTTSEnabled] = useAtom(isTTSEnabledAtom);
   const [selectedVoiceName, setSelectedVoiceName] = useAtom(
@@ -44,7 +43,9 @@ export default function VoiceSettings({ open, onClose }: VoiceSettingsProps) {
     const utterance = new SpeechSynthesisUtterance(
       'This is a test of the text-to-speech system.',
     );
-    const voice = availableVoices.find((v) => v.name === selectedVoiceName);
+    const voice = availableVoices.find(
+      (v: SpeechSynthesisVoice) => v.name === selectedVoiceName,
+    );
     if (voice) {
       utterance.voice = voice;
     }
@@ -81,11 +82,11 @@ export default function VoiceSettings({ open, onClose }: VoiceSettingsProps) {
                     value={selectedVoiceName}
                     onChange={(e) => setSelectedVoiceName(e.target.value)}
                   >
-                    {availableVoices.map((voice) => (
+                    {availableVoices?.map((voice: SpeechSynthesisVoice) => (
                       <MenuItem key={voice.name} value={voice.name}>
                         {voice.name} ({voice.lang})
                       </MenuItem>
-                    ))}
+                    )) || <MenuItem value="">No voices available</MenuItem>}
                   </Select>
                 </FormControl>
 
@@ -115,11 +116,7 @@ export default function VoiceSettings({ open, onClose }: VoiceSettingsProps) {
                 value={sttLanguage}
                 onChange={(e) => setSTTLanguage(e.target.value)}
               >
-                {APP_CONFIG.voice.stt.supportedLanguages.map((lang) => (
-                  <MenuItem key={lang.code} value={lang.code}>
-                    {lang.name}
-                  </MenuItem>
-                ))}
+                <MenuItem value="en-US">English (US)</MenuItem>
               </Select>
             </FormControl>
           </Box>

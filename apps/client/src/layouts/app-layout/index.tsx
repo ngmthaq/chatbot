@@ -1,6 +1,6 @@
 import { Box, Toolbar } from '@mui/material';
 import { useAtom } from 'jotai';
-import { ReactNode, useState } from 'react';
+import { type ReactNode, useState } from 'react';
 
 import VoiceSettings from '../../components/voice-settings';
 import { isVoiceSettingsOpenAtom } from '../../stores/conversation-store';

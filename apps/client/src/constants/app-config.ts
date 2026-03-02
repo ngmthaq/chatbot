@@ -55,6 +55,7 @@ export const APP_CONFIG = {
     REFRESH_TOKEN: 'chatbot_refresh_token',
     THEME: 'chatbot_theme',
     USER: 'chatbot_user',
+    PERMISSIONS: 'chatbot_permissions',
     TTS_ENABLED: 'chatbot_tts_enabled',
     SELECTED_VOICE: 'chatbot_selected_voice',
     STT_LANGUAGE: 'chatbot_stt_language',
