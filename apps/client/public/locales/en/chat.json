@@ -41,8 +41,12 @@
     "selectConversation": "Select a conversation to start chatting"
   },
   "conversation": {
+    "title": "Conversations",
     "new": "New conversation",
     "empty": "No conversations yet",
+    "createFirst": "Create your first conversation to get started",
+    "edit": "Edit conversation",
+    "delete": "Delete conversation",
     "loading": "Loading conversation..."
   },
   "streaming": {

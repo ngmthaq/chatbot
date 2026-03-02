@@ -9,6 +9,7 @@ i18n
   .use(initReactI18next)
   .init({
     fallbackLng: 'en',
+    load: 'languageOnly',
     debug: import.meta.env.DEV,
 
     ns: ['common', 'auth', 'chat', 'documents', 'admin', 'forms'],

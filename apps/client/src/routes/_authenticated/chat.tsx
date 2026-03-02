@@ -1,4 +1,4 @@
-import { Box, Container } from '@mui/material';
+import { Box, Container, Typography } from '@mui/material';
 import { Drawer, useMediaQuery, useTheme } from '@mui/material';
 import { createFileRoute } from '@tanstack/react-router';
 import { useAtom, useSetAtom } from 'jotai';
@@ -152,7 +152,7 @@ function Chat() {
         ) : (
           <Container maxWidth="md" sx={{ mt: 8 }}>
             <Box sx={{ textAlign: 'center' }}>
-              <LoadingSpinner message={t('message.selectConversation')} />
+              <Typography>{t('message.selectConversation')}</Typography>
             </Box>
           </Container>
         )}
