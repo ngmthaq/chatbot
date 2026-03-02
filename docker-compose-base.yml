@@ -69,8 +69,23 @@ services:
       timeout: 10s
       retries: 5
 
+  qdrant_service:
+    image: qdrant/qdrant:v1.7.4
+    restart: unless-stopped
+    ports:
+      - '${QDRANT_PORT}:6333'
+      - '6334:6334'
+    volumes:
+      - qdrant_data:/qdrant/storage
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:6333/']
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
 volumes:
   database_data:
   message_queue_data:
   cache_data:
   ollama_data:
+  qdrant_data:
