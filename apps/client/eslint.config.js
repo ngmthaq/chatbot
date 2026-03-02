@@ -1,16 +1,16 @@
-import { base } from '@chatbot/eslint-config/base';
-import react from 'eslint-plugin-react';
-import reactHooks from 'eslint-plugin-react-hooks';
-import reactRefresh from 'eslint-plugin-react-refresh';
+import { base } from "@chatbot/eslint-config/base";
+import react from "eslint-plugin-react";
+import reactHooks from "eslint-plugin-react-hooks";
+import reactRefresh from "eslint-plugin-react-refresh";
 
 export default [
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ["**/*.{ts,tsx}"],
 
     plugins: {
       react,
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
+      "react-hooks": reactHooks,
+      "react-refresh": reactRefresh,
     },
 
     languageOptions: {
@@ -23,22 +23,22 @@ export default [
 
     settings: {
       react: {
-        version: 'detect',
+        version: "detect",
       },
     },
 
     rules: {
       /* --- React --- */
-      'react/react-in-jsx-scope': 'off',
-      'react/jsx-uses-react': 'off',
+      "react/react-in-jsx-scope": "off",
+      "react/jsx-uses-react": "off",
 
       /* --- Hooks --- */
-      'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn',
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn",
 
       /* --- Vite / Fast Refresh --- */
-      'react-refresh/only-export-components': [
-        'warn',
+      "react-refresh/only-export-components": [
+        "warn",
         { allowConstantExport: true },
       ],
     },
