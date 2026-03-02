@@ -13,6 +13,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ThrottlerGuard } from '@nestjs/throttler';
 import { diskStorage } from 'multer';
 
 import { ExceptionBuilder } from '../../core/exception/exception-builder';
@@ -30,7 +31,7 @@ import { FileValidationGuard } from './file-validation.guard';
 import { GetDocumentListDto } from './get-document-list.dto';
 
 @Controller('documents')
-@UseGuards(AuthGuard, RbacGuard)
+@UseGuards(ThrottlerGuard, AuthGuard, RbacGuard)
 export class DocumentsController {
   constructor(private readonly documentsService: DocumentsService) {}
 

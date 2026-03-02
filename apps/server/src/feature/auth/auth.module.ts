@@ -4,6 +4,7 @@ import { JwtModule } from '@nestjs/jwt';
 
 import { ConfigType } from '../../core/config/config-type';
 import { CoreConfigModule } from '../../core/config/config.module';
+import { CoreThrottlerModule } from '../../core/throttler/throttler.module';
 
 import { AuthController } from './auth.controller';
 import { AuthGuard } from './auth.guard';
@@ -11,6 +12,7 @@ import { AuthService } from './auth.service';
 
 @Module({
   imports: [
+    CoreThrottlerModule,
     JwtModule.registerAsync({
       imports: [CoreConfigModule],
       inject: [ConfigService],

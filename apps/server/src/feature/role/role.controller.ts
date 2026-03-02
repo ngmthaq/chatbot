@@ -7,7 +7,9 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 import { Action } from '../rbac/action';
 import { Module } from '../rbac/module';
@@ -23,6 +25,7 @@ import { RoleService } from './role.service';
 import { UpdateRoleDto } from './update-role.dto';
 
 @Controller('roles')
+@UseGuards(ThrottlerGuard)
 export class RoleController {
   public constructor(private readonly roleService: RoleService) {}
 

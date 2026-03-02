@@ -8,6 +8,7 @@ import {
   UseGuards,
   Query,
 } from '@nestjs/common';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 import { ResponseBuilder } from '../../core/response/response-builder';
 import { AuthGuard } from '../auth/auth.guard';
@@ -21,7 +22,7 @@ import { AdminService } from './admin.service';
 import { TokenUsageDto } from './token-usage.dto';
 
 @Controller('admin')
-@UseGuards(AuthGuard, RbacGuard, AdminRoleGuard)
+@UseGuards(ThrottlerGuard, AuthGuard, RbacGuard, AdminRoleGuard)
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 

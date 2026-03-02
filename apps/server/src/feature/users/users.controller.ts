@@ -6,7 +6,9 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 import { Public } from '../auth/public.decorator';
 import { Action } from '../rbac/action';
@@ -21,6 +23,7 @@ import { UpdateUserDto } from './update-user.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
+@UseGuards(ThrottlerGuard)
 export class UsersController {
   public constructor(private readonly usersService: UsersService) {}
 

@@ -11,6 +11,7 @@ import {
   Delete,
   Query,
 } from '@nestjs/common';
+import { ThrottlerGuard } from '@nestjs/throttler';
 import { Request, Response } from 'express';
 
 import { ExceptionBuilder } from '../../core/exception/exception-builder';
@@ -34,7 +35,7 @@ export interface AuthRequest extends Request {
 }
 
 @Controller('chat')
-@UseGuards(AuthGuard, RbacGuard)
+@UseGuards(ThrottlerGuard, AuthGuard, RbacGuard)
 export class ChatController {
   constructor(
     private readonly chatService: ChatService,

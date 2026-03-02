@@ -7,7 +7,9 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 import { Public } from '../auth/public.decorator';
 
@@ -23,6 +25,7 @@ import { RbacService } from './rbac.service';
 import { UpdateRbacDto } from './update-rbac.dto';
 
 @Controller('rbac')
+@UseGuards(ThrottlerGuard)
 export class RbacController {
   public constructor(private readonly rbacService: RbacService) {}
 

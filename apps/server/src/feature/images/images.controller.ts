@@ -1,4 +1,5 @@
 import { Controller, Post, Body, UseGuards } from '@nestjs/common';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 import { ResponseBuilder } from '../../core/response/response-builder';
 import { AuthGuard } from '../auth/auth.guard';
@@ -11,7 +12,7 @@ import { ImagesService } from './images.service';
 import { ProcessImageDto } from './process-image.dto';
 
 @Controller('images')
-@UseGuards(AuthGuard, RbacGuard)
+@UseGuards(ThrottlerGuard, AuthGuard, RbacGuard)
 export class ImagesController {
   constructor(private readonly imagesService: ImagesService) {}
 

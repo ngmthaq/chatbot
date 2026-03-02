@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 import { PrismaService } from '../../core/database/prisma.service';
 
@@ -13,6 +14,7 @@ import { RegisterDto } from './register.dto';
 import { ResetPasswordDto } from './reset-password.dto';
 
 @Controller('auth')
+@UseGuards(ThrottlerGuard)
 export class AuthController {
   public constructor(
     private readonly authService: AuthService,
