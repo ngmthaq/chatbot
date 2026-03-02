@@ -1,16 +1,16 @@
 /**
  * Text-to-Speech Service - Placeholder for speech synthesis
- * 
+ *
  * ⚠️ IMPORTANT: Speech synthesis is handled CLIENT-SIDE using Chrome's Web Speech API.
  * This service is a PLACEHOLDER for optional server-side synthesis.
- * 
+ *
  * This service can be implemented with:
  * - OpenAI TTS API: https://platform.openai.com/docs/guides/text-to-speech
  * - ElevenLabs: https://elevenlabs.io/docs/api-reference/text-to-speech
  * - Google Cloud Text-to-Speech: https://cloud.google.com/text-to-speech
  * - AWS Polly: https://aws.amazon.com/polly/
  * - Azure Speech Service: https://azure.microsoft.com/en-us/services/cognitive-services/text-to-speech/
- * 
+ *
  * Current Status: Placeholder returning mock audio buffer.
  * To implement: Replace the synthesize() method with actual API calls.
  */

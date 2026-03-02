@@ -1,7 +1,4 @@
 {
   "postman.settings.dotenv-detection-notification-visibility": false,
-  "cSpell.words": [
-    "OLLAMA",
-    "qdrant"
-  ]
+  "cSpell.words": ["OLLAMA", "qdrant"]
 }

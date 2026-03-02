@@ -97,11 +97,11 @@ model Conversation {
   isArchived    Boolean   @default(false)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  
+
   user          User      @relation("ConversationUser", fields: [userId], references: [id], onDelete: Cascade)
   messages      Message[]
   documents     Document[] @relation("ConversationDocuments")
-  
+
   @@index([userId])
   @@index([isArchived])
 }
@@ -115,9 +115,9 @@ model Message {
   tokenUsage      Int?
   finishReason    String?
   createdAt       DateTime  @default(now())
-  
+
   conversation    Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  
+
   @@index([conversationId])
   @@index([role])
 }
@@ -140,11 +140,11 @@ model Document {
   processedAt           DateTime?
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
-  
+
   user                  User      @relation("DocumentUser", fields: [userId], references: [id], onDelete: Cascade)
   chunks                DocumentChunk[]
   conversations         Conversation[] @relation("ConversationDocuments")
-  
+
   @@index([userId])
   @@index([status])
   @@index([uploadedAt])
@@ -160,9 +160,9 @@ model DocumentChunk {
   qdrantPointId   String?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
-  
+
   document        Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
-  
+
   @@index([documentId])
   @@index([qdrantPointId])
 }
@@ -174,17 +174,17 @@ model DocumentChunk {
 
 ### Feature Modules
 
-| Module | Files | Responsibility |
-| --- | --- | --- |
-| **ollama** | ollama.service.ts, ollama.module.ts, ollama-response.type.ts | LLM + embeddings + vision model HTTP client |
-| **qdrant** | qdrant.service.ts, qdrant.module.ts, qdrant-payload.type.ts | Vector search + storage client |
-| **rag** | rag.service.ts, rag.module.ts, document-chunking.service.ts, embedding.service.ts, vector-retrieval.service.ts, prompt-construction.service.ts, prompt-injection.guard.ts | RAG pipeline orchestration |
-| **chat** | chat.controller.ts, chat.service.ts, chat.module.ts, conversation.entity.ts, message.entity.ts, create-conversation.dto.ts, create-message.dto.ts, get-conversation-list.dto.ts, message-response.dto.ts, conversation-ownership.guard.ts | Conversation management + SSE streaming |
-| **documents** | documents.controller.ts, documents.service.ts, documents.module.ts, document.entity.ts, document-chunk.entity.ts, upload-document.dto.ts, get-document-list.dto.ts, document-response.dto.ts, file-validation.guard.ts | Document upload + management |
-| **processors** | processors.module.ts, process-document.processor.ts, generate-embeddings.processor.ts, cleanup.processor.ts, document-job.interface.ts | BullMQ background jobs |
-| **images** | images.controller.ts, images.service.ts, images.module.ts, process-image.dto.ts | Vision model image processing |
-| **audio** | audio.gateway.ts, audio.service.ts, audio.module.ts, speech-to-text.service.ts, text-to-speech.service.ts, audio-chunk.dto.ts | WebSocket audio streaming |
-| **admin** | admin.controller.ts, admin.service.ts, admin.module.ts, token-usage.dto.ts, admin-role.guard.ts | Admin functions + monitoring |
+| Module         | Files                                                                                                                                                                                                                                     | Responsibility                              |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| **ollama**     | ollama.service.ts, ollama.module.ts, ollama-response.type.ts                                                                                                                                                                              | LLM + embeddings + vision model HTTP client |
+| **qdrant**     | qdrant.service.ts, qdrant.module.ts, qdrant-payload.type.ts                                                                                                                                                                               | Vector search + storage client              |
+| **rag**        | rag.service.ts, rag.module.ts, document-chunking.service.ts, embedding.service.ts, vector-retrieval.service.ts, prompt-construction.service.ts, prompt-injection.guard.ts                                                                 | RAG pipeline orchestration                  |
+| **chat**       | chat.controller.ts, chat.service.ts, chat.module.ts, conversation.entity.ts, message.entity.ts, create-conversation.dto.ts, create-message.dto.ts, get-conversation-list.dto.ts, message-response.dto.ts, conversation-ownership.guard.ts | Conversation management + SSE streaming     |
+| **documents**  | documents.controller.ts, documents.service.ts, documents.module.ts, document.entity.ts, document-chunk.entity.ts, upload-document.dto.ts, get-document-list.dto.ts, document-response.dto.ts, file-validation.guard.ts                    | Document upload + management                |
+| **processors** | processors.module.ts, process-document.processor.ts, generate-embeddings.processor.ts, cleanup.processor.ts, document-job.interface.ts                                                                                                    | BullMQ background jobs                      |
+| **images**     | images.controller.ts, images.service.ts, images.module.ts, process-image.dto.ts                                                                                                                                                           | Vision model image processing               |
+| **audio**      | audio.gateway.ts, audio.service.ts, audio.module.ts, speech-to-text.service.ts, text-to-speech.service.ts, audio-chunk.dto.ts                                                                                                             | WebSocket audio streaming                   |
+| **admin**      | admin.controller.ts, admin.service.ts, admin.module.ts, token-usage.dto.ts, admin-role.guard.ts                                                                                                                                           | Admin functions + monitoring                |
 
 ---
 

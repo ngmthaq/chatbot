@@ -1,18 +1,18 @@
-const { mkdir, cp } = require('node:fs/promises');
-const { resolve } = require('node:path');
-const { execPromise } = require('./helpers.cjs');
+const { mkdir, cp } = require("node:fs/promises");
+const { resolve } = require("node:path");
+const { execPromise } = require("./helpers.cjs");
 
-const mainBackendApp = 'apps/server';
+const mainBackendApp = "apps/server";
 const subBackendApps = [];
 
 function getPrismaGeneratedPath(appPath) {
-  return resolve(__dirname, '..', appPath, 'prisma-generated');
+  return resolve(__dirname, "..", appPath, "prisma-generated");
 }
 
 async function generatePrismaClient() {
-  await execPromise('npx turbo run db:generate');
+  await execPromise("npx turbo run db:generate");
   const rootPrismaGenerated = getPrismaGeneratedPath(mainBackendApp);
-  console.log('Root Prisma generated path:', rootPrismaGenerated);
+  console.log("Root Prisma generated path:", rootPrismaGenerated);
 
   const response = await Promise.allSettled(
     subBackendApps.map(async (app) => {
@@ -25,10 +25,10 @@ async function generatePrismaClient() {
   );
 
   response.forEach((res) => {
-    if (res.status === 'fulfilled') {
+    if (res.status === "fulfilled") {
       console.log(res.value);
     } else {
-      console.error('Error:', res.reason);
+      console.error("Error:", res.reason);
     }
   });
 }

@@ -8,11 +8,11 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-      - '${MYSQL_PORT}:3306'
+      - "${MYSQL_PORT}:3306"
     volumes:
       - database_data:/var/lib/mysql
     healthcheck:
-      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -21,12 +21,12 @@ services:
     image: redis:7
     restart: unless-stopped
     ports:
-      - '${MESSAGE_QUEUE_REDIS_PORT}:6379'
+      - "${MESSAGE_QUEUE_REDIS_PORT}:6379"
     volumes:
       - message_queue_data:/data
-    command: ['redis-server', '--appendonly', 'yes']
+    command: ["redis-server", "--appendonly", "yes"]
     healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
+      test: ["CMD", "redis-cli", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -35,12 +35,12 @@ services:
     image: redis:7
     restart: unless-stopped
     ports:
-      - '${CACHE_REDIS_PORT}:6379'
+      - "${CACHE_REDIS_PORT}:6379"
     volumes:
       - cache_data:/data
-    command: ['redis-server', '--appendonly', 'yes']
+    command: ["redis-server", "--appendonly", "yes"]
     healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
+      test: ["CMD", "redis-cli", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -49,7 +49,7 @@ services:
     image: adminer:4.8.1
     restart: unless-stopped
     ports:
-      - '${ADMINER_PORT}:8080'
+      - "${ADMINER_PORT}:8080"
     environment:
       ADMINER_DEFAULT_SERVER: database_service
     depends_on:
@@ -60,11 +60,11 @@ services:
     image: ollama/ollama:0.17.4
     restart: unless-stopped
     ports:
-      - '${OLLAMA_PORT}:11434'
+      - "${OLLAMA_PORT}:11434"
     volumes:
       - ollama_data:/root/.ollama
     healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:11434/']
+      test: ["CMD", "curl", "-f", "http://localhost:11434/"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -73,12 +73,12 @@ services:
     image: qdrant/qdrant:v1.7.4
     restart: unless-stopped
     ports:
-      - '${QDRANT_PORT}:6333'
-      - '6334:6334'
+      - "${QDRANT_PORT}:6333"
+      - "6334:6334"
     volumes:
       - qdrant_data:/qdrant/storage
     healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:6333/']
+      test: ["CMD", "curl", "-f", "http://localhost:6333/"]
       interval: 30s
       timeout: 10s
       retries: 5

@@ -1,16 +1,16 @@
 /**
  * Speech-to-Text Service - Placeholder for audio transcription
- * 
+ *
  * ⚠️ IMPORTANT: Audio transcription is handled CLIENT-SIDE using Chrome's Web Speech API.
  * This service is a PLACEHOLDER for optional server-side transcription.
- * 
+ *
  * This service can be implemented with:
  * - OpenAI Whisper API: https://platform.openai.com/docs/guides/speech-to-text
  * - Local Whisper model: https://github.com/openai/whisper
  * - Google Cloud Speech-to-Text: https://cloud.google.com/speech-to-text
  * - AWS Transcribe: https://aws.amazon.com/transcribe/
  * - Ollama with Whisper (if available)
- * 
+ *
  * Current Status: Placeholder returning mock transcription.
  * To implement: Replace the transcribe() method with actual API calls.
  */

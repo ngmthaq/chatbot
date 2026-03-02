@@ -215,7 +215,7 @@ async verifyToken(token: string) {
 Add `@UseGuards(ThrottlerGuard)` to controllers or specific routes:
 
 ```typescript
-@Controller('auth')
+@Controller("auth")
 @UseGuards(ThrottlerGuard)
 export class AuthController {
   // All routes in this controller are rate-limited
@@ -239,9 +239,9 @@ async login(@Body() dto: LoginDto) {
 **Example**:
 
 ```typescript
-import { ThrottlerGuard } from '@nestjs/throttler';
+import { ThrottlerGuard } from "@nestjs/throttler";
 
-@Controller('admin')
+@Controller("admin")
 @UseGuards(ThrottlerGuard, AuthGuard, RbacGuard)
 export class AdminController {
   // Rate limiting applied before auth checks
@@ -296,13 +296,13 @@ constructor(
 
 ## Summary
 
-| Module              | Provider           | Purpose                       | Location          |
-| ------------------- | ------------------ | ----------------------------- | ----------------- |
-| CoreConfigModule    | ConfigService      | Environment & configuration   | `core/config`     |
-| CoreDatabaseModule  | PrismaService      | Database access (ORM)         | `core/database`   |
-| CoreEncryptModule   | EncryptService     | Encryption & password hashing | `core/encrypt`    |
-| CoreValidatorModule | Various validators | Custom DTO validations        | `core/validator`  |
-| JwtModule           | JwtService         | JWT token management          | `feature/auth`    |
-| CoreThrottlerModule | ThrottlerGuard     | Rate limiting & throttling    | `core/throttler`  |
+| Module              | Provider           | Purpose                       | Location         |
+| ------------------- | ------------------ | ----------------------------- | ---------------- |
+| CoreConfigModule    | ConfigService      | Environment & configuration   | `core/config`    |
+| CoreDatabaseModule  | PrismaService      | Database access (ORM)         | `core/database`  |
+| CoreEncryptModule   | EncryptService     | Encryption & password hashing | `core/encrypt`   |
+| CoreValidatorModule | Various validators | Custom DTO validations        | `core/validator` |
+| JwtModule           | JwtService         | JWT token management          | `feature/auth`   |
+| CoreThrottlerModule | ThrottlerGuard     | Rate limiting & throttling    | `core/throttler` |
 
 All these modules are marked with `@Global()` or `global: true` and are automatically available throughout the application without explicit imports.

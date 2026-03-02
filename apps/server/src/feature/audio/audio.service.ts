@@ -1,9 +1,9 @@
 /**
  * Audio Service - Orchestrates audio processing operations
- * 
+ *
  * NOTE: This is an OPTIONAL service. Audio processing is primarily CLIENT-SIDE.
  * This service provides fallback capabilities for browsers/apps that need server-side processing.
- * 
+ *
  * Current implementation uses placeholder STT/TTS services that can be replaced with:
  * - OpenAI Whisper (STT) + OpenAI TTS
  * - Google Cloud Speech-to-Text + Text-to-Speech
