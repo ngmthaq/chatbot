@@ -1,0 +1,19 @@
+model Conversation {
+  id            Int       @id @default(autoincrement())
+  userId        Int
+  title         String?
+  model         String    @default("llama3")
+  temperature   Float     @default(0.7)
+  maxTokens     Int       @default(2048)
+  contextWindow Int       @default(20)
+  isArchived    Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  user          User      @relation("ConversationUser", fields: [userId], references: [id], onDelete: Cascade)
+  messages      Message[]
+  documents     Document[] @relation("ConversationDocuments")
+
+  @@index([userId])
+  @@index([isArchived])
+}

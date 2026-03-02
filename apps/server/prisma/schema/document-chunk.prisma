@@ -1,0 +1,16 @@
+model DocumentChunk {
+  id              Int       @id @default(autoincrement())
+  documentId      Int
+  chunkIndex      Int
+  text            String    @db.LongText
+  tokenCount      Int?
+  embedding       String?   @db.LongText
+  qdrantPointId   String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  document        Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId])
+  @@index([qdrantPointId])
+}

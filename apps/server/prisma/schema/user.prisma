@@ -14,4 +14,6 @@ model User {
     updatedAt     DateTime  @updatedAt
     role          Role      @relation(fields: [roleId], references: [id])
     refreshTokens Token[]
+    conversations Conversation[] @relation("ConversationUser")
+    documents     Document[] @relation("DocumentUser")
 }

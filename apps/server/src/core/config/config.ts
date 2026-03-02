@@ -38,6 +38,39 @@ export const config = () => ({
   // OLLAMA_PORT
   ollamaPort: parseInt(process.env.OLLAMA_PORT!, 10) || 11434,
 
+  // OLLAMA_BASE_URL
+  ollamaBaseUrl: process.env.OLLAMA_BASE_URL || 'http://localhost:11434',
+
+  // OLLAMA_CHAT_MODEL
+  ollamaChatModel: process.env.OLLAMA_CHAT_MODEL || 'llama3',
+
+  // OLLAMA_EMBED_MODEL
+  ollamaEmbedModel: process.env.OLLAMA_EMBED_MODEL || 'nomic-embed-text',
+
+  // OLLAMA_VISION_MODEL
+  ollamaVisionModel: process.env.OLLAMA_VISION_MODEL || 'llava',
+
+  // QDRANT_URL
+  qdrantUrl: process.env.QDRANT_URL || 'http://localhost:6333',
+
+  // QDRANT_API_KEY
+  qdrantApiKey: process.env.QDRANT_API_KEY || '',
+
+  // DEFAULT_CONTEXT_WINDOW
+  defaultContextWindow: parseInt(process.env.DEFAULT_CONTEXT_WINDOW!, 10) || 20,
+
+  // DEFAULT_TEMPERATURE
+  defaultTemperature: parseFloat(process.env.DEFAULT_TEMPERATURE!) || 0.7,
+
+  // DEFAULT_MAX_TOKENS
+  defaultMaxTokens: parseInt(process.env.DEFAULT_MAX_TOKENS!, 10) || 2048,
+
+  // UPLOAD_DIR
+  uploadDir: process.env.UPLOAD_DIR || './uploads',
+
+  // MAX_FILE_SIZE
+  maxFileSize: parseInt(process.env.MAX_FILE_SIZE!, 10) || 52428800,
+
   // NEST_APP_PORT
   port: parseInt(process.env.NEST_APP_PORT!, 10) || 3000,
 

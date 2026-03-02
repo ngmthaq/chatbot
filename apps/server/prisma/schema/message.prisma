@@ -1,0 +1,20 @@
+enum MessageRole {
+  user
+  assistant
+}
+
+model Message {
+  id              Int       @id @default(autoincrement())
+  conversationId  Int
+  role            MessageRole
+  content         String    @db.LongText
+  sourceDocuments Json?
+  tokenUsage      Int?
+  finishReason    String?
+  createdAt       DateTime  @default(now())
+
+  conversation    Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId])
+  @@index([role])
+}

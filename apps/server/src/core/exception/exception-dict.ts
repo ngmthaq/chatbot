@@ -112,4 +112,65 @@ export class ExceptionDict {
   public static isBoolean() {
     return standardizeRule('isBoolean');
   }
+
+  // RAG & Chat errors
+  public static conversationNotFound() {
+    return standardizeRule('conversationNotFound');
+  }
+
+  public static conversationAccessDenied() {
+    return standardizeRule('conversationAccessDenied');
+  }
+
+  public static documentNotFound() {
+    return standardizeRule('documentNotFound');
+  }
+
+  public static documentAccessDenied() {
+    return standardizeRule('documentAccessDenied');
+  }
+
+  public static invalidFileType() {
+    return standardizeRule('invalidFileType');
+  }
+
+  public static fileTooLarge() {
+    return standardizeRule('fileTooLarge');
+  }
+
+  public static ollamaServiceUnavailable() {
+    return standardizeRule('ollamaServiceUnavailable');
+  }
+
+  public static qdrantServiceUnavailable() {
+    return standardizeRule('qdrantServiceUnavailable');
+  }
+
+  public static embeddingGenerationFailed() {
+    return standardizeRule('embeddingGenerationFailed');
+  }
+
+  public static vectorSearchFailed() {
+    return standardizeRule('vectorSearchFailed');
+  }
+
+  public static promptInjectionDetected() {
+    return standardizeRule('promptInjectionDetected');
+  }
+
+  public static messageTooLong() {
+    return standardizeRule('messageTooLong');
+  }
+
+  public static documentProcessingFailed() {
+    return standardizeRule('documentProcessingFailed');
+  }
+
+  public static isNumber() {
+    return standardizeRule('isNumber');
+  }
+
+  public static isPositive() {
+    return standardizeRule('isPositive');
+  }
 }

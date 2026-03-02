@@ -1,0 +1,34 @@
+enum DocumentStatus {
+  pending
+  processing
+  completed
+  failed
+}
+
+model Document {
+  id                    Int       @id @default(autoincrement())
+  userId                Int
+  title                 String
+  description           String?
+  filePath              String
+  mimeType              String
+  fileSize              Int
+  pageCount             Int?
+  status                DocumentStatus
+  errorMessage          String?
+  chunkCount            Int       @default(0)
+  embeddingCount        Int       @default(0)
+  qdrantCollectionId    String?
+  uploadedAt            DateTime  @default(now())
+  processedAt           DateTime?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  user                  User      @relation("DocumentUser", fields: [userId], references: [id], onDelete: Cascade)
+  chunks                DocumentChunk[]
+  conversations         Conversation[] @relation("ConversationDocuments")
+
+  @@index([userId])
+  @@index([status])
+  @@index([uploadedAt])
+}
