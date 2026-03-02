@@ -16,11 +16,6 @@ export function useUploadDocument() {
       const response = await apiClient.post<ApiResponse<Document>>(
         DOCUMENTS_ROUTES.UPLOAD,
         formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        },
       );
       return unwrapResponse(response);
     },

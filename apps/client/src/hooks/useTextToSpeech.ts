@@ -1,6 +1,7 @@
 import { useAtom, useAtomValue } from 'jotai';
 import { useState, useEffect, useCallback } from 'react';
 
+import { APP_CONFIG } from '../constants/app-config';
 import {
   voiceStateAtom,
   isTTSEnabledAtom,
@@ -15,6 +16,25 @@ export function useTextToSpeech() {
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
 
   const isSupported = 'speechSynthesis' in window;
+
+  const getPreferredVoice = useCallback(
+    (availableVoices: SpeechSynthesisVoice[]) => {
+      if (availableVoices.length === 0) return null;
+
+      const selectedVoice = selectedVoiceName
+        ? availableVoices.find((voice) => voice.name === selectedVoiceName)
+        : null;
+
+      if (selectedVoice) return selectedVoice;
+
+      const googleUsEnglishVoice = availableVoices.find(
+        (voice) => voice.name === APP_CONFIG.VOICE_CONFIG.DEFAULT_TTS_VOICE,
+      );
+
+      return googleUsEnglishVoice || availableVoices[0];
+    },
+    [selectedVoiceName],
+  );
 
   // Load available voices
   useEffect(() => {
@@ -42,12 +62,9 @@ export function useTextToSpeech() {
 
       const newUtterance = new SpeechSynthesisUtterance(text);
 
-      // Set voice if selected
-      if (selectedVoiceName && voices.length > 0) {
-        const voice = voices.find((v) => v.name === selectedVoiceName);
-        if (voice) {
-          newUtterance.voice = voice;
-        }
+      const voice = getPreferredVoice(voices);
+      if (voice) {
+        newUtterance.voice = voice;
       }
 
       newUtterance.onstart = () => {
@@ -66,7 +83,7 @@ export function useTextToSpeech() {
 
       window.speechSynthesis.speak(newUtterance);
     },
-    [isSupported, isTTSEnabled, selectedVoiceName, voices, setVoiceState],
+    [isSupported, isTTSEnabled, voices, setVoiceState, getPreferredVoice],
   );
 
   const stop = useCallback(() => {

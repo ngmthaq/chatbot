@@ -44,9 +44,7 @@ ${historyStr || 'This is the beginning of the conversation.'}
 ## Current Question:
 USER: ${userMessage}
 
-Provide a helpful, accurate answer based on the provided context. If the answer is not in the context, say so clearly. Always cite your sources by referencing [Source X] when using information from the documents.
-
-ASSISTANT:`;
+Provide a helpful, accurate answer based on the provided context. If the answer is not in the context, say so clearly. Always cite your sources by referencing [Source X] when using information from the documents.`;
 
     return prompt;
   }

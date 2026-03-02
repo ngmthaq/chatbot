@@ -29,7 +29,7 @@ export default function CitationPanel({ messages }: CitationPanelProps) {
   const setIsOpen = useSetAtom(isCitationPanelOpenAtom);
 
   const selectedMessage = messages.find((m) => m.id === selectedMessageId);
-  const citations = selectedMessage?.citations || [];
+  const citations = selectedMessage?.sourceDocuments || [];
 
   const handleClose = () => {
     setIsOpen(false);
@@ -89,13 +89,14 @@ export default function CitationPanel({ messages }: CitationPanelProps) {
                           }}
                         >
                           <Typography variant="subtitle2" fontWeight={600}>
-                            {citation.documentTitle}
+                            {citation.metadata?.documentTitle ||
+                              'Untitled document'}
                           </Typography>
                           <Chip
                             label={
-                              citation.pageNumber
+                              citation.metadata?.chunkIndex
                                 ? t('citations.page', {
-                                    number: citation.pageNumber,
+                                    number: citation.metadata.chunkIndex,
                                   })
                                 : t('citations.pageNA')
                             }
@@ -115,7 +116,7 @@ export default function CitationPanel({ messages }: CitationPanelProps) {
                             overflow: 'hidden',
                           }}
                         >
-                          {citation.snippet}
+                          {citation.pageContent}
                         </Typography>
                       }
                     />

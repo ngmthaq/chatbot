@@ -10,7 +10,6 @@ import { AuthModule } from '../auth/auth.module';
 
 import { DocumentsController } from './documents.controller';
 import { DocumentsService } from './documents.service';
-import { FileValidationGuard } from './file-validation.guard';
 
 @Module({
   imports: [
@@ -35,7 +34,7 @@ import { FileValidationGuard } from './file-validation.guard';
     BullModule.registerQueue({ name: 'process-document' }),
   ],
   controllers: [DocumentsController],
-  providers: [DocumentsService, FileValidationGuard],
+  providers: [DocumentsService],
   exports: [DocumentsService],
 })
 export class DocumentsModule {}

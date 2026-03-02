@@ -2,7 +2,7 @@ import { Box, Container, Typography } from '@mui/material';
 import { Drawer, useMediaQuery, useTheme } from '@mui/material';
 import { createFileRoute } from '@tanstack/react-router';
 import { useAtom, useSetAtom } from 'jotai';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ChatInput from '../../components/chat-input';
@@ -20,6 +20,8 @@ import {
   selectedMessageForCitationAtom,
   isCitationPanelOpenAtom,
 } from '../../stores/conversation-store';
+import { MessageRole, type Message } from '../../types/chat-types';
+import { showErrorToast } from '../../utils/error-handler';
 
 export const Route = createFileRoute('/_authenticated/chat')({
   component: Chat,
@@ -33,6 +35,8 @@ function Chat() {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [conversationDrawerOpen, setConversationDrawerOpen] =
     useState(!isMobile);
+  const [optimisticMessages, setOptimisticMessages] = useState<Message[]>([]);
+  const [isAssistantLoading, setIsAssistantLoading] = useState(false);
 
   const [selectedConversationId, setSelectedConversationId] = useAtom(
     selectedConversationIdAtom,
@@ -54,9 +58,68 @@ function Chat() {
     selectedConversationId || 0,
   );
 
+  useEffect(() => {
+    setOptimisticMessages([]);
+    setIsAssistantLoading(false);
+  }, [selectedConversationId]);
+
+  const displayedMessages = useMemo(() => {
+    const baseMessages = currentConversation?.messages || [];
+
+    if (optimisticMessages.length === 0 && !isAssistantLoading) {
+      return baseMessages;
+    }
+
+    const loadingMessage: Message[] = isAssistantLoading
+      ? [
+          {
+            id: -Date.now(),
+            conversationId: selectedConversationId || 0,
+            role: MessageRole.ASSISTANT,
+            content: t('common:labels.loading'),
+            createdAt: new Date().toISOString(),
+          },
+        ]
+      : [];
+
+    return [...baseMessages, ...optimisticMessages, ...loadingMessage];
+  }, [
+    currentConversation?.messages,
+    optimisticMessages,
+    isAssistantLoading,
+    selectedConversationId,
+    t,
+  ]);
+
   const handleSend = (message: string) => {
     if (selectedConversationId) {
-      sendMessage({ content: message });
+      const now = new Date().toISOString();
+
+      setOptimisticMessages([
+        {
+          id: -Date.now(),
+          conversationId: selectedConversationId,
+          role: MessageRole.USER,
+          content: message,
+          createdAt: now,
+        },
+      ]);
+
+      setIsAssistantLoading(true);
+      sendMessage(
+        { content: message },
+        {
+          onSuccess: () => {
+            setOptimisticMessages([]);
+            setIsAssistantLoading(false);
+          },
+          onError: (error) => {
+            setOptimisticMessages([]);
+            setIsAssistantLoading(false);
+            showErrorToast(error);
+          },
+        },
+      );
     }
   };
 
@@ -147,7 +210,7 @@ function Chat() {
         ) : selectedConversationId ? (
           <>
             <MessageList
-              messages={currentConversation?.messages || []}
+              messages={displayedMessages}
               onCitationClick={handleCitationClick}
             />
             <ChatInput onSend={handleSend} disabled={isSending} />
@@ -162,7 +225,7 @@ function Chat() {
       </Box>
 
       {/* Citation panel */}
-      <CitationPanel messages={currentConversation?.messages || []} />
+      <CitationPanel messages={displayedMessages} />
     </Box>
   );
 }

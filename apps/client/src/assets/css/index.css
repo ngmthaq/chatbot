@@ -1,21 +1,3 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html,
-body,
-#root {
-  height: 100%;
-  font-family: 'Roboto', sans-serif;
-}
-
-/* Smooth scrolling */
-html {
-  scroll-behavior: smooth;
-}
-
 /* Animations */
 @keyframes fadeIn {
   from {
@@ -76,23 +58,6 @@ html {
   ::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.3);
   }
-}
-
-/* Code block styling */
-pre {
-  margin: 0;
-  padding: 0;
-  overflow-x: auto;
-}
-
-code {
-  font-family: 'Courier New', monospace;
-}
-
-/* Link styling */
-a {
-  color: inherit;
-  text-decoration: none;
 }
 
 /* Selection styling */

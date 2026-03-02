@@ -67,7 +67,7 @@ export default function ToggleVoiceButton({
             transition: 'all 0.2s',
           }}
         >
-          {isListening ? <Mic /> : <MicOff />}
+          <Mic />
         </IconButton>
         {isListening && (
           <Box

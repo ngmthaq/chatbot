@@ -17,10 +17,7 @@ import {
 
 const apiClient = axios.create({
   baseURL: APP_CONFIG.API_BASE_URL,
-  timeout: 30000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  timeout: 180000,
 });
 
 let isRefreshing = false;
@@ -47,6 +44,15 @@ apiClient.interceptors.request.use(
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
+    if (config.headers) {
+      if (config.data instanceof FormData) {
+        delete config.headers['Content-Type'];
+      } else if (!config.headers['Content-Type']) {
+        config.headers['Content-Type'] = 'application/json';
+      }
+    }
+
     return config;
   },
   (error) => {

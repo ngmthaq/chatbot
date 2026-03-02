@@ -18,6 +18,7 @@ import { useAtom } from 'jotai';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { APP_CONFIG } from '../../constants/app-config';
 import { useTextToSpeech } from '../../hooks/useTextToSpeech';
 import {
   isTTSEnabledAtom,
@@ -40,10 +41,14 @@ export default function VoiceSettings({ open, onClose }: VoiceSettingsProps) {
   );
   const [sttLanguage, setSTTLanguage] = useAtom(sttLanguageAtom);
 
-  // Set default voice to first available if not selected
+  // Set default voice to Google US English, fallback to first available
   useEffect(() => {
     if (isTTSEnabled && availableVoices.length > 0 && !selectedVoiceName) {
-      setSelectedVoiceName(availableVoices[0].name);
+      const defaultVoice =
+        availableVoices.find(
+          (voice) => voice.name === APP_CONFIG.VOICE_CONFIG.DEFAULT_TTS_VOICE,
+        ) || availableVoices[0];
+      setSelectedVoiceName(defaultVoice.name);
     }
   }, [isTTSEnabled, availableVoices, selectedVoiceName, setSelectedVoiceName]);
 

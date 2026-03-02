@@ -31,10 +31,13 @@ function Documents() {
 
   const handleUpload = (file: File) => {
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('file', file, file.name);
 
     uploadDocument(formData, {
       onSuccess: () => {
+        setUploadProgress(0);
+      },
+      onError: () => {
         setUploadProgress(0);
       },
     });

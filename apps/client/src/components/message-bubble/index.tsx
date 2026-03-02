@@ -44,8 +44,8 @@ export default function MessageBubble({
         sx={{
           maxWidth: '70%',
           p: 2,
-          bgcolor: isUser ? 'userBubble.main' : 'aiBubble.main',
-          color: isUser ? 'userBubble.contrastText' : 'aiBubble.contrastText',
+          bgcolor: isUser ? 'chat.userBubble' : 'chat.assistantBubble',
+          color: isUser ? 'chat.userText' : 'chat.assistantText',
           borderRadius: 2,
           position: 'relative',
         }}
@@ -53,9 +53,9 @@ export default function MessageBubble({
         <Box sx={{ mb: 1 }}>
           <ReactMarkdown
             components={{
-              code: ({ inline, className, children, ...props }) => {
+              code: ({ className, children, ...props }) => {
                 const match = /language-(\w+)/.exec(className || '');
-                return !inline && match ? (
+                return match ? (
                   <CodeBlock
                     language={match[1]}
                     code={String(children).replace(/\n$/, '')}
@@ -81,7 +81,7 @@ export default function MessageBubble({
           </ReactMarkdown>
         </Box>
 
-        {message.citations && message.citations.length > 0 && (
+        {message.sourceDocuments && message.sourceDocuments.length > 0 && (
           <Box
             sx={{
               mt: 1,
@@ -91,7 +91,7 @@ export default function MessageBubble({
             }}
           >
             <Typography variant="caption" sx={{ opacity: 0.8 }}>
-              {t('message.citations')}: {message.citations.length}
+              {t('message.citations')}: {message.sourceDocuments.length}
             </Typography>
             {onCitationClick && (
               <Typography
@@ -119,7 +119,7 @@ export default function MessageBubble({
           }}
         >
           <Typography variant="caption" sx={{ opacity: 0.7 }}>
-            {formatDateRelative(message.timestamp)}
+            {formatDateRelative(message.createdAt)}
           </Typography>
 
           <Box sx={{ display: 'flex', gap: 0.5 }}>

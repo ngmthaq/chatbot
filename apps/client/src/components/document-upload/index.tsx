@@ -30,7 +30,6 @@ export default function DocumentUpload({
     maxSize: APP_CONFIG.FILE_MAX_SIZE,
     accept: {
       'application/pdf': ['.pdf'],
-      'application/msword': ['.doc'],
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
         ['.docx'],
       'text/plain': ['.txt'],
@@ -71,7 +70,7 @@ export default function DocumentUpload({
         {t('upload.or')} <strong>{t('upload.browse')}</strong>
       </Typography>
       <Typography variant="caption" color="text.secondary">
-        {t('upload.supportedFormats')}: PDF, DOC, DOCX, TXT
+        {t('upload.supportedFormats')}: PDF, DOCX, TXT
       </Typography>
       <Typography variant="caption" color="text.secondary" display="block">
         {t('upload.maxSize', {

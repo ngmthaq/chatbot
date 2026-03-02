@@ -24,6 +24,7 @@ export const APP_CONFIG = {
   // Voice Configuration
   VOICE_CONFIG: {
     STT_LANGUAGE: import.meta.env.VITE_STT_LANGUAGE || 'en-US',
+    DEFAULT_TTS_VOICE: 'Google US English',
     TTS_AUTO_PLAY: import.meta.env.VITE_TTS_AUTO_PLAY === 'true',
     TTS_RATE: 1.0,
     TTS_PITCH: 1.0,

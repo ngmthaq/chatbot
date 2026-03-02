@@ -1,3 +1,4 @@
+import * as fs from 'fs/promises';
 import * as path from 'path';
 
 import {
@@ -6,6 +7,7 @@ import {
   Get,
   Delete,
   Param,
+  ParseFilePipeBuilder,
   UseGuards,
   UseInterceptors,
   UploadedFile,
@@ -37,7 +39,6 @@ import { Rbac } from '../rbac/rbac.decorator';
 import { RbacGuard } from '../rbac/rbac.guard';
 
 import { DocumentsService } from './documents.service';
-import { FileValidationGuard } from './file-validation.guard';
 import { GetDocumentListDto } from './get-document-list.dto';
 
 @ApiTags('Documents')
@@ -60,7 +61,16 @@ export class DocumentsController {
             'uploads',
             dayjs().format('YYYY-MM-DD'),
           );
-          cb(null, uploadDir);
+
+          fs.mkdir(uploadDir, { recursive: true })
+            .then(() => cb(null, uploadDir))
+            .catch((error: unknown) => {
+              const uploadError =
+                error instanceof Error
+                  ? error
+                  : new Error('Failed to create upload directory');
+              cb(uploadError, uploadDir);
+            });
         },
         filename: (req, file, cb) => {
           const uniqueName = `${Date.now()}-${file.originalname}`;
@@ -70,7 +80,6 @@ export class DocumentsController {
       limits: { fileSize: 50 * 1024 * 1024 },
     }),
   )
-  @UseGuards(FileValidationGuard)
   @Rbac(Module.DOCUMENTS, Action.CREATE)
   @ApiOperation({
     summary: 'Upload document',
@@ -100,10 +109,23 @@ export class DocumentsController {
   })
   @ApiResponse({ status: 400, description: 'Invalid file or file too large' })
   async uploadDocument(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({
+          fileType:
+            /^(application\/pdf|application\/vnd\.openxmlformats-officedocument\.wordprocessingml\.document|text\/plain)$/,
+        })
+        .addMaxSizeValidator({
+          maxSize: 50 * 1024 * 1024,
+        })
+        .build({
+          fileIsRequired: true,
+        }),
+    )
+    file: Express.Multer.File,
     @Req() req: AuthRequest,
   ) {
-    if (!file) {
+    if (!file || file.size <= 0) {
       throw ExceptionBuilder.badRequest({
         errors: [ExceptionDict.noFileUploaded()],
       });
