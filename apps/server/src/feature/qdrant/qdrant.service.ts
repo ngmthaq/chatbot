@@ -5,6 +5,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { ConfigType } from '../../core/config/config-type';
 import { ExceptionBuilder } from '../../core/exception/exception-builder';
+import { ExceptionDict } from '../../core/exception/exception-dict';
 
 import {
   QdrantPoint,
@@ -54,7 +55,7 @@ export class QdrantService {
         `Failed to create collection: ${error instanceof Error ? error.message : 'Unknown error'}`,
       );
       throw ExceptionBuilder.serviceUnavailable({
-        errors: ['Failed to create vector collection'],
+        errors: [ExceptionDict.vectorCollectionCreationFailed()],
       });
     }
   }
@@ -76,7 +77,7 @@ export class QdrantService {
         `Failed to delete collection: ${error instanceof Error ? error.message : 'Unknown error'}`,
       );
       throw ExceptionBuilder.serviceUnavailable({
-        errors: ['Failed to delete vector collection'],
+        errors: [ExceptionDict.vectorCollectionDeletionFailed()],
       });
     }
   }
@@ -111,7 +112,7 @@ export class QdrantService {
         `Failed to upsert points: ${error instanceof Error ? error.message : 'Unknown error'}`,
       );
       throw ExceptionBuilder.serviceUnavailable({
-        errors: ['Failed to store embeddings'],
+        errors: [ExceptionDict.vectorStorageFailed()],
       });
     }
   }
@@ -165,7 +166,7 @@ export class QdrantService {
         `Failed to search vectors: ${error instanceof Error ? error.message : 'Unknown error'}`,
       );
       throw ExceptionBuilder.serviceUnavailable({
-        errors: ['Failed to search documents'],
+        errors: [ExceptionDict.vectorSearchFailed()],
       });
     }
   }
@@ -199,7 +200,7 @@ export class QdrantService {
         `Failed to delete points: ${error instanceof Error ? error.message : 'Unknown error'}`,
       );
       throw ExceptionBuilder.serviceUnavailable({
-        errors: ['Failed to delete embeddings'],
+        errors: [ExceptionDict.vectorDeletionFailed()],
       });
     }
   }

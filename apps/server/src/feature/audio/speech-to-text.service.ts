@@ -8,6 +8,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { ConfigType } from '../../core/config/config-type';
 import { ExceptionBuilder } from '../../core/exception/exception-builder';
+import { ExceptionDict } from '../../core/exception/exception-dict';
 
 @Injectable()
 export class SpeechToTextService {
@@ -64,7 +65,7 @@ export class SpeechToTextService {
         `Transcription failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
       );
       throw ExceptionBuilder.serviceUnavailable({
-        errors: ['Speech-to-text transcription failed'],
+        errors: [ExceptionDict.speechToTextFailed()],
       });
     }
   }

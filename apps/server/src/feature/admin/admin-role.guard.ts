@@ -2,6 +2,7 @@ import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 
 import { PrismaService } from '../../core/database/prisma.service';
 import { ExceptionBuilder } from '../../core/exception/exception-builder';
+import { ExceptionDict } from '../../core/exception/exception-dict';
 import { AuthRequest } from '../auth/auth-type';
 
 @Injectable()
@@ -14,7 +15,7 @@ export class AdminRoleGuard implements CanActivate {
 
     if (!userId) {
       throw ExceptionBuilder.unauthorized({
-        errors: ['User not authenticated'],
+        errors: [ExceptionDict.userNotAuthenticated()],
       });
     }
 
@@ -25,7 +26,7 @@ export class AdminRoleGuard implements CanActivate {
 
     if (!user || user.role.name !== 'ADMIN') {
       throw ExceptionBuilder.forbidden({
-        errors: ['Admin role required'],
+        errors: [ExceptionDict.adminRoleRequired()],
       });
     }
 

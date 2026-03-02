@@ -173,4 +173,56 @@ export class ExceptionDict {
   public static isPositive() {
     return standardizeRule('isPositive');
   }
+
+  // Authentication & Authorization errors
+  public static userNotAuthenticated() {
+    return standardizeRule('userNotAuthenticated');
+  }
+
+  public static adminRoleRequired() {
+    return standardizeRule('adminRoleRequired');
+  }
+
+  // Document management errors
+  public static noFileUploaded() {
+    return standardizeRule('noFileUploaded');
+  }
+
+  public static documentDeletionFailed() {
+    return standardizeRule('documentDeletionFailed');
+  }
+
+  public static documentChunkingFailed() {
+    return standardizeRule('documentChunkingFailed');
+  }
+
+  // Vector database errors
+  public static vectorCollectionCreationFailed() {
+    return standardizeRule('vectorCollectionCreationFailed');
+  }
+
+  public static vectorCollectionDeletionFailed() {
+    return standardizeRule('vectorCollectionDeletionFailed');
+  }
+
+  public static vectorStorageFailed() {
+    return standardizeRule('vectorStorageFailed');
+  }
+
+  public static vectorDeletionFailed() {
+    return standardizeRule('vectorDeletionFailed');
+  }
+
+  // AI/ML service errors
+  public static imageProcessingFailed() {
+    return standardizeRule('imageProcessingFailed');
+  }
+
+  public static speechToTextFailed() {
+    return standardizeRule('speechToTextFailed');
+  }
+
+  public static textToSpeechFailed() {
+    return standardizeRule('textToSpeechFailed');
+  }
 }

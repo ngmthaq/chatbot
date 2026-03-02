@@ -3,6 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 
 import { PrismaService } from '../../core/database/prisma.service';
 import { ExceptionBuilder } from '../../core/exception/exception-builder';
+import { ExceptionDict } from '../../core/exception/exception-dict';
 
 interface ChunkingOptions {
   chunkSize?: number;
@@ -64,7 +65,7 @@ export class DocumentChunkingService {
         `Failed to chunk document: ${error instanceof Error ? error.message : 'Unknown error'}`,
       );
       throw ExceptionBuilder.badRequest({
-        errors: ['Failed to process document chunks'],
+        errors: [ExceptionDict.documentChunkingFailed()],
       });
     }
   }

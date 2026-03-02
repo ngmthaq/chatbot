@@ -17,6 +17,7 @@ import { ThrottlerGuard } from '@nestjs/throttler';
 import { diskStorage } from 'multer';
 
 import { ExceptionBuilder } from '../../core/exception/exception-builder';
+import { ExceptionDict } from '../../core/exception/exception-dict';
 import { ResponseBuilder } from '../../core/response/response-builder';
 import dayjs from '../../utils/date';
 import { AuthRequest } from '../auth/auth-type';
@@ -66,7 +67,7 @@ export class DocumentsController {
   ) {
     if (!file) {
       throw ExceptionBuilder.badRequest({
-        errors: ['No file uploaded'],
+        errors: [ExceptionDict.noFileUploaded()],
       });
     }
 

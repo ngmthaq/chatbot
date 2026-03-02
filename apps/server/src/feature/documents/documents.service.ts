@@ -199,7 +199,7 @@ export class DocumentsService {
         `Failed to delete document: ${error instanceof Error ? error.message : 'Unknown error'}`,
       );
       throw ExceptionBuilder.internalServerError({
-        errors: ['Failed to delete document'],
+        errors: [ExceptionDict.documentDeletionFailed()],
       });
     }
   }

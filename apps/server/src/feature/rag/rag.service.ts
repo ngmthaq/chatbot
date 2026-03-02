@@ -4,6 +4,7 @@ import { Queue } from 'bullmq';
 
 import { PrismaService } from '../../core/database/prisma.service';
 import { ExceptionBuilder } from '../../core/exception/exception-builder';
+import { ExceptionDict } from '../../core/exception/exception-dict';
 import { OllamaService } from '../ollama/ollama.service';
 
 import { DocumentChunkingService } from './document-chunking.service';
@@ -84,7 +85,7 @@ export class RagService {
 
       if (!conversation) {
         throw ExceptionBuilder.notFound({
-          errors: ['Conversation not found'],
+          errors: [ExceptionDict.conversationNotFound()],
         });
       }
 

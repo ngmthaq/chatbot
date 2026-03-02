@@ -5,6 +5,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { ConfigType } from '../../core/config/config-type';
 import { ExceptionBuilder } from '../../core/exception/exception-builder';
+import { ExceptionDict } from '../../core/exception/exception-dict';
 
 import {
   GenerateRequest,
@@ -56,7 +57,7 @@ export class OllamaService {
         `Failed to generate text: ${error instanceof Error ? error.message : 'Unknown error'}`,
       );
       throw ExceptionBuilder.serviceUnavailable({
-        errors: ['Ollama service unavailable'],
+        errors: [ExceptionDict.ollamaServiceUnavailable()],
       });
     }
   }
@@ -99,13 +100,13 @@ export class OllamaService {
           `Failed to generate embedding after ${this.retryAttempts} attempts`,
         );
         throw ExceptionBuilder.serviceUnavailable({
-          errors: ['Failed to generate embeddings'],
+          errors: [ExceptionDict.embeddingGenerationFailed()],
         });
       }
     }
 
     throw ExceptionBuilder.serviceUnavailable({
-      errors: ['Failed to generate embeddings'],
+      errors: [ExceptionDict.embeddingGenerationFailed()],
     });
   }
 
@@ -136,7 +137,7 @@ export class OllamaService {
         `Failed to process image: ${error instanceof Error ? error.message : 'Unknown error'}`,
       );
       throw ExceptionBuilder.serviceUnavailable({
-        errors: ['Image processing failed'],
+        errors: [ExceptionDict.imageProcessingFailed()],
       });
     }
   }

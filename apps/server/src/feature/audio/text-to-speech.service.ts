@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
 
 import { ExceptionBuilder } from '../../core/exception/exception-builder';
+import { ExceptionDict } from '../../core/exception/exception-dict';
 
 interface SynthesizeOptions {
   voiceId?: string;
@@ -47,7 +48,7 @@ export class TextToSpeechService {
         `Speech synthesis failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
       );
       throw ExceptionBuilder.serviceUnavailable({
-        errors: ['Text-to-speech synthesis failed'],
+        errors: [ExceptionDict.textToSpeechFailed()],
       });
     }
   }

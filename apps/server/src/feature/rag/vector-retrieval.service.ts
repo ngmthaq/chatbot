@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 
 import { ExceptionBuilder } from '../../core/exception/exception-builder';
+import { ExceptionDict } from '../../core/exception/exception-dict';
 import { QdrantService } from '../qdrant/qdrant.service';
 
 export interface RetrievedSource {
@@ -48,7 +49,7 @@ export class VectorRetrievalService {
         `Failed to retrieve similar documents: ${error instanceof Error ? error.message : 'Unknown error'}`,
       );
       throw ExceptionBuilder.serviceUnavailable({
-        errors: ['Failed to search documents'],
+        errors: [ExceptionDict.vectorSearchFailed()],
       });
     }
   }
