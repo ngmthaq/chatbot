@@ -6,6 +6,7 @@ import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 
 import dayjs from '../../utils/date';
+import { AuthModule } from '../auth/auth.module';
 
 import { DocumentsController } from './documents.controller';
 import { DocumentsService } from './documents.service';
@@ -13,6 +14,7 @@ import { FileValidationGuard } from './file-validation.guard';
 
 @Module({
   imports: [
+    AuthModule,
     MulterModule.register({
       storage: diskStorage({
         destination: (req, file, cb) => {
