@@ -23,7 +23,9 @@ export class QdrantService {
     private readonly configService: ConfigService,
     private readonly httpService: HttpService,
   ) {
-    this.baseUrl = this.configService.get<ConfigType['qdrantUrl']>('qdrantUrl');
+    const qdrantUrl =
+      this.configService.get<ConfigType['qdrantUrl']>('qdrantUrl');
+    this.baseUrl = typeof qdrantUrl === 'function' ? qdrantUrl() : qdrantUrl;
     this.apiKey =
       this.configService.get<ConfigType['qdrantApiKey']>('qdrantApiKey');
   }

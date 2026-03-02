@@ -13,15 +13,16 @@ import { ExceptionDict } from '../../core/exception/exception-dict';
 @Injectable()
 export class SpeechToTextService {
   private readonly logger = new Logger(SpeechToTextService.name);
-  private readonly ollamaBaseUrl: string;
+  private readonly ollamaBaseUrl?: string;
 
   constructor(
     private readonly configService: ConfigService,
     private readonly httpService: HttpService,
   ) {
-    const host = this.configService.get<ConfigType['ollamaHost']>('ollamaHost');
-    const port = this.configService.get<ConfigType['ollamaPort']>('ollamaPort');
-    this.ollamaBaseUrl = `http://${host}:${port}`;
+    const ollamaUrl =
+      this.configService.get<ConfigType['ollamaUrl']>('ollamaUrl');
+    this.ollamaBaseUrl =
+      typeof ollamaUrl === 'function' ? ollamaUrl() : ollamaUrl;
   }
 
   /**

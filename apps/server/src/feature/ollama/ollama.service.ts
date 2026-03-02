@@ -16,7 +16,7 @@ import {
 @Injectable()
 export class OllamaService {
   private readonly logger = new Logger(OllamaService.name);
-  private readonly baseUrl: string;
+  private readonly baseUrl?: string;
   private readonly retryAttempts = 3;
   private readonly retryDelay = 1000; // ms
 
@@ -24,9 +24,9 @@ export class OllamaService {
     private readonly configService: ConfigService,
     private readonly httpService: HttpService,
   ) {
-    const host = this.configService.get<ConfigType['ollamaHost']>('ollamaHost');
-    const port = this.configService.get<ConfigType['ollamaPort']>('ollamaPort');
-    this.baseUrl = `http://${host}:${port}`;
+    const ollamaUrl =
+      this.configService.get<ConfigType['ollamaUrl']>('ollamaUrl');
+    this.baseUrl = typeof ollamaUrl === 'function' ? ollamaUrl() : ollamaUrl;
   }
 
   /**

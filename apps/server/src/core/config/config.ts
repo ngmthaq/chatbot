@@ -19,6 +19,16 @@ export const config = () => ({
   // MYSQL_ROOT_PASSWORD
   databaseRootPassword: process.env.MYSQL_ROOT_PASSWORD || 'root',
 
+  // DATABASE_URL (constructed from database config)
+  databaseUrl: () => {
+    const user = process.env.MYSQL_USER || 'app_user';
+    const password = process.env.MYSQL_PASSWORD || 'app_password';
+    const host = process.env.MYSQL_HOST || 'localhost';
+    const port = parseInt(process.env.MYSQL_PORT!, 10) || 3306;
+    const database = process.env.MYSQL_DATABASE || 'app_db';
+    return `mysql://${user}:${password}@${host}:${port}/${database}`;
+  },
+
   // MESSAGE_QUEUE_REDIS_HOST
   messageQueueRedisHost: process.env.MESSAGE_QUEUE_REDIS_HOST || 'localhost',
 
@@ -47,8 +57,25 @@ export const config = () => ({
   // OLLAMA_VISION_MODEL
   ollamaVisionModel: process.env.OLLAMA_VISION_MODEL || 'llava',
 
-  // QDRANT_URL
-  qdrantUrl: process.env.QDRANT_URL || 'http://localhost:6333',
+  // OLLAMA_URL (constructed from host and port)
+  ollamaUrl: () => {
+    const host = process.env.OLLAMA_HOST || 'localhost';
+    const port = parseInt(process.env.OLLAMA_PORT!, 10) || 11434;
+    return `http://${host}:${port}`;
+  },
+
+  // QDRANT_HOST
+  qdrantHost: process.env.QDRANT_HOST || 'localhost',
+
+  // QDRANT_PORT
+  qdrantPort: parseInt(process.env.QDRANT_PORT!, 10) || 6333,
+
+  // QDRANT_URL (constructed from host and port)
+  qdrantUrl: () => {
+    const host = process.env.QDRANT_HOST || 'localhost';
+    const port = parseInt(process.env.QDRANT_PORT!, 10) || 6333;
+    return `http://${host}:${port}`;
+  },
 
   // QDRANT_API_KEY
   qdrantApiKey: process.env.QDRANT_API_KEY || '',
