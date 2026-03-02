@@ -6,7 +6,6 @@ import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 
 import dayjs from '../../utils/date';
-import { CoreThrottlerModule } from '../../core/throttler/throttler.module';
 import { AuthModule } from '../auth/auth.module';
 
 import { DocumentsController } from './documents.controller';
@@ -15,7 +14,6 @@ import { FileValidationGuard } from './file-validation.guard';
 
 @Module({
   imports: [
-    CoreThrottlerModule,
     AuthModule,
     MulterModule.register({
       storage: diskStorage({

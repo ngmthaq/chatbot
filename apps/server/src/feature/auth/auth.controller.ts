@@ -1,10 +1,19 @@
-import { Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { ThrottlerGuard } from '@nestjs/throttler';
 
 import { PrismaService } from '../../core/database/prisma.service';
 
 import { ActivateUserDto } from './activate-user.dto';
 import { AuthRequest } from './auth-type';
+import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { ForgotPasswordDto } from './forgot-password.dto';
 import { LoginDto } from './login.dto';
@@ -14,7 +23,7 @@ import { RegisterDto } from './register.dto';
 import { ResetPasswordDto } from './reset-password.dto';
 
 @Controller('auth')
-@UseGuards(ThrottlerGuard)
+@UseGuards(ThrottlerGuard, AuthGuard)
 export class AuthController {
   public constructor(
     private readonly authService: AuthService,

@@ -190,7 +190,7 @@ async verifyToken(token: string) {
 
 **Location**: `apps/server/src/core/throttler/throttler.module.ts`
 
-**Description**: Provides rate limiting functionality to protect the application from abuse and brute-force attacks. Configures multiple throttling contexts (short, medium, long) with different time windows and request limits. Must be explicitly imported in modules that need rate limiting protection.
+**Description**: Provides rate limiting functionality to protect the application from abuse and brute-force attacks. Configures multiple throttling contexts (short, medium, long) with different time windows and request limits. Marked as global, so `ThrottlerGuard` is automatically available throughout the application.
 
 **Exports**:
 
@@ -305,4 +305,4 @@ constructor(
 | JwtModule           | JwtService         | JWT token management          | `feature/auth`    |
 | CoreThrottlerModule | ThrottlerGuard     | Rate limiting & throttling    | `core/throttler`  |
 
-**Note**: CoreConfigModule, CoreDatabaseModule, CoreEncryptModule, CoreValidatorModule, and JwtModule are marked with `@Global()` or `global: true` and are automatically available throughout the application. CoreThrottlerModule must be explicitly imported in modules that need rate limiting.
+All these modules are marked with `@Global()` or `global: true` and are automatically available throughout the application without explicit imports.

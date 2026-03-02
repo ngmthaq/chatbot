@@ -1,10 +1,11 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 /**
  * Core Throttler Module
  * @see: https://docs.nestjs.com/security/rate-limiting
  */
+@Global()
 @Module({
   imports: [
     ThrottlerModule.forRoot([
