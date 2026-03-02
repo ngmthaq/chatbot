@@ -1,3 +1,22 @@
+/**
+ * Audio Gateway - WebSocket handler for real-time audio streaming
+ * 
+ * NOTE: This is an OPTIONAL feature. Audio processing is primarily handled CLIENT-SIDE
+ * using Chrome's Web Speech API (speechRecognition and speechSynthesis).
+ * 
+ * This WebSocket gateway provides fallback server-side audio processing for:
+ * - Browsers without Web Speech API support
+ * - Applications requiring server-side audio processing
+ * - Advanced features like multi-language support, custom voices, etc.
+ * 
+ * Namespace: /audio
+ * Events:
+ * - audio:chunk - Client sends audio data for transcription
+ * - audio:transcription - Server returns transcribed text
+ * - audio:textToSpeech - Client requests audio from text
+ * - audio:audioResponse - Server returns synthesized audio
+ * - audio:error - Error notifications
+ */
 import { Logger, UseGuards } from '@nestjs/common';
 import {
   ConnectedSocket,
