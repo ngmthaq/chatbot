@@ -3,7 +3,7 @@ CREATE TABLE `Conversation` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `userId` INTEGER NOT NULL,
     `title` VARCHAR(191) NULL,
-    `model` VARCHAR(191) NOT NULL DEFAULT 'llama3',
+    `model` VARCHAR(191) NOT NULL DEFAULT 'gemma3',
     `temperature` DOUBLE NOT NULL DEFAULT 0.7,
     `maxTokens` INTEGER NOT NULL DEFAULT 2048,
     `contextWindow` INTEGER NOT NULL DEFAULT 20,

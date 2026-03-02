@@ -1,37 +1,33 @@
-import { Send, Stop } from '@mui/icons-material';
+import { Send } from '@mui/icons-material';
 import { Box, TextField, IconButton, Tooltip, Paper } from '@mui/material';
 import { useAtomValue } from 'jotai';
-import { useState, KeyboardEvent } from 'react';
+import { useState, type KeyboardEvent, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { currentStreamAtom } from '../../stores/streaming-store';
 import { transcriptAtom, isListeningAtom } from '../../stores/voice-store';
-import PressToTalkButton from '../press-to-talk-button';
+import ToggleVoiceButton from '../toggle-voice-button';
 import WaveformAnimation from '../waveform-animation';
 
 interface ChatInputProps {
   onSend: (message: string) => void;
-  onStop: () => void;
   disabled?: boolean;
 }
 
 export default function ChatInput({
   onSend,
-  onStop,
   disabled = false,
 }: ChatInputProps) {
   const { t } = useTranslation('chat');
   const [input, setInput] = useState('');
   const transcript = useAtomValue(transcriptAtom);
   const isListening = useAtomValue(isListeningAtom);
-  const currentStream = useAtomValue(currentStreamAtom);
+  const wasListeningRef = useRef(false);
 
-  const isStreaming = currentStream.status === 'streaming';
   const displayValue = isListening ? transcript : input;
 
   const handleSend = () => {
     const message = displayValue.trim();
-    if (message && !disabled && !isStreaming) {
+    if (message && !disabled) {
       onSend(message);
       setInput('');
     }
@@ -50,6 +46,15 @@ export default function ChatInput({
     }
   };
 
+  // Auto-send transcript when recording stops
+  useEffect(() => {
+    if (wasListeningRef.current && !isListening && transcript.trim()) {
+      onSend(transcript);
+      setInput('');
+    }
+    wasListeningRef.current = isListening;
+  }, [isListening, transcript, onSend]);
+
   return (
     <Paper
       elevation={3}
@@ -60,7 +65,7 @@ export default function ChatInput({
       }}
     >
       <Box sx={{ display: 'flex', gap: 1, alignItems: 'flex-end' }}>
-        <PressToTalkButton disabled={disabled || isStreaming} />
+        <ToggleVoiceButton disabled={disabled} />
 
         <Box sx={{ flexGrow: 1 }}>
           <TextField
@@ -73,7 +78,7 @@ export default function ChatInput({
             placeholder={
               isListening ? t('input.listening') : t('input.placeholder')
             }
-            disabled={disabled || isStreaming || isListening}
+            disabled={disabled || isListening}
             size="small"
             slotProps={{
               input: {
@@ -90,26 +95,18 @@ export default function ChatInput({
           )}
         </Box>
 
-        {isStreaming ? (
-          <Tooltip title={t('input.stop')}>
-            <IconButton color="error" onClick={onStop} size="large">
-              <Stop />
+        <Tooltip title={t('input.send')}>
+          <span>
+            <IconButton
+              color="primary"
+              onClick={handleSend}
+              disabled={!displayValue.trim() || disabled || isListening}
+              size="large"
+            >
+              <Send />
             </IconButton>
-          </Tooltip>
-        ) : (
-          <Tooltip title={t('input.send')}>
-            <span>
-              <IconButton
-                color="primary"
-                onClick={handleSend}
-                disabled={!displayValue.trim() || disabled}
-                size="large"
-              >
-                <Send />
-              </IconButton>
-            </span>
-          </Tooltip>
-        )}
+          </span>
+        </Tooltip>
       </Box>
     </Paper>
   );

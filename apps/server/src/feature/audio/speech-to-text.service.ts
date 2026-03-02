@@ -49,8 +49,6 @@ export class SpeechToTextService {
     audioBuffer: Buffer,
     format: string = 'wav',
   ): Promise<string> {
-    this.logger.debug(`Transcribing audio (format: ${format})`);
-
     try {
       // Save audio buffer to temporary file
       const tempDir = path.join(process.cwd(), 'temp');

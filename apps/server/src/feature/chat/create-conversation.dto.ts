@@ -12,13 +12,13 @@ export class CreateConversationDto {
   title!: string;
 
   @ApiPropertyOptional({
-    example: 'llama3',
+    example: 'gemma3',
     description: 'LLM model to use',
-    default: 'llama3',
+    default: 'gemma3',
   })
   @IsOptional()
   @IsString({ message: ExceptionDict.isString() })
-  model?: string = 'llama3';
+  model?: string = 'gemma3';
 
   @ApiPropertyOptional({
     example: 0.7,

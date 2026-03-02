@@ -86,7 +86,7 @@ async function implementSwagger(app: NestExpressApplication) {
     .addBearerAuth()
     .setTitle('RAG LLM Chatbot API')
     .setDescription(
-      'REST API for RAG (Retrieval-Augmented Generation) Chatbot with document ingestion, vector search, and streaming responses',
+      'REST API for RAG (Retrieval-Augmented Generation) Chatbot with document ingestion and vector search',
     )
     .setVersion('1.0.0')
     .addTag('Authentication', 'User authentication and authorization')

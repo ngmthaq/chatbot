@@ -26,10 +26,6 @@ export class VectorRetrievalService {
     topK: number = 5,
     userId: number,
   ): Promise<RetrievedSource[]> {
-    this.logger.debug(
-      `Retrieving top ${topK} similar documents for user ${userId}`,
-    );
-
     try {
       const results = await this.qdrantService.searchSimilar(
         queryEmbedding,

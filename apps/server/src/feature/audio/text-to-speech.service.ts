@@ -48,8 +48,6 @@ export class TextToSpeechService {
     voiceId?: string,
     _options: SynthesizeOptions = {},
   ): Promise<Buffer> {
-    this.logger.debug(`Synthesizing speech for text length: ${text.length}`);
-
     try {
       // Validate text length
       if (text.length > 4096) {

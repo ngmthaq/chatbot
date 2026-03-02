@@ -49,7 +49,7 @@ export const config = () => ({
   ollamaPort: parseInt(process.env.OLLAMA_PORT!, 10) || 11434,
 
   // OLLAMA_CHAT_MODEL
-  ollamaChatModel: process.env.OLLAMA_CHAT_MODEL || 'llama3',
+  ollamaChatModel: process.env.OLLAMA_CHAT_MODEL || 'gemma3',
 
   // OLLAMA_EMBED_MODEL
   ollamaEmbedModel: process.env.OLLAMA_EMBED_MODEL || 'nomic-embed-text',

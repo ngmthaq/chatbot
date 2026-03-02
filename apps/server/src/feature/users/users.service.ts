@@ -83,10 +83,6 @@ export class UsersService {
       await this.emailService.sendWelcomeEmail(user.email, {
         name: user.name || 'User',
       });
-
-      this.logger.log(
-        `Welcome email sent to ${user.email} with temporary password`,
-      );
     } catch (error) {
       this.logger.error(
         `Failed to send welcome email: ${error instanceof Error ? error.message : 'Unknown error'}`,
@@ -94,9 +90,6 @@ export class UsersService {
       // Don't fail user creation if email fails
     }
 
-    this.logger.log(
-      `User created with email: ${user.email} and password: ${password}`,
-    );
     return ResponseBuilder.data(new UserEntity(user));
   }
 

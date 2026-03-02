@@ -10,9 +10,9 @@ import CitationPanel from '../../components/citation-panel';
 import ConversationList from '../../components/conversation-list';
 import LoadingSpinner from '../../components/loading-spinner';
 import MessageList from '../../components/message-list';
-import { useSSEChat } from '../../hooks/useSSEChat';
 import { useCreateConversation } from '../../mutations/useCreateConversation';
 import { useDeleteConversation } from '../../mutations/useDeleteConversation';
+import { useSendMessage } from '../../mutations/useSendMessage';
 import { useGetConversation } from '../../queries/useGetConversation';
 import { useGetConversations } from '../../queries/useGetConversations';
 import {
@@ -42,8 +42,6 @@ function Chat() {
   );
   const setIsCitationPanelOpen = useSetAtom(isCitationPanelOpenAtom);
 
-  const { sendMessage, stopGeneration } = useSSEChat();
-
   const { data: conversationsData, isLoading: conversationsLoading } =
     useGetConversations({ page: 1, limit: 50 });
 
@@ -52,10 +50,13 @@ function Chat() {
 
   const { mutate: createConversation } = useCreateConversation();
   const { mutate: deleteConversation } = useDeleteConversation();
+  const { mutate: sendMessage, isPending: isSending } = useSendMessage(
+    selectedConversationId || 0,
+  );
 
   const handleSend = (message: string) => {
     if (selectedConversationId) {
-      sendMessage(selectedConversationId, message);
+      sendMessage({ content: message });
     }
   };
 
@@ -137,6 +138,8 @@ function Chat() {
           display: 'flex',
           flexDirection: 'column',
           height: '100%',
+          justifyContent: 'space-between',
+          p: 2,
         }}
       >
         {conversationLoading ? (
@@ -147,7 +150,7 @@ function Chat() {
               messages={currentConversation?.messages || []}
               onCitationClick={handleCitationClick}
             />
-            <ChatInput onSend={handleSend} onStop={stopGeneration} />
+            <ChatInput onSend={handleSend} disabled={isSending} />
           </>
         ) : (
           <Container maxWidth="md" sx={{ mt: 8 }}>

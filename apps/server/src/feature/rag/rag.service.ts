@@ -45,20 +45,13 @@ export class RagService {
     private readonly vectorRetrievalService: VectorRetrievalService,
     private readonly promptService: PromptConstructionService,
     private readonly prismaService: PrismaService,
-    @InjectQueue('generate-embeddings')
-    private readonly embeddingsQueue: Queue,
+    @InjectQueue('generate-embeddings') private readonly embeddingsQueue: Queue,
   ) {}
 
   /**
-   * Execute RAG query and stream response
+   * Execute RAG query and return response
    */
-  async executeRagQuery(
-    options: RagQueryOptions,
-  ): Promise<AsyncIterable<string>> {
-    this.logger.debug(
-      `Executing RAG query for conversation ${options.conversationId}`,
-    );
-
+  async executeRagQuery(options: RagQueryOptions): Promise<string> {
     try {
       // 1. Generate embedding for user message
       const queryEmbedding = await this.ollamaService.generateEmbedding(
@@ -96,12 +89,10 @@ export class RagService {
         history: conversation.messages || [],
       });
 
-      // 5. Stream response from Ollama
+      // 5. Get response from Ollama
       return this.ollamaService.generateText({
-        model: options.model || 'llama3',
+        model: options.model || 'gemma3',
         prompt,
-        temperature: options.temperature,
-        num_predict: options.maxTokens,
       });
     } catch (error) {
       this.logger.error(
@@ -120,8 +111,6 @@ export class RagService {
     userId: number,
     text: string,
   ): Promise<void> {
-    this.logger.debug(`Processing chunks for document ${documentId}`);
-
     try {
       // Chunk the document
       await this.chunkingService.chunkDocument(documentId, text);
@@ -131,10 +120,6 @@ export class RagService {
         where: { documentId },
         orderBy: { chunkIndex: 'asc' },
       });
-
-      this.logger.debug(
-        `Queueing ${chunks.length} chunks for embedding generation`,
-      );
 
       // Queue embeddings generation for each chunk
       for (const chunk of chunks) {
@@ -164,10 +149,6 @@ export class RagService {
           chunkCount: chunks.length,
         },
       });
-
-      this.logger.log(
-        `Successfully chunked document ${documentId} and queued ${chunks.length} embedding jobs`,
-      );
     } catch (error) {
       this.logger.error(
         `Failed to process document ${documentId}: ${error instanceof Error ? error.message : 'Unknown error'}`,

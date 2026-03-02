@@ -6,7 +6,6 @@ import {
   Body,
   UseGuards,
   Req,
-  Res,
   Patch,
   Delete,
   Query,
@@ -19,7 +18,7 @@ import {
   ApiParam,
 } from '@nestjs/swagger';
 import { ThrottlerGuard } from '@nestjs/throttler';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 
 import { ExceptionBuilder } from '../../core/exception/exception-builder';
 import { ResponseBuilder } from '../../core/response/response-builder';
@@ -132,29 +131,28 @@ export class ChatController {
   }
 
   /**
-   * Send message and stream response via SSE
+   * Send message and get response
    */
   @Post('conversations/:conversationId/messages')
   @UseGuards(ConversationOwnershipGuard, PromptInjectionGuard)
   @Rbac(Module.CHAT, Action.CREATE)
   @ApiOperation({
     summary: 'Send message',
-    description: 'Send message and stream AI response via Server-Sent Events',
+    description: 'Send message and get AI response',
   })
   @ApiParam({
     name: 'conversationId',
     description: 'Conversation ID',
     type: 'number',
   })
-  @ApiResponse({ status: 200, description: 'Message sent, streaming response' })
+  @ApiResponse({ status: 200, description: 'Message sent, response received' })
   @ApiResponse({
     status: 400,
     description: 'Invalid message or prompt injection detected',
   })
-  async streamMessage(
+  async sendMessage(
     @Param('conversationId') conversationId: string,
     @Body() dto: CreateMessageDto,
-    @Res() res: Response,
     @Req() req: AuthRequest,
   ) {
     const userId = req.authentication.sub;
@@ -167,74 +165,43 @@ export class ChatController {
       // Get conversation config
       const conversation = await this.chatService.getConversation(convId);
 
-      // Setup SSE response
-      res.setHeader('Content-Type', 'text/event-stream');
-      res.setHeader('Cache-Control', 'no-cache');
-      res.setHeader('Connection', 'keep-alive');
-      res.setHeader('X-Accel-Buffering', 'no');
+      // Get response from RAG
+      const response = await this.ragService.executeRagQuery({
+        conversationId: convId,
+        userId,
+        userMessage: dto.content,
+        model: conversation.model,
+        temperature: conversation.temperature,
+        maxTokens: conversation.maxTokens,
+        contextWindow: conversation.contextWindow,
+      });
 
-      // Stream RAG response
-      let fullResponse = '';
-
-      try {
-        const ragStream = await this.ragService.executeRagQuery({
-          conversationId: convId,
-          userId,
-          userMessage: dto.content,
-          model: conversation.model,
-          temperature: conversation.temperature,
-          maxTokens: conversation.maxTokens,
-          contextWindow: conversation.contextWindow,
-        });
-
-        for await (const chunk of ragStream) {
-          fullResponse += chunk;
-          res.write(
-            `data: ${JSON.stringify({ type: 'chunk', data: chunk })}\n\n`,
-          );
-        }
-
-        // Save assistant message
-        const assistantMessage = await this.chatService.createMessage(
-          convId,
-          userId,
-          'assistant',
-          fullResponse,
-          undefined,
-          0, // TODO: implement token counting
-        );
-
-        // Send completion event
-        res.write(
-          `data: ${JSON.stringify({
-            type: 'done',
-            data: {
-              messageId: assistantMessage.id,
-              tokenUsage: {
-                prompt: 0,
-                completion: 0,
-                total: 0,
-              },
-            },
-          })}\n\n`,
-        );
-
-        res.end();
-      } catch (error) {
-        res.write(
-          `data: ${JSON.stringify({
-            type: 'error',
-            error: error instanceof Error ? error.message : 'Unknown error',
-          })}\n\n`,
-        );
-        res.end();
-      }
-    } catch (error) {
-      return res.status(400).json(
-        ExceptionBuilder.badRequest({
-          errors: [error instanceof Error ? error.message : 'Unknown error'],
-        }),
+      // Save assistant message
+      const assistantMessage = await this.chatService.createMessage(
+        convId,
+        userId,
+        'assistant',
+        response,
+        undefined,
+        0, // TODO: implement token counting
       );
+
+      // Return response
+      return ResponseBuilder.data({
+        messageId: assistantMessage.id,
+        content: response,
+        tokenUsage: {
+          prompt: 0,
+          completion: 0,
+          total: 0,
+        },
+      });
+    } catch (error) {
+      throw ExceptionBuilder.badRequest({
+        errors: [
+          error instanceof Error ? error.message : 'Failed to send message',
+        ],
+      });
     }
   }
 

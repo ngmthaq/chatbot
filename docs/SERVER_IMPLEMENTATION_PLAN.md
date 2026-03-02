@@ -90,7 +90,7 @@ model Conversation {
   id            Int       @id @default(autoincrement())
   userId        Int
   title         String?
-  model         String    @default("llama3")
+  model         String    @default("gemma3")
   temperature   Float     @default(0.7)
   maxTokens     Int       @default(2048)
   contextWindow Int       @default(20)
@@ -286,7 +286,7 @@ model DocumentChunk {
 ```bash
 # Ollama
 OLLAMA_BASE_URL=http://localhost:11434
-OLLAMA_CHAT_MODEL=llama3
+OLLAMA_CHAT_MODEL=gemma3
 OLLAMA_EMBED_MODEL=nomic-embed-text
 OLLAMA_VISION_MODEL=llava
 

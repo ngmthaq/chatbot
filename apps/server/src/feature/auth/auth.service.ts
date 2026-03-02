@@ -126,9 +126,6 @@ export class AuthService {
         expiredAt: expiredAt!(),
       },
     });
-    this.logger.log(
-      `Activation token created for user ${user.email}: ${activateToken}`,
-    );
 
     // Send activation email
     try {
@@ -141,8 +138,6 @@ export class AuthService {
         activationToken: activateToken,
         activationUrl,
       });
-
-      this.logger.log(`Activation email sent to ${user.email}`);
     } catch (error) {
       this.logger.error(
         `Failed to send activation email: ${error instanceof Error ? error.message : 'Unknown error'}`,
@@ -171,7 +166,6 @@ export class AuthService {
       await this.emailService.sendWelcomeEmail(user.email, {
         name: user.name || 'User',
       });
-      this.logger.log(`Welcome email sent to ${user.email}`);
     } catch (error) {
       this.logger.error(
         `Failed to send welcome email: ${error instanceof Error ? error.message : 'Unknown error'}`,
@@ -196,9 +190,6 @@ export class AuthService {
         expiredAt: expiredAt!(),
       },
     });
-    this.logger.log(
-      `Reset password token created for user ${user!.email}: ${resetToken}`,
-    );
 
     // Send password reset email
     try {
@@ -211,8 +202,6 @@ export class AuthService {
         resetToken,
         resetUrl,
       });
-
-      this.logger.log(`Password reset email sent to ${user!.email}`);
     } catch (error) {
       this.logger.error(
         `Failed to send password reset email: ${error instanceof Error ? error.message : 'Unknown error'}`,

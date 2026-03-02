@@ -65,29 +65,3 @@ export interface UpdateConversationDto extends Partial<ConversationSettings> {
 export interface SendMessageDto {
   content: string;
 }
-
-export enum SSEEventType {
-  CHUNK = 'chunk',
-  DONE = 'done',
-  ERROR = 'error',
-}
-
-export interface SSEChunkEvent {
-  type: SSEEventType;
-  data?: string;
-  error?: string;
-  metadata?: {
-    sourceDocuments?: SourceDocument[];
-    tokenUsage?: number;
-    finishReason?: string;
-  };
-}
-
-export interface StreamState {
-  conversationId: number | null;
-  content: string;
-  status: 'idle' | 'streaming' | 'complete' | 'error';
-  tokenUsage?: number;
-  sourceDocuments?: SourceDocument[];
-  error?: string;
-}

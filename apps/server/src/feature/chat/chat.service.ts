@@ -18,8 +18,6 @@ export class ChatService {
    * Create new conversation
    */
   async createConversation(userId: number, dto: CreateConversationDto) {
-    this.logger.debug(`Creating conversation for user ${userId}`);
-
     return this.prismaService.conversation.create({
       data: {
         userId,

@@ -25,8 +25,6 @@ export class DocumentChunkingService {
     text: string,
     options: ChunkingOptions = {},
   ): Promise<void> {
-    this.logger.debug(`Chunking document ${documentId}`);
-
     try {
       const splitter = new RecursiveCharacterTextSplitter({
         chunkSize: options.chunkSize || 1000,
@@ -35,7 +33,6 @@ export class DocumentChunkingService {
       });
 
       const chunks = await splitter.splitText(text);
-      this.logger.debug(`Generated ${chunks.length} chunks`);
 
       if (chunks.length === 0) {
         throw new Error('No chunks generated from document');
@@ -56,10 +53,6 @@ export class DocumentChunkingService {
           data: batch,
         });
       }
-
-      this.logger.log(
-        `Successfully stored ${documentChunks.length} chunks for document ${documentId}`,
-      );
     } catch (error) {
       this.logger.error(
         `Failed to chunk document: ${error instanceof Error ? error.message : 'Unknown error'}`,

@@ -32,8 +32,6 @@ export class AudioService {
     audioData: Buffer,
     format: string = 'wav',
   ): Promise<string> {
-    this.logger.debug('Processing audio chunk');
-
     try {
       const transcription = await this.speechToTextService.transcribe(
         audioData,
@@ -52,8 +50,6 @@ export class AudioService {
    * Generate audio response from text
    */
   async generateAudioResponse(text: string, voiceId?: string): Promise<Buffer> {
-    this.logger.debug('Generating audio response');
-
     try {
       const audioBuffer = await this.textToSpeechService.synthesize(
         text,

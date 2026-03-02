@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
 
@@ -14,7 +14,7 @@ import {
 } from './qdrant-payload.type';
 
 @Injectable()
-export class QdrantService {
+export class QdrantService implements OnModuleInit {
   private readonly logger = new Logger(QdrantService.name);
   private readonly baseUrl?: string;
   private apiKey?: string;
@@ -30,6 +30,17 @@ export class QdrantService {
       this.configService.get<ConfigType['qdrantApiKey']>('qdrantApiKey');
   }
 
+  async onModuleInit() {
+    // Create default "documents" collection with 768 dimensions (for embeddinggemma)
+    try {
+      await this.createCollection('documents', 768);
+    } catch (error) {
+      this.logger.warn(
+        `Failed to initialize Qdrant collection: ${error instanceof Error ? error.message : JSON.stringify(error)}`,
+      );
+    }
+  }
+
   /**
    * Create or update a collection in Qdrant
    */
@@ -37,8 +48,6 @@ export class QdrantService {
     collectionName: string,
     vectorSize: number = 384,
   ): Promise<void> {
-    this.logger.debug(`Creating collection: ${collectionName}`);
-
     const url = `${this.baseUrl}/collections/${collectionName}`;
     const headers = this.getHeaders();
 
@@ -49,31 +58,18 @@ export class QdrantService {
       },
     };
 
-    try {
-      await firstValueFrom(this.httpService.put(url, payload, { headers }));
-      this.logger.log(`Collection ${collectionName} created successfully`);
-    } catch (error) {
-      this.logger.error(
-        `Failed to create collection: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      );
-      throw ExceptionBuilder.serviceUnavailable({
-        errors: [ExceptionDict.vectorCollectionCreationFailed()],
-      });
-    }
+    await firstValueFrom(this.httpService.put(url, payload, { headers }));
   }
 
   /**
    * Delete a collection
    */
   async deleteCollection(collectionName: string): Promise<void> {
-    this.logger.debug(`Deleting collection: ${collectionName}`);
-
     const url = `${this.baseUrl}/collections/${collectionName}`;
     const headers = this.getHeaders();
 
     try {
       await firstValueFrom(this.httpService.delete(url, { headers }));
-      this.logger.log(`Collection ${collectionName} deleted successfully`);
     } catch (error) {
       this.logger.error(
         `Failed to delete collection: ${error instanceof Error ? error.message : 'Unknown error'}`,
@@ -91,10 +87,6 @@ export class QdrantService {
     collectionName: string,
     points: QdrantPoint[],
   ): Promise<void> {
-    this.logger.debug(
-      `Upserting ${points.length} points to collection ${collectionName}`,
-    );
-
     const url = `${this.baseUrl}/collections/${collectionName}/points`;
     const headers = this.getHeaders();
 
@@ -108,7 +100,6 @@ export class QdrantService {
 
     try {
       await firstValueFrom(this.httpService.put(url, payload, { headers }));
-      this.logger.log(`Upserted ${points.length} points successfully`);
     } catch (error) {
       this.logger.error(
         `Failed to upsert points: ${error instanceof Error ? error.message : 'Unknown error'}`,
@@ -127,8 +118,6 @@ export class QdrantService {
     topK: number = 5,
     filter?: QdrantFilter,
   ): Promise<QdrantSearchResult[]> {
-    this.logger.debug(`Searching for top ${topK} similar vectors`);
-
     const url = `${this.baseUrl}/collections/documents/points/search`;
     const headers = this.getHeaders();
 
@@ -142,8 +131,8 @@ export class QdrantService {
     if (filter) {
       payload.filter = {
         must: Object.entries(filter).map(([key, value]) => ({
-          field: key,
-          match: { value },
+          key,
+          match: { value: parseInt(value as string, 10) },
         })),
       };
     }
@@ -180,8 +169,6 @@ export class QdrantService {
     collectionName: string,
     filter: QdrantFilter,
   ): Promise<void> {
-    this.logger.debug(`Deleting points from ${collectionName} by filter`);
-
     const url = `${this.baseUrl}/collections/${collectionName}/points/delete`;
     const headers = this.getHeaders();
 
@@ -196,7 +183,6 @@ export class QdrantService {
 
     try {
       await firstValueFrom(this.httpService.post(url, payload, { headers }));
-      this.logger.log('Points deleted successfully');
     } catch (error) {
       this.logger.error(
         `Failed to delete points: ${error instanceof Error ? error.message : 'Unknown error'}`,

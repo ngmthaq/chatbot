@@ -1,13 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNumber, MaxLength } from 'class-validator';
+import { IsString, MaxLength } from 'class-validator';
 
 import { ExceptionDict } from '../../core/exception/exception-dict';
 
 export class CreateMessageDto {
-  @ApiProperty({ example: 1, description: 'Conversation ID' })
-  @IsNumber({}, { message: ExceptionDict.isNumber() })
-  conversationId!: number;
-
   @ApiProperty({
     example: 'What is machine learning?',
     description: 'Message content',

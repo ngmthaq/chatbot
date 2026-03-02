@@ -79,9 +79,11 @@ export function useSpeechToText() {
       await navigator.mediaDevices.getUserMedia({ audio: true });
       setMicPermission('granted');
       setError('');
+      resetRecognitionTranscript();
+      setTranscript('');
 
       SpeechRecognition.startListening({
-        continuous: false,
+        continuous: true,
         language: sttLanguage,
       });
     } catch (err) {
@@ -90,7 +92,13 @@ export function useSpeechToText() {
       // eslint-disable-next-line no-console
       console.error('Microphone permission error:', err);
     }
-  }, [browserSupportsSpeechRecognition, sttLanguage, setMicPermission]);
+  }, [
+    browserSupportsSpeechRecognition,
+    sttLanguage,
+    setMicPermission,
+    resetRecognitionTranscript,
+    setTranscript,
+  ]);
 
   const stopListening = useCallback(() => {
     SpeechRecognition.stopListening();

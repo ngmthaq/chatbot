@@ -3,7 +3,7 @@ export interface GenerateResponse {
   created_at: string;
   response: string;
   done: boolean;
-  context: number[];
+  context?: number[];
   total_duration?: number;
   load_duration?: number;
   prompt_eval_count?: number;
@@ -13,15 +13,11 @@ export interface GenerateResponse {
 }
 
 export interface EmbeddingResponse {
-  embedding: number[];
+  embeddings: number[][];
 }
 
 export type GenerateRequest = {
   model: string;
   prompt: string;
   stream?: boolean;
-  temperature?: number;
-  top_k?: number;
-  top_p?: number;
-  num_predict?: number;
 };

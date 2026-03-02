@@ -31,7 +31,7 @@ export const APP_CONFIG = {
   },
 
   // Chat Configuration
-  DEFAULT_MODEL: 'llama3',
+  DEFAULT_MODEL: 'gemma3',
   DEFAULT_TEMPERATURE: 0.7,
   DEFAULT_MAX_TOKENS: 2048,
   DEFAULT_CONTEXT_WINDOW: 20,
@@ -63,8 +63,8 @@ export const APP_CONFIG = {
 } as const;
 
 export const AVAILABLE_MODELS = [
-  { value: 'llama3', label: 'Llama 3' },
-  { value: 'llama3.1', label: 'Llama 3.1' },
+  { value: 'gemma3', label: 'Llama 3' },
+  { value: 'gemma3.1', label: 'Llama 3.1' },
   { value: 'mistral', label: 'Mistral' },
   { value: 'codellama', label: 'Code Llama' },
 ] as const;

@@ -14,8 +14,6 @@ export class ImagesService {
    * Process image with vision model
    */
   async processImage(dto: ProcessImageDto): Promise<string> {
-    this.logger.debug('Processing image with vision model');
-
     try {
       const response = await this.ollamaService.processImage(
         dto.image,

@@ -35,8 +35,6 @@ export class DocumentsService {
   ) {
     const { file, description } = data;
 
-    this.logger.debug(`Creating document for user ${userId}`);
-
     try {
       // Create document record
       const document = await this.prismaService.document.create({
@@ -229,8 +227,6 @@ export class DocumentsService {
       await this.prismaService.document.delete({
         where: { id: documentId },
       });
-
-      this.logger.log(`Document ${documentId} deleted successfully`);
     } catch (error) {
       this.logger.error(
         `Failed to delete document: ${error instanceof Error ? error.message : 'Unknown error'}`,

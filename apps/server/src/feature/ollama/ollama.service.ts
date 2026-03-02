@@ -31,30 +31,34 @@ export class OllamaService {
 
   /**
    * Generate text using Ollama chat model
-   * Streams response
    */
-  async generateText(req: GenerateRequest): Promise<AsyncIterable<string>> {
-    this.logger.debug(`Generating text with model: ${req.model}`);
-
+  async generateText(req: GenerateRequest): Promise<string> {
     const requestBody = {
-      model: req.model || 'llama3',
+      model: req.model || 'gemma3',
       prompt: req.prompt,
-      stream: true,
-      temperature: req.temperature ?? 0.7,
-      num_predict: req.num_predict ?? 512,
+      stream: false,
     };
 
     try {
       const response = await firstValueFrom(
-        this.httpService.post(`${this.baseUrl}/api/generate`, requestBody, {
-          responseType: 'stream',
-        }),
+        this.httpService.post<GenerateResponse>(
+          `${this.baseUrl}/api/generate`,
+          requestBody,
+        ),
       );
 
-      return this.parseStreamResponse(response.data);
+      return response.data.response || '';
     } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const axiosError = error as any;
       this.logger.error(
-        `Failed to generate text: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        `Failed to generate text at ${this.baseUrl}/api/generate: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      );
+      this.logger.error(
+        `Status: ${axiosError.response?.status}, Data: ${JSON.stringify(axiosError.response?.data)}`,
+      );
+      this.logger.error(
+        `Request URL: ${axiosError.config?.url}, Method: ${axiosError.config?.method}`,
       );
       throw ExceptionBuilder.serviceUnavailable({
         errors: [ExceptionDict.ollamaServiceUnavailable()],
@@ -67,27 +71,36 @@ export class OllamaService {
    * Used for vector storage
    */
   async generateEmbedding(text: string): Promise<number[]> {
-    this.logger.debug(`Generating embedding for text length: ${text.length}`);
-
     const request = {
-      prompt: text,
       model:
         this.configService.get<ConfigType['ollamaEmbedModel']>(
           'ollamaEmbedModel',
         ),
+      input: text,
     };
 
     for (let attempt = 0; attempt < this.retryAttempts; attempt++) {
       try {
         const response = await firstValueFrom(
           this.httpService.post<EmbeddingResponse>(
-            `${this.baseUrl}/api/embeddings`,
+            `${this.baseUrl}/api/embed`,
             request,
           ),
         );
 
-        return response.data.embedding;
-      } catch {
+        return response.data.embeddings[0] || [];
+      } catch (error) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const axiosError = error as any;
+        this.logger.error(
+          `Embedding attempt ${attempt + 1} failed at ${this.baseUrl}/api/embed: ${error instanceof Error ? error.message : JSON.stringify(error)}`,
+        );
+        this.logger.error(
+          `Status: ${axiosError.response?.status}, Data: ${JSON.stringify(axiosError.response?.data)}`,
+        );
+        this.logger.error(
+          `Request URL: ${axiosError.config?.url}, Method: ${axiosError.config?.method}`,
+        );
         if (attempt < this.retryAttempts - 1) {
           this.logger.warn(
             `Embedding generation attempt ${attempt + 1} failed, retrying...`,
@@ -114,10 +127,8 @@ export class OllamaService {
    * Process image with vision model
    */
   async processImage(imageBase64: string, prompt: string): Promise<string> {
-    this.logger.debug('Processing image with llava model');
-
     const request = {
-      model: 'llava',
+      model: 'gemma3',
       prompt: prompt,
       images: [imageBase64],
       stream: false,
@@ -131,7 +142,7 @@ export class OllamaService {
         ),
       );
 
-      return response.data.response;
+      return response.data.response || '';
     } catch (error) {
       this.logger.error(
         `Failed to process image: ${error instanceof Error ? error.message : 'Unknown error'}`,
@@ -145,7 +156,7 @@ export class OllamaService {
   /**
    * Get token count for text
    */
-  async countTokens(text: string, model: string = 'llama3'): Promise<number> {
+  async countTokens(text: string, model: string = 'gemma3'): Promise<number> {
     try {
       const request = {
         model,
@@ -153,7 +164,10 @@ export class OllamaService {
       };
 
       const response = await firstValueFrom(
-        this.httpService.post(`${this.baseUrl}/api/generate`, request),
+        this.httpService.post<GenerateResponse>(
+          `${this.baseUrl}/api/generate`,
+          request,
+        ),
       );
 
       return response.data.eval_count || 0;
@@ -162,52 +176,6 @@ export class OllamaService {
         `Failed to count tokens: ${error instanceof Error ? error.message : 'Unknown error'}`,
       );
       return Math.ceil(text.length / 4); // Estimate
-    }
-  }
-
-  /**
-   * Parse streaming response from Ollama
-   */
-  private async *parseStreamResponse(
-    stream: AsyncIterable<Buffer>,
-  ): AsyncIterable<string> {
-    let buffer = '';
-
-    for await (const chunk of stream) {
-      buffer += chunk.toString();
-      const lines = buffer.split('\n');
-
-      // Keep last incomplete line in buffer
-      buffer = lines.pop() || '';
-
-      for (const line of lines) {
-        if (!line.trim()) continue;
-
-        try {
-          const data = JSON.parse(line) as GenerateResponse;
-          if (data.response) {
-            yield data.response;
-          }
-        } catch (error) {
-          this.logger.warn(
-            `Failed to parse stream line: ${error instanceof Error ? error.message : 'Unknown error'}`,
-          );
-        }
-      }
-    }
-
-    // Yield remaining buffer
-    if (buffer.trim()) {
-      try {
-        const data = JSON.parse(buffer) as GenerateResponse;
-        if (data.response) {
-          yield data.response;
-        }
-      } catch (error) {
-        this.logger.warn(
-          `Failed to parse final buffer: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        );
-      }
     }
   }
 

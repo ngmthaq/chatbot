@@ -5,51 +5,34 @@ import { useTranslation } from 'react-i18next';
 
 import { useSpeechToText } from '../../hooks/useSpeechToText';
 import { isListeningAtom, voiceStateAtom } from '../../stores/voice-store';
-import type { VoiceState } from '../../types/voice-types';
+import { VoiceState } from '../../types/voice-types';
 
-interface PressToTalkButtonProps {
+interface ToggleVoiceButtonProps {
   disabled?: boolean;
   size?: 'small' | 'medium' | 'large';
 }
 
-export default function PressToTalkButton({
+export default function ToggleVoiceButton({
   disabled = false,
   size = 'medium',
-}: PressToTalkButtonProps) {
+}: ToggleVoiceButtonProps) {
   const { t } = useTranslation('chat');
-  const { startListening, stopListening, browserSupported } = useSpeechToText();
+  const { startListening, stopListening, browserSupportsSpeechRecognition } =
+    useSpeechToText();
   const isListening = useAtomValue(isListeningAtom);
   const voiceState = useAtomValue(voiceStateAtom);
 
-  const handleMouseDown = () => {
-    if (!disabled && browserSupported) {
-      startListening();
+  const handleToggle = () => {
+    if (!disabled && browserSupportsSpeechRecognition) {
+      if (isListening) {
+        stopListening();
+      } else {
+        startListening();
+      }
     }
   };
 
-  const handleMouseUp = () => {
-    if (!disabled && browserSupported) {
-      stopListening();
-    }
-  };
-
-  const handleMouseLeave = () => {
-    if (isListening) {
-      stopListening();
-    }
-  };
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    e.preventDefault();
-    handleMouseDown();
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    e.preventDefault();
-    handleMouseUp();
-  };
-
-  if (!browserSupported) {
+  if (!browserSupportsSpeechRecognition) {
     return (
       <Tooltip title={t('voice.notSupported')}>
         <span>
@@ -64,7 +47,7 @@ export default function PressToTalkButton({
   const isDisabled = disabled || voiceState === VoiceState.PROCESSING;
 
   return (
-    <Tooltip title={t('voice.pressToTalk')}>
+    <Tooltip title={isListening ? t('voice.stop') : t('voice.start')}>
       <Box
         sx={{
           position: 'relative',
@@ -72,15 +55,11 @@ export default function PressToTalkButton({
         }}
       >
         <IconButton
-          onMouseDown={handleMouseDown}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseLeave}
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
+          onClick={handleToggle}
           disabled={isDisabled}
           size={size}
           sx={{
-            color: isListening ? 'error.main' : 'inherit',
+            color: isListening ? 'common.light' : 'inherit',
             bgcolor: isListening ? 'error.light' : 'transparent',
             '&:hover': {
               bgcolor: isListening ? 'error.light' : 'action.hover',
