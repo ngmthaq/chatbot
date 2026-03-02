@@ -1,6 +1,6 @@
 import { createTheme, type ThemeOptions } from '@mui/material/styles';
 
-import type { ThemeMode } from '../stores/theme-store';
+import type { ThemeMode } from '../../stores/theme-store';
 
 export const createAppTheme = (mode: ThemeMode) => {
   const themeOptions: ThemeOptions = {
@@ -118,6 +118,9 @@ export const createAppTheme = (mode: ThemeMode) => {
         },
       },
       MuiTextField: {
+        defaultProps: {
+          margin: 'dense',
+        },
         styleOverrides: {
           root: {
             '& .MuiOutlinedInput-root': {

@@ -62,7 +62,6 @@ export default function RegisterForm() {
           onBlur={formik.handleBlur}
           error={formik.touched.name && Boolean(formik.errors.name)}
           helperText={formik.touched.name && formik.errors.name}
-          margin="normal"
           autoComplete="name"
           autoFocus
         />
@@ -77,7 +76,6 @@ export default function RegisterForm() {
           onBlur={formik.handleBlur}
           error={formik.touched.email && Boolean(formik.errors.email)}
           helperText={formik.touched.email && formik.errors.email}
-          margin="normal"
           autoComplete="email"
         />
 
@@ -92,7 +90,6 @@ export default function RegisterForm() {
           onBlur={formik.handleBlur}
           error={formik.touched.password && Boolean(formik.errors.password)}
           helperText={formik.touched.password && formik.errors.password}
-          margin="normal"
           autoComplete="new-password"
           slotProps={{
             input: {
@@ -127,7 +124,6 @@ export default function RegisterForm() {
           helperText={
             formik.touched.confirmPassword && formik.errors.confirmPassword
           }
-          margin="normal"
           autoComplete="new-password"
           slotProps={{
             input: {

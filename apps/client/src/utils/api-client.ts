@@ -64,8 +64,15 @@ apiClient.interceptors.response.use(
       _retry?: boolean;
     };
 
-    // Handle 401 errors (unauthorized)
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // Skip refresh logic for login attempts
+    const isLoginRequest = originalRequest.url?.endsWith(AUTH_ROUTES.LOGIN);
+
+    // Handle 401 errors (unauthorized) - but skip for login attempts
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      !isLoginRequest
+    ) {
       if (isRefreshing) {
         // Queue the request
         return new Promise((resolve, reject) => {

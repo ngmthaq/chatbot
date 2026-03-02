@@ -15,6 +15,7 @@ import {
   Divider,
 } from '@mui/material';
 import { useAtom } from 'jotai';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useTextToSpeech } from '../../hooks/useTextToSpeech';
@@ -38,6 +39,13 @@ export default function VoiceSettings({ open, onClose }: VoiceSettingsProps) {
     selectedVoiceNameAtom,
   );
   const [sttLanguage, setSTTLanguage] = useAtom(sttLanguageAtom);
+
+  // Set default voice to first available if not selected
+  useEffect(() => {
+    if (isTTSEnabled && availableVoices.length > 0 && !selectedVoiceName) {
+      setSelectedVoiceName(availableVoices[0].name);
+    }
+  }, [isTTSEnabled, availableVoices, selectedVoiceName, setSelectedVoiceName]);
 
   const handleTestVoice = () => {
     const utterance = new SpeechSynthesisUtterance(
@@ -90,12 +98,7 @@ export default function VoiceSettings({ open, onClose }: VoiceSettingsProps) {
                   </Select>
                 </FormControl>
 
-                <Button
-                  variant="outlined"
-                  size="small"
-                  onClick={handleTestVoice}
-                  fullWidth
-                >
+                <Button variant="outlined" onClick={handleTestVoice} fullWidth>
                   {t('voice.testVoice')}
                 </Button>
               </>

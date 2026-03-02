@@ -54,7 +54,6 @@ export default function LoginForm() {
           onBlur={formik.handleBlur}
           error={formik.touched.email && Boolean(formik.errors.email)}
           helperText={formik.touched.email && formik.errors.email}
-          margin="normal"
           autoComplete="email"
           autoFocus
         />
@@ -70,7 +69,6 @@ export default function LoginForm() {
           onBlur={formik.handleBlur}
           error={formik.touched.password && Boolean(formik.errors.password)}
           helperText={formik.touched.password && formik.errors.password}
-          margin="normal"
           autoComplete="current-password"
           slotProps={{
             input: {
