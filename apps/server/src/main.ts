@@ -84,8 +84,20 @@ async function implementGlobalFilters(app: NestExpressApplication) {
 async function implementSwagger(app: NestExpressApplication) {
   const config = new DocumentBuilder()
     .addBearerAuth()
-    .setTitle('API Documentation')
-    .setDescription('The API documentation for the NestJS application')
+    .setTitle('RAG LLM Chatbot API')
+    .setDescription(
+      'REST API for RAG (Retrieval-Augmented Generation) Chatbot with document ingestion, vector search, and streaming responses',
+    )
+    .setVersion('1.0.0')
+    .addTag('Authentication', 'User authentication and authorization')
+    .addTag('Chat', 'Conversation and message management')
+    .addTag('Documents', 'Document upload and RAG processing')
+    .addTag('Users', 'User management')
+    .addTag('Roles', 'Role management')
+    .addTag('RBAC', 'Role-based access control permissions')
+    .addTag('Admin', 'Admin operations and monitoring')
+    .addTag('Images', 'Image analysis with vision models')
+    .addTag('Tokens', 'Token management')
     .build();
 
   const documentFactory = () => SwaggerModule.createDocument(app, config);

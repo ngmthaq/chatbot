@@ -13,6 +13,15 @@ import {
   Query,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiConsumes,
+  ApiBody,
+  ApiParam,
+} from '@nestjs/swagger';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { diskStorage } from 'multer';
 
@@ -31,6 +40,8 @@ import { DocumentsService } from './documents.service';
 import { FileValidationGuard } from './file-validation.guard';
 import { GetDocumentListDto } from './get-document-list.dto';
 
+@ApiTags('Documents')
+@ApiBearerAuth()
 @Controller('documents')
 @UseGuards(ThrottlerGuard, AuthGuard, RbacGuard)
 export class DocumentsController {
@@ -61,6 +72,33 @@ export class DocumentsController {
   )
   @UseGuards(FileValidationGuard)
   @Rbac(Module.DOCUMENTS, Action.CREATE)
+  @ApiOperation({
+    summary: 'Upload document',
+    description: 'Upload PDF, DOCX, or TXT document for RAG processing',
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+          description: 'Document file (PDF/DOCX/TXT, max 50MB)',
+        },
+        description: {
+          type: 'string',
+          description: 'Optional document description',
+        },
+      },
+      required: ['file'],
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Document uploaded and queued for processing',
+  })
+  @ApiResponse({ status: 400, description: 'Invalid file or file too large' })
   async uploadDocument(
     @UploadedFile() file: Express.Multer.File,
     @Req() req: AuthRequest,
@@ -87,6 +125,12 @@ export class DocumentsController {
    */
   @Get()
   @Rbac(Module.DOCUMENTS, Action.READ)
+  @ApiOperation({
+    summary: 'Get documents',
+    description: 'Get list of user documents with status',
+  })
+  @ApiResponse({ status: 200, description: 'Documents retrieved successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async getDocuments(
     @Query() dto: GetDocumentListDto,
     @Req() req: AuthRequest,
@@ -104,6 +148,13 @@ export class DocumentsController {
    */
   @Get(':documentId')
   @Rbac(Module.DOCUMENTS, Action.READ)
+  @ApiOperation({
+    summary: 'Get document',
+    description: 'Get document details and chunks',
+  })
+  @ApiParam({ name: 'documentId', description: 'Document ID', type: 'number' })
+  @ApiResponse({ status: 200, description: 'Document retrieved successfully' })
+  @ApiResponse({ status: 404, description: 'Document not found' })
   async getDocument(
     @Param('documentId') documentId: string,
     @Req() req: AuthRequest,
@@ -121,6 +172,13 @@ export class DocumentsController {
    */
   @Delete(':documentId')
   @Rbac(Module.DOCUMENTS, Action.DELETE)
+  @ApiOperation({
+    summary: 'Delete document',
+    description: 'Delete document and remove from vector store',
+  })
+  @ApiParam({ name: 'documentId', description: 'Document ID', type: 'number' })
+  @ApiResponse({ status: 200, description: 'Document deleted successfully' })
+  @ApiResponse({ status: 404, description: 'Document not found' })
   async deleteDocument(
     @Param('documentId') documentId: string,
     @Req() req: AuthRequest,

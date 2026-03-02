@@ -8,6 +8,14 @@ import {
   UseGuards,
   Query,
 } from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiParam,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { ThrottlerGuard } from '@nestjs/throttler';
 
 import { ResponseBuilder } from '../../core/response/response-builder';
@@ -21,6 +29,8 @@ import { AdminRoleGuard } from './admin-role.guard';
 import { AdminService } from './admin.service';
 import { TokenUsageDto } from './token-usage.dto';
 
+@ApiTags('Admin')
+@ApiBearerAuth()
 @Controller('admin')
 @UseGuards(ThrottlerGuard, AuthGuard, RbacGuard, AdminRoleGuard)
 export class AdminController {
@@ -31,6 +41,14 @@ export class AdminController {
    */
   @Get('users')
   @Rbac(Module.ADMIN, Action.READ)
+  @ApiOperation({
+    summary: 'Get all users',
+    description: 'Get paginated list of all users (admin only)',
+  })
+  @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
+  @ApiResponse({ status: 200, description: 'Users retrieved successfully' })
+  @ApiResponse({ status: 403, description: 'Admin access required' })
   async getAllUsers(@Query('page') page = 1, @Query('limit') limit = 20) {
     const result = await this.adminService.getAllUsers(page, limit);
 
@@ -42,6 +60,13 @@ export class AdminController {
    */
   @Patch('users/:userId/status')
   @Rbac(Module.ADMIN, Action.UPDATE)
+  @ApiOperation({
+    summary: 'Toggle user status',
+    description: 'Enable or disable user account',
+  })
+  @ApiParam({ name: 'userId', description: 'User ID', type: 'number' })
+  @ApiResponse({ status: 200, description: 'User status updated successfully' })
+  @ApiResponse({ status: 404, description: 'User not found' })
   async toggleUserStatus(
     @Param('userId') userId: string,
     @Body() body: { enabled: boolean },
@@ -59,6 +84,15 @@ export class AdminController {
    */
   @Get('analytics/token-usage')
   @Rbac(Module.ADMIN, Action.READ)
+  @ApiOperation({
+    summary: 'Get token usage',
+    description: 'Get token usage analytics and statistics',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Token usage stats retrieved successfully',
+  })
+  @ApiResponse({ status: 403, description: 'Admin access required' })
   async getTokenUsage(@Query() dto: TokenUsageDto) {
     const stats = await this.adminService.getTokenUsageStats(
       dto.period || '7d',
@@ -72,6 +106,19 @@ export class AdminController {
    */
   @Get('documents')
   @Rbac(Module.ADMIN, Action.READ)
+  @ApiOperation({
+    summary: 'Get all documents',
+    description: 'Get all documents from all users (admin only)',
+  })
+  @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    enum: ['pending', 'processing', 'completed', 'failed'],
+  })
+  @ApiResponse({ status: 200, description: 'Documents retrieved successfully' })
+  @ApiResponse({ status: 403, description: 'Admin access required' })
   async getAllDocuments(
     @Query('page') page = 1,
     @Query('limit') limit = 20,
@@ -87,6 +134,13 @@ export class AdminController {
    */
   @Post('documents/:documentId/delete')
   @Rbac(Module.ADMIN, Action.DELETE)
+  @ApiOperation({
+    summary: 'Delete document',
+    description: 'Delete any document (admin only)',
+  })
+  @ApiParam({ name: 'documentId', description: 'Document ID', type: 'number' })
+  @ApiResponse({ status: 200, description: 'Document deleted successfully' })
+  @ApiResponse({ status: 404, description: 'Document not found' })
   async deleteDocument(@Param('documentId') documentId: string) {
     await this.adminService.deleteDocumentAdmin(Number(documentId));
 

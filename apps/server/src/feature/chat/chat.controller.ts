@@ -11,6 +11,13 @@ import {
   Delete,
   Query,
 } from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiParam,
+} from '@nestjs/swagger';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { Request, Response } from 'express';
 
@@ -34,6 +41,8 @@ export interface AuthRequest extends Request {
   authentication: { sub: number };
 }
 
+@ApiTags('Chat')
+@ApiBearerAuth()
 @Controller('chat')
 @UseGuards(ThrottlerGuard, AuthGuard, RbacGuard)
 export class ChatController {
@@ -47,6 +56,15 @@ export class ChatController {
    */
   @Post('conversations')
   @Rbac(Module.CHAT, Action.CREATE)
+  @ApiOperation({
+    summary: 'Create conversation',
+    description: 'Create a new chat conversation',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Conversation created successfully',
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async createConversation(
     @Body() dto: CreateConversationDto,
     @Req() req: AuthRequest,
@@ -64,6 +82,15 @@ export class ChatController {
    */
   @Get('conversations')
   @Rbac(Module.CHAT, Action.READ)
+  @ApiOperation({
+    summary: 'Get conversations',
+    description: 'Get list of user conversations',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Conversations retrieved successfully',
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async getConversations(
     @Query() dto: GetConversationListDto,
     @Req() req: AuthRequest,
@@ -82,6 +109,20 @@ export class ChatController {
   @Get('conversations/:conversationId')
   @UseGuards(ConversationOwnershipGuard)
   @Rbac(Module.CHAT, Action.READ)
+  @ApiOperation({
+    summary: 'Get conversation',
+    description: 'Get conversation details with messages',
+  })
+  @ApiParam({
+    name: 'conversationId',
+    description: 'Conversation ID',
+    type: 'number',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Conversation retrieved successfully',
+  })
+  @ApiResponse({ status: 404, description: 'Conversation not found' })
   async getConversation(@Param('conversationId') conversationId: string) {
     const conversation = await this.chatService.getConversation(
       Number(conversationId),
@@ -96,6 +137,20 @@ export class ChatController {
   @Post('conversations/:conversationId/messages')
   @UseGuards(ConversationOwnershipGuard, PromptInjectionGuard)
   @Rbac(Module.CHAT, Action.CREATE)
+  @ApiOperation({
+    summary: 'Send message',
+    description: 'Send message and stream AI response via Server-Sent Events',
+  })
+  @ApiParam({
+    name: 'conversationId',
+    description: 'Conversation ID',
+    type: 'number',
+  })
+  @ApiResponse({ status: 200, description: 'Message sent, streaming response' })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid message or prompt injection detected',
+  })
   async streamMessage(
     @Param('conversationId') conversationId: string,
     @Body() dto: CreateMessageDto,
@@ -189,6 +244,20 @@ export class ChatController {
   @Patch('conversations/:conversationId/archive')
   @UseGuards(ConversationOwnershipGuard)
   @Rbac(Module.CHAT, Action.UPDATE)
+  @ApiOperation({
+    summary: 'Archive conversation',
+    description: 'Archive a conversation (soft delete)',
+  })
+  @ApiParam({
+    name: 'conversationId',
+    description: 'Conversation ID',
+    type: 'number',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Conversation archived successfully',
+  })
+  @ApiResponse({ status: 404, description: 'Conversation not found' })
   async archiveConversation(@Param('conversationId') conversationId: string) {
     await this.chatService.archiveConversation(Number(conversationId));
 
@@ -201,6 +270,20 @@ export class ChatController {
   @Delete('conversations/:conversationId')
   @UseGuards(ConversationOwnershipGuard)
   @Rbac(Module.CHAT, Action.DELETE)
+  @ApiOperation({
+    summary: 'Delete conversation',
+    description: 'Permanently delete a conversation and all messages',
+  })
+  @ApiParam({
+    name: 'conversationId',
+    description: 'Conversation ID',
+    type: 'number',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Conversation deleted successfully',
+  })
+  @ApiResponse({ status: 404, description: 'Conversation not found' })
   async deleteConversation(@Param('conversationId') conversationId: string) {
     await this.chatService.deleteConversation(Number(conversationId));
 
