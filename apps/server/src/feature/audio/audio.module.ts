@@ -1,13 +1,19 @@
+import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
-import { WebSocketGateway } from '@nestjs/websockets';
 
+import { AudioGateway } from './audio.gateway';
 import { AudioService } from './audio.service';
-
-@WebSocketGateway()
-export class AudioGateway {}
+import { SpeechToTextService } from './speech-to-text.service';
+import { TextToSpeechService } from './text-to-speech.service';
 
 @Module({
-  providers: [AudioGateway, AudioService],
-  exports: [AudioService],
+  imports: [HttpModule],
+  providers: [
+    AudioGateway,
+    AudioService,
+    SpeechToTextService,
+    TextToSpeechService,
+  ],
+  exports: [AudioService, SpeechToTextService, TextToSpeechService],
 })
 export class AudioModule {}

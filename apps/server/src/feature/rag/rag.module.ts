@@ -1,3 +1,4 @@
+import { BullModule } from '@nestjs/bullmq';
 import { Module } from '@nestjs/common';
 
 import { OllamaModule } from '../ollama/ollama.module';
@@ -9,7 +10,11 @@ import { RagService } from './rag.service';
 import { VectorRetrievalService } from './vector-retrieval.service';
 
 @Module({
-  imports: [OllamaModule, QdrantModule],
+  imports: [
+    BullModule.registerQueue({ name: 'generate-embeddings' }),
+    OllamaModule,
+    QdrantModule,
+  ],
   providers: [
     RagService,
     DocumentChunkingService,

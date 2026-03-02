@@ -1,4 +1,6 @@
+import { InjectQueue } from '@nestjs/bullmq';
 import { Injectable, Logger } from '@nestjs/common';
+import { Queue } from 'bullmq';
 
 import { PrismaService } from '../../core/database/prisma.service';
 import { ExceptionBuilder } from '../../core/exception/exception-builder';
@@ -42,6 +44,8 @@ export class RagService {
     private readonly vectorRetrievalService: VectorRetrievalService,
     private readonly promptService: PromptConstructionService,
     private readonly prismaService: PrismaService,
+    @InjectQueue('generate-embeddings')
+    private readonly embeddingsQueue: Queue,
   ) {}
 
   /**
@@ -121,13 +125,48 @@ export class RagService {
       // Chunk the document
       await this.chunkingService.chunkDocument(documentId, text);
 
+      // Get all chunks for this document
+      const chunks = await this.prismaService.documentChunk.findMany({
+        where: { documentId },
+        orderBy: { chunkIndex: 'asc' },
+      });
+
+      this.logger.debug(
+        `Queueing ${chunks.length} chunks for embedding generation`,
+      );
+
+      // Queue embeddings generation for each chunk
+      for (const chunk of chunks) {
+        await this.embeddingsQueue.add(
+          'generate-embeddings',
+          {
+            documentId,
+            chunkId: chunk.id,
+            text: chunk.text,
+            userId,
+          },
+          {
+            attempts: 3,
+            backoff: {
+              type: 'exponential',
+              delay: 2000,
+            },
+          },
+        );
+      }
+
       // Update document status to processing (embeddings step)
       await this.prismaService.document.update({
         where: { id: documentId },
-        data: { status: 'processing' },
+        data: {
+          status: 'processing',
+          chunkCount: chunks.length,
+        },
       });
 
-      this.logger.log(`Successfully chunked document ${documentId}`);
+      this.logger.log(
+        `Successfully chunked document ${documentId} and queued ${chunks.length} embedding jobs`,
+      );
     } catch (error) {
       this.logger.error(
         `Failed to process document ${documentId}: ${error instanceof Error ? error.message : 'Unknown error'}`,

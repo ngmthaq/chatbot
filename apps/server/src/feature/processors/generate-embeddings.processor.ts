@@ -52,6 +52,44 @@ export class GenerateEmbeddingsProcessor extends WorkerHost {
         },
       });
 
+      // Check if all chunks have embeddings
+      const document = await this.prismaService.document.findUnique({
+        where: { id: job.data.documentId },
+        include: {
+          chunks: {
+            select: { qdrantPointId: true },
+          },
+        },
+      });
+
+      if (document) {
+        const completedChunks = document.chunks.filter(
+          (chunk) => chunk.qdrantPointId !== null,
+        ).length;
+        const totalChunks = document.chunks.length;
+
+        // Update embedding count
+        await this.prismaService.document.update({
+          where: { id: job.data.documentId },
+          data: { embeddingCount: completedChunks },
+        });
+
+        // If all chunks have embeddings, mark document as completed
+        if (completedChunks === totalChunks && totalChunks > 0) {
+          await this.prismaService.document.update({
+            where: { id: job.data.documentId },
+            data: {
+              status: 'completed',
+              processedAt: new Date(),
+            },
+          });
+
+          this.logger.log(
+            `Document ${job.data.documentId} completed with ${completedChunks} embeddings`,
+          );
+        }
+      }
+
       this.logger.log(
         `Successfully generated embedding for chunk ${job.data.chunkId}`,
       );
