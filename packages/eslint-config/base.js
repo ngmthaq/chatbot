@@ -1,11 +1,11 @@
-import js from "@eslint/js";
-import tseslint from "typescript-eslint";
-import importPlugin from "eslint-plugin-import";
-import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
+import js from '@eslint/js';
+import tseslint from 'typescript-eslint';
+import importPlugin from 'eslint-plugin-import';
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 
 export const base = [
   {
-    ignores: ["**/dist/**", "**/node_modules/**"],
+    ignores: ['**/dist/**', '**/node_modules/**'],
   },
 
   js.configs.recommended,
@@ -19,35 +19,35 @@ export const base = [
 
     rules: {
       /* --- Core hygiene --- */
-      "no-console": "warn",
-      "no-debugger": "error",
+      'no-console': 'warn',
+      'no-debugger': 'error',
 
       /* --- TypeScript --- */
-      "no-unused-vars": "off",
-      "@typescript-eslint/no-unused-vars": [
-        "error",
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
         {
-          argsIgnorePattern: "^_",
-          varsIgnorePattern: "^_",
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
         },
       ],
-      "@typescript-eslint/no-explicit-any": "warn",
+      '@typescript-eslint/no-explicit-any': 'warn',
 
       /* --- Imports --- */
-      "import/order": [
-        "error",
+      'import/order': [
+        'error',
         {
           groups: [
-            "builtin",
-            "external",
-            "internal",
-            "parent",
-            "sibling",
-            "index",
+            'builtin',
+            'external',
+            'internal',
+            'parent',
+            'sibling',
+            'index',
           ],
-          "newlines-between": "always",
+          'newlines-between': 'always',
           alphabetize: {
-            order: "asc",
+            order: 'asc',
             caseInsensitive: true,
           },
         },

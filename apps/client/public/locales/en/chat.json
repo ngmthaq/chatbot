@@ -1,0 +1,76 @@
+{
+  "title": "Chat",
+  "newChat": "New Chat",
+  "conversations": "Conversations",
+  "noConversations": "No conversations yet. Start a new chat!",
+  "input": {
+    "placeholder": "Type a message or hold to speak...",
+    "send": "Send",
+    "stop": "Stop",
+    "holdToSpeak": "Hold to speak"
+  },
+  "voice": {
+    "listening": "Listening...",
+    "speaking": "Speaking...",
+    "processing": "Processing...",
+    "micPermissionDenied": "Microphone permission denied",
+    "micNotSupported": "Speech recognition not supported in this browser",
+    "enableTTS": "Enable text-to-speech",
+    "disableTTS": "Disable text-to-speech",
+    "selectVoice": "Select voice",
+    "selectLanguage": "Select language",
+    "settings": "Voice Settings"
+  },
+  "message": {
+    "user": "You",
+    "assistant": "Assistant",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "regenerate": "Regenerate",
+    "tokens": "{{count}} tokens used"
+  },
+  "streaming": {
+    "connecting": "Connecting...",
+    "streaming": "Streaming...",
+    "complete": "Complete",
+    "error": "Error occurred during streaming"
+  },
+  "citations": {
+    "title": "Citations",
+    "noSources": "No source documents",
+    "viewDocument": "View document",
+    "relevanceScore": "Relevance: {{score}}%"
+  },
+  "settings": {
+    "title": "Conversation Settings",
+    "conversationTitle": "Title",
+    "model": "Model",
+    "temperature": "Temperature",
+    "maxTokens": "Max Tokens",
+    "contextWindow": "Context Window",
+    "temperatureHelp": "Controls randomness (0 = focused, 1 = creative)",
+    "maxTokensHelp": "Maximum length of response",
+    "contextWindowHelp": "Number of previous messages to consider"
+  },
+  "actions": {
+    "archive": "Archive",
+    "unarchive": "Unarchive",
+    "delete": "Delete",
+    "deleteConfirm": "Are you sure you want to delete this conversation?",
+    "archived": "Conversation archived",
+    "deleted": "Conversation deleted"
+  },
+  "suggestions": {
+    "title": "Try asking:",
+    "examples": [
+      "What is machine learning?",
+      "Explain quantum computing",
+      "How do neural networks work?",
+      "What are the applications of AI?"
+    ]
+  },
+  "empty": {
+    "title": "Start a conversation",
+    "subtitle": "Ask me anything or upload documents to chat about them"
+  }
+}

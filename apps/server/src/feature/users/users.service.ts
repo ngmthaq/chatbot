@@ -2,7 +2,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import { Prisma } from '../../../prisma-generated/client';
-import { ConfigType } from '../../core/config/config-type';
 import { PrismaService } from '../../core/database/prisma.service';
 import { EmailService } from '../../core/email/email.service';
 import { EncryptService } from '../../core/encrypt/encrypt.service';

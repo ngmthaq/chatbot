@@ -134,13 +134,13 @@ async verifyPassword(password: string, hash: string) {
 
 ```typescript
 export class RegisterDto {
-  @UserEmailShouldNotExist({ message: "Email already exists" })
+  @UserEmailShouldNotExist({ message: 'Email already exists' })
   email: string;
 }
 
 export class DeleteRoleDto {
-  @RoleIdShouldNotBeDefault({ message: "Cannot delete default role" })
-  @RoleIdShouldNotHaveRelationships({ message: "Role has active users" })
+  @RoleIdShouldNotBeDefault({ message: 'Cannot delete default role' })
+  @RoleIdShouldNotHaveRelationships({ message: 'Role has active users' })
   id: number;
 }
 ```
@@ -215,7 +215,7 @@ async verifyToken(token: string) {
 Add `@UseGuards(ThrottlerGuard)` to controllers or specific routes:
 
 ```typescript
-@Controller("auth")
+@Controller('auth')
 @UseGuards(ThrottlerGuard)
 export class AuthController {
   // All routes in this controller are rate-limited
@@ -239,9 +239,9 @@ async login(@Body() dto: LoginDto) {
 **Example**:
 
 ```typescript
-import { ThrottlerGuard } from "@nestjs/throttler";
+import { ThrottlerGuard } from '@nestjs/throttler';
 
-@Controller("admin")
+@Controller('admin')
 @UseGuards(ThrottlerGuard, AuthGuard, RbacGuard)
 export class AdminController {
   // Rate limiting applied before auth checks

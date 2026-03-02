@@ -12,11 +12,41 @@
     "prod": "vite build && vite preview --host"
   },
   "dependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/icons-material": "^6.1.9",
+    "@mui/material": "^6.1.9",
+    "@mui/x-charts": "^7.22.2",
+    "@tanstack/react-query": "^5.62.7",
+    "@tanstack/react-query-devtools": "^5.62.7",
+    "@tanstack/react-router": "^1.94.3",
+    "@tanstack/react-router-devtools": "^1.94.3",
+    "axios": "^1.7.9",
+    "dayjs": "^1.11.13",
+    "eventsource-parser": "^3.0.0",
+    "formik": "^2.4.6",
+    "i18next": "^24.2.0",
+    "i18next-browser-languagedetector": "^8.0.2",
+    "i18next-http-backend": "^3.0.2",
+    "jotai": "^2.10.3",
+    "jotai-devtools": "^0.13.0",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "react-dropzone": "^14.3.5",
+    "react-i18next": "^15.2.0",
+    "react-markdown": "^9.0.1",
+    "react-speech-recognition": "^3.10.0",
+    "react-syntax-highlighter": "^15.6.1",
+    "remark-gfm": "^4.0.0",
+    "sonner": "^1.7.1",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
+    "@tanstack/router-plugin": "^1.164.0",
+    "@types/dom-speech-recognition": "^0.0.4",
     "@types/react": "^19.2.5",
-    "@types/react-dom": "^19.2.3"
+    "@types/react-dom": "^19.2.3",
+    "@types/react-speech-recognition": "^3.9.6",
+    "@types/react-syntax-highlighter": "^15.5.13"
   }
 }

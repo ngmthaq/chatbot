@@ -1,0 +1,78 @@
+{
+  "login": {
+    "errors": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Invalid email address",
+      "passwordRequired": "Password is required",
+      "passwordMin": "Password must be at least {{min}} characters"
+    }
+  },
+  "register": {
+    "errors": {
+      "nameMin": "Name must be at least {{min}} characters",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Invalid email address",
+      "passwordRequired": "Password is required",
+      "passwordMin": "Password must be at least {{min}} characters",
+      "confirmPasswordRequired": "Please confirm your password",
+      "passwordsMustMatch": "Passwords must match"
+    }
+  },
+  "forgotPassword": {
+    "errors": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Invalid email address"
+    }
+  },
+  "user": {
+    "errors": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Invalid email address",
+      "nameRequired": "Name is required",
+      "roleRequired": "Role is required",
+      "passwordRequired": "Password is required",
+      "passwordMin": "Password must be at least {{min}} characters",
+      "phoneInvalid": "Invalid phone number",
+      "dateInvalid": "Invalid date"
+    }
+  },
+  "role": {
+    "errors": {
+      "nameRequired": "Role name is required",
+      "nameMin": "Role name must be at least {{min}} characters",
+      "nameMax": "Role name must not exceed {{max}} characters"
+    }
+  },
+  "conversation": {
+    "errors": {
+      "titleMax": "Title must not exceed {{max}} characters",
+      "modelRequired": "Model is required",
+      "temperatureMin": "Temperature must be at least {{min}}",
+      "temperatureMax": "Temperature must not exceed {{max}}",
+      "maxTokensMin": "Max tokens must be at least {{min}}",
+      "maxTokensMax": "Max tokens must not exceed {{max}}",
+      "contextWindowMin": "Context window must be at least {{min}}",
+      "contextWindowMax": "Context window must not exceed {{max}}"
+    }
+  },
+  "document": {
+    "errors": {
+      "fileRequired": "File is required",
+      "fileTooLarge": "File size must not exceed {{max}}",
+      "fileTypeInvalid": "Invalid file type. Accepted: PDF, DOCX, TXT"
+    }
+  },
+  "common": {
+    "required": "This field is required",
+    "minLength": "Must be at least {{min}} characters",
+    "maxLength": "Must not exceed {{max}} characters",
+    "min": "Must be at least {{min}}",
+    "max": "Must not exceed {{max}}",
+    "email": "Invalid email address",
+    "url": "Invalid URL",
+    "number": "Must be a number",
+    "integer": "Must be an integer",
+    "positive": "Must be positive",
+    "date": "Invalid date"
+  }
+}
