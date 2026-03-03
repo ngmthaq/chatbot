@@ -14,8 +14,6 @@ export default function WaveformAnimation({
 }: WaveformAnimationProps) {
   const isListening = useAtomValue(isListeningAtom);
 
-  if (!isListening) return null;
-
   return (
     <Box
       sx={{
@@ -31,10 +29,13 @@ export default function WaveformAnimation({
           key={index}
           sx={{
             width: 4,
+            height: height * 0.5,
             bgcolor: 'error.main',
             borderRadius: 1,
-            animation: `waveform 1s ease-in-out infinite`,
-            animationDelay: `${index * 0.1}s`,
+            ...(isListening && {
+              animation: 'waveform 1s ease-in-out infinite',
+              animationDelay: `${index * 0.1}s`,
+            }),
           }}
         />
       ))}

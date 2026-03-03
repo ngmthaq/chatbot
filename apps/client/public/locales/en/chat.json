@@ -7,7 +7,10 @@
     "placeholder": "Type a message or hold to speak...",
     "send": "Send",
     "stop": "Stop",
-    "holdToSpeak": "Hold to speak"
+    "holdToSpeak": "Hold to speak",
+    "listening": "Listening...",
+    "processing": "Processing...",
+    "speaking": "Speaking response..."
   },
   "voice": {
     "listening": "Listening...",
@@ -27,7 +30,9 @@
     "sttSettings": "Speech-to-Text",
     "testVoice": "Test Voice",
     "language": "Language",
-    "done": "Done"
+    "done": "Done",
+    "start": "Start voice input",
+    "stop": "Stop voice input"
   },
   "message": {
     "user": "You",

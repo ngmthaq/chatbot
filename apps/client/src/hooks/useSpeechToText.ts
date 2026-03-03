@@ -1,5 +1,5 @@
 import { useAtom, useAtomValue } from 'jotai';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import SpeechRecognition, {
   useSpeechRecognition,
 } from 'react-speech-recognition';
@@ -9,15 +9,21 @@ import {
   transcriptAtom,
   micPermissionAtom,
   sttLanguageAtom,
+  isVoiceModeAtom,
 } from '../stores/voice-store';
 import { VoiceState } from '../types/voice-types';
+
+const SILENCE_TIMEOUT_MS = 2000;
 
 export function useSpeechToText() {
   const [voiceState, setVoiceState] = useAtom(voiceStateAtom);
   const [transcript, setTranscript] = useAtom(transcriptAtom);
   const [micPermission, setMicPermission] = useAtom(micPermissionAtom);
   const sttLanguage = useAtomValue(sttLanguageAtom);
+  const [isVoiceMode, setIsVoiceMode] = useAtom(isVoiceModeAtom);
   const [error, setError] = useState<string>('');
+  const silenceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const prevVoiceStateRef = useRef<VoiceState>(VoiceState.IDLE);
 
   const {
     transcript: recognitionTranscript,
@@ -48,11 +54,50 @@ export function useSpeechToText() {
   }, [setMicPermission]);
 
   // Update transcript atom when recognition transcript changes
+  // In voice mode, start a 2-second silence timer that auto-stops recording
   useEffect(() => {
     if (recognitionTranscript) {
       setTranscript(recognitionTranscript);
+
+      if (isVoiceMode && listening) {
+        if (silenceTimerRef.current) {
+          clearTimeout(silenceTimerRef.current);
+        }
+        silenceTimerRef.current = setTimeout(() => {
+          // Auto-stop after 2s silence; keep isVoiceMode=true so auto-TTS fires
+          SpeechRecognition.stopListening();
+        }, SILENCE_TIMEOUT_MS);
+      }
     }
-  }, [recognitionTranscript, setTranscript]);
+  }, [recognitionTranscript, setTranscript, isVoiceMode, listening]);
+
+  // Auto-restart STT after TTS finishes (continuous voice conversation)
+  useEffect(() => {
+    const justFinishedSpeaking =
+      prevVoiceStateRef.current === VoiceState.SPEAKING &&
+      voiceState === VoiceState.IDLE;
+
+    prevVoiceStateRef.current = voiceState;
+
+    if (justFinishedSpeaking && isVoiceMode && !listening) {
+      resetRecognitionTranscript();
+      setTranscript('');
+      const timer = setTimeout(() => {
+        SpeechRecognition.startListening({
+          continuous: true,
+          language: sttLanguage,
+        });
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [
+    voiceState,
+    isVoiceMode,
+    listening,
+    sttLanguage,
+    resetRecognitionTranscript,
+    setTranscript,
+  ]);
 
   // Update voice state based on listening status
   useEffect(() => {
@@ -68,6 +113,15 @@ export function useSpeechToText() {
     }
   }, [listening, voiceState, transcript, setVoiceState]);
 
+  // Cleanup silence timer on unmount
+  useEffect(() => {
+    return () => {
+      if (silenceTimerRef.current) {
+        clearTimeout(silenceTimerRef.current);
+      }
+    };
+  }, []);
+
   const startListening = useCallback(async () => {
     if (!browserSupportsSpeechRecognition) {
       setError('Speech recognition is not supported in this browser');
@@ -81,6 +135,7 @@ export function useSpeechToText() {
       setError('');
       resetRecognitionTranscript();
       setTranscript('');
+      setIsVoiceMode(true);
 
       SpeechRecognition.startListening({
         continuous: true,
@@ -98,11 +153,18 @@ export function useSpeechToText() {
     setMicPermission,
     resetRecognitionTranscript,
     setTranscript,
+    setIsVoiceMode,
   ]);
 
   const stopListening = useCallback(() => {
+    // Clear the silence timer and exit voice mode (manual abort)
+    if (silenceTimerRef.current) {
+      clearTimeout(silenceTimerRef.current);
+      silenceTimerRef.current = null;
+    }
+    setIsVoiceMode(false);
     SpeechRecognition.stopListening();
-  }, []);
+  }, [setIsVoiceMode]);
 
   const resetTranscript = useCallback(() => {
     resetRecognitionTranscript();

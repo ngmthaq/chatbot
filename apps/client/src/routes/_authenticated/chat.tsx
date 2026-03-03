@@ -1,18 +1,21 @@
 import { Box, Container, Typography } from '@mui/material';
 import { Drawer, useMediaQuery, useTheme } from '@mui/material';
 import { createFileRoute } from '@tanstack/react-router';
-import { useAtom, useSetAtom } from 'jotai';
-import { useEffect, useMemo, useState } from 'react';
+import { useAtom, useSetAtom, useAtomValue } from 'jotai';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ChatInput from '../../components/chat-input';
 import CitationPanel from '../../components/citation-panel';
 import ConversationList from '../../components/conversation-list';
+import ConversationSettings from '../../components/conversation-settings';
 import LoadingSpinner from '../../components/loading-spinner';
 import MessageList from '../../components/message-list';
+import { useTextToSpeech } from '../../hooks/useTextToSpeech';
 import { useCreateConversation } from '../../mutations/useCreateConversation';
 import { useDeleteConversation } from '../../mutations/useDeleteConversation';
 import { useSendMessage } from '../../mutations/useSendMessage';
+import { useUpdateConversation } from '../../mutations/useUpdateConversation';
 import { useGetConversation } from '../../queries/useGetConversation';
 import { useGetConversations } from '../../queries/useGetConversations';
 import {
@@ -20,7 +23,12 @@ import {
   selectedMessageForCitationAtom,
   isCitationPanelOpenAtom,
 } from '../../stores/conversation-store';
-import { MessageRole, type Message } from '../../types/chat-types';
+import { isVoiceModeAtom } from '../../stores/voice-store';
+import {
+  MessageRole,
+  type Message,
+  type ConversationSettings as ConversationSettingsType,
+} from '../../types/chat-types';
 import { showErrorToast } from '../../utils/error-handler';
 
 export const Route = createFileRoute('/_authenticated/chat')({
@@ -37,6 +45,10 @@ function Chat() {
     useState(!isMobile);
   const [optimisticMessages, setOptimisticMessages] = useState<Message[]>([]);
   const [isAssistantLoading, setIsAssistantLoading] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [editingConversationId, setEditingConversationId] = useState<
+    number | null
+  >(null);
 
   const [selectedConversationId, setSelectedConversationId] = useAtom(
     selectedConversationIdAtom,
@@ -54,9 +66,15 @@ function Chat() {
 
   const { mutate: createConversation } = useCreateConversation();
   const { mutate: deleteConversation } = useDeleteConversation();
+  const { mutate: updateConversation, isPending: isUpdating } =
+    useUpdateConversation();
   const { mutate: sendMessage, isPending: isSending } = useSendMessage(
     selectedConversationId || 0,
   );
+  const { speak } = useTextToSpeech();
+  const isVoiceMode = useAtomValue(isVoiceModeAtom);
+  const isVoiceModeRef = useRef(false);
+  isVoiceModeRef.current = isVoiceMode;
 
   useEffect(() => {
     setOptimisticMessages([]);
@@ -109,9 +127,18 @@ function Chat() {
       sendMessage(
         { content: message },
         {
-          onSuccess: () => {
+          onSuccess: (data) => {
             setOptimisticMessages([]);
             setIsAssistantLoading(false);
+            // Auto-speak response only in voice mode
+            // eslint-disable-next-line no-console
+            console.log(
+              'isVoiceModeRef.current in onSuccess:',
+              isVoiceModeRef.current,
+            );
+            if (isVoiceModeRef.current) {
+              speak(data.content, true);
+            }
           },
           onError: (error) => {
             setOptimisticMessages([]);
@@ -134,8 +161,23 @@ function Chat() {
     });
   };
 
-  const handleEditConversation = (_id: number) => {
-    // TODO: Open conversation settings dialog
+  const handleEditConversation = (id: number) => {
+    setEditingConversationId(id);
+    setSettingsOpen(true);
+  };
+
+  const handleSaveConversation = (settings: ConversationSettingsType) => {
+    if (editingConversationId) {
+      updateConversation(
+        { id: editingConversationId, ...settings },
+        {
+          onSuccess: () => {
+            setSettingsOpen(false);
+            setEditingConversationId(null);
+          },
+        },
+      );
+    }
   };
 
   const handleDeleteConversation = (id: number) => {
@@ -226,6 +268,30 @@ function Chat() {
 
       {/* Citation panel */}
       <CitationPanel messages={displayedMessages} />
+
+      {/* Edit conversation settings dialog */}
+      <ConversationSettings
+        open={settingsOpen}
+        onClose={() => {
+          setSettingsOpen(false);
+          setEditingConversationId(null);
+        }}
+        onSave={handleSaveConversation}
+        initialSettings={(() => {
+          const conv = conversationsData?.data.find(
+            (c) => c.id === editingConversationId,
+          );
+          if (!conv) return undefined;
+          return {
+            title: conv.title,
+            model: conv.model,
+            temperature: conv.temperature,
+            maxTokens: conv.maxTokens,
+            contextWindow: conv.contextWindow,
+          };
+        })()}
+        isLoading={isUpdating}
+      />
     </Box>
   );
 }

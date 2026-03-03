@@ -1,10 +1,15 @@
 import { Mic, MicOff } from '@mui/icons-material';
 import { IconButton, Tooltip, Box } from '@mui/material';
-import { useAtomValue } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { useTranslation } from 'react-i18next';
 
 import { useSpeechToText } from '../../hooks/useSpeechToText';
-import { isListeningAtom, voiceStateAtom } from '../../stores/voice-store';
+import { useTextToSpeech } from '../../hooks/useTextToSpeech';
+import {
+  isListeningAtom,
+  voiceStateAtom,
+  isVoiceModeAtom,
+} from '../../stores/voice-store';
 import { VoiceState } from '../../types/voice-types';
 
 interface ToggleVoiceButtonProps {
@@ -19,16 +24,30 @@ export default function ToggleVoiceButton({
   const { t } = useTranslation('chat');
   const { startListening, stopListening, browserSupportsSpeechRecognition } =
     useSpeechToText();
+  const { stop: stopTTS } = useTextToSpeech();
   const isListening = useAtomValue(isListeningAtom);
   const voiceState = useAtomValue(voiceStateAtom);
+  const isVoiceMode = useAtomValue(isVoiceModeAtom);
+  const setIsVoiceMode = useSetAtom(isVoiceModeAtom);
+
+  const isActive = isVoiceMode || isListening;
 
   const handleToggle = () => {
-    if (!disabled && browserSupportsSpeechRecognition) {
-      if (isListening) {
-        stopListening();
-      } else {
-        startListening();
-      }
+    if (disabled || !browserSupportsSpeechRecognition) return;
+
+    if (isListening) {
+      // Manual abort while recording — stopListening already sets isVoiceMode=false
+      stopListening();
+    } else if (
+      voiceState === VoiceState.PROCESSING ||
+      voiceState === VoiceState.SPEAKING
+    ) {
+      // Abort while waiting for API response or TTS is playing
+      stopTTS();
+      setIsVoiceMode(false);
+    } else {
+      // Start voice mode
+      startListening();
     }
   };
 
@@ -44,10 +63,8 @@ export default function ToggleVoiceButton({
     );
   }
 
-  const isDisabled = disabled || voiceState === VoiceState.PROCESSING;
-
   return (
-    <Tooltip title={isListening ? t('voice.stop') : t('voice.start')}>
+    <Tooltip title={isActive ? t('voice.stop') : t('voice.start')}>
       <Box
         sx={{
           position: 'relative',
@@ -56,20 +73,20 @@ export default function ToggleVoiceButton({
       >
         <IconButton
           onClick={handleToggle}
-          disabled={isDisabled}
+          disabled={disabled}
           size={size}
           sx={{
-            color: isListening ? 'common.light' : 'inherit',
-            bgcolor: isListening ? 'error.light' : 'transparent',
+            color: isActive ? 'common.light' : 'inherit',
+            bgcolor: isActive ? 'error.light' : 'transparent',
             '&:hover': {
-              bgcolor: isListening ? 'error.light' : 'action.hover',
+              bgcolor: isActive ? 'error.light' : 'action.hover',
             },
             transition: 'all 0.2s',
           }}
         >
           <Mic />
         </IconButton>
-        {isListening && (
+        {isActive && (
           <Box
             sx={{
               position: 'absolute',

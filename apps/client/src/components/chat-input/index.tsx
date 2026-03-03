@@ -4,7 +4,13 @@ import { useAtomValue } from 'jotai';
 import { useState, type KeyboardEvent, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { transcriptAtom, isListeningAtom } from '../../stores/voice-store';
+import {
+  transcriptAtom,
+  isListeningAtom,
+  voiceStateAtom,
+  isVoiceModeAtom,
+} from '../../stores/voice-store';
+import { VoiceState } from '../../types/voice-types';
 import ToggleVoiceButton from '../toggle-voice-button';
 import WaveformAnimation from '../waveform-animation';
 
@@ -21,9 +27,22 @@ export default function ChatInput({
   const [input, setInput] = useState('');
   const transcript = useAtomValue(transcriptAtom);
   const isListening = useAtomValue(isListeningAtom);
+  const voiceState = useAtomValue(voiceStateAtom);
+  const isVoiceMode = useAtomValue(isVoiceModeAtom);
   const wasListeningRef = useRef(false);
 
+  const isVoiceProcessing = isVoiceMode && voiceState === VoiceState.PROCESSING;
+  const isVoiceSpeaking = isVoiceMode && voiceState === VoiceState.SPEAKING;
+  const isVoiceActive = isListening || isVoiceProcessing || isVoiceSpeaking;
+
   const displayValue = isListening ? transcript : input;
+
+  const getPlaceholder = () => {
+    if (isListening) return t('input.listening');
+    if (isVoiceProcessing) return t('input.processing', 'Processing...');
+    if (isVoiceSpeaking) return t('input.speaking', 'Speaking response...');
+    return t('input.placeholder');
+  };
 
   const handleSend = () => {
     const message = displayValue.trim();
@@ -75,20 +94,22 @@ export default function ChatInput({
             value={displayValue}
             onChange={handleInputChange}
             onKeyDown={handleKeyPress}
-            placeholder={
-              isListening ? t('input.listening') : t('input.placeholder')
-            }
-            disabled={disabled || isListening}
+            placeholder={getPlaceholder()}
+            disabled={disabled || isVoiceActive}
             size="small"
             slotProps={{
               input: {
                 sx: {
-                  bgcolor: isListening ? 'error.lighter' : 'background.paper',
+                  bgcolor: isListening
+                    ? 'error.lighter'
+                    : isVoiceProcessing || isVoiceSpeaking
+                      ? 'action.hover'
+                      : 'background.paper',
                 },
               },
             }}
           />
-          {isListening && (
+          {isVoiceActive && (
             <Box sx={{ mt: 1 }}>
               <WaveformAnimation />
             </Box>
@@ -100,7 +121,7 @@ export default function ChatInput({
             <IconButton
               color="primary"
               onClick={handleSend}
-              disabled={!displayValue.trim() || disabled || isListening}
+              disabled={!displayValue.trim() || disabled || isVoiceActive}
               size="large"
             >
               <Send />

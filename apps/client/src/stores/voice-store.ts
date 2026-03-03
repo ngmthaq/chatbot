@@ -57,3 +57,6 @@ export const isVoiceBusyAtom = atom((get) => {
   const state = get(voiceStateAtom);
   return state !== VoiceState.IDLE;
 });
+
+// Voice mode - true when user initiated mic recording (enables silence auto-send + auto-TTS)
+export const isVoiceModeAtom = atom(false);

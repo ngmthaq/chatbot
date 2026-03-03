@@ -54,8 +54,8 @@ export function useTextToSpeech() {
   }, [isSupported]);
 
   const speak = useCallback(
-    (text: string) => {
-      if (!isSupported || !isTTSEnabled || !text) return;
+    (text: string, force = false) => {
+      if (!isSupported || (!isTTSEnabled && !force) || !text) return;
 
       // Cancel any ongoing speech
       window.speechSynthesis.cancel();
