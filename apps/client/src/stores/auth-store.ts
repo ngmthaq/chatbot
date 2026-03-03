@@ -26,6 +26,9 @@ export const permissionsAtom = atomWithStorage<Rbac[]>(
 // Auth loading state
 export const authLoadingAtom = atom(false);
 
+// Profile dialog open state
+export const isProfileDialogOpenAtom = atom(false);
+
 // Derived atom to check if permissions are loaded
 export const permissionsLoadedAtom = atom((get) => {
   const user = get(userAtom);

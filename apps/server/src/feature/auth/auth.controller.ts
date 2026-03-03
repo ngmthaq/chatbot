@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   Req,
   UseGuards,
@@ -27,6 +28,7 @@ import { Public } from './public.decorator';
 import { RefreshTokenDto } from './refresh-token.dto';
 import { RegisterDto } from './register.dto';
 import { ResetPasswordDto } from './reset-password.dto';
+import { UpdateProfileDto } from './update-profile.dto';
 
 @ApiTags('Authentication')
 @ApiBearerAuth()
@@ -125,6 +127,20 @@ export class AuthController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   public getProfile(@Req() req: AuthRequest) {
     return this.authService.getProfile(req.authentication.sub);
+  }
+
+  @Patch('profile')
+  @ApiOperation({
+    summary: 'Update user profile',
+    description: 'Update authenticated user profile information',
+  })
+  @ApiResponse({ status: 200, description: 'Profile updated successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  public updateProfile(
+    @Req() req: AuthRequest,
+    @Body() body: UpdateProfileDto,
+  ) {
+    return this.authService.updateProfile(req.authentication.sub, body);
   }
 
   @Get('role')

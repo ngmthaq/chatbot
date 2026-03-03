@@ -55,7 +55,6 @@ export default function LoginForm() {
           error={formik.touched.email && Boolean(formik.errors.email)}
           helperText={formik.touched.email && formik.errors.email}
           autoComplete="email"
-          autoFocus
         />
 
         <TextField

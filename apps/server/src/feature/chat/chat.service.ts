@@ -113,6 +113,35 @@ export class ChatService {
   }
 
   /**
+   * Update conversation settings
+   */
+  async updateConversation(
+    conversationId: number,
+    dto: Partial<{
+      title: string;
+      model: string;
+      temperature: number;
+      maxTokens: number;
+      contextWindow: number;
+    }>,
+  ) {
+    const conversation = await this.prismaService.conversation.findUnique({
+      where: { id: conversationId },
+    });
+
+    if (!conversation) {
+      throw ExceptionBuilder.notFound({
+        errors: [ExceptionDict.conversationNotFound()],
+      });
+    }
+
+    return this.prismaService.conversation.update({
+      where: { id: conversationId },
+      data: dto,
+    });
+  }
+
+  /**
    * Archive conversation
    */
   async archiveConversation(conversationId: number) {

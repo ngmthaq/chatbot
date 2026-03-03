@@ -1,9 +1,8 @@
-import { ContentCopy, VolumeUp } from '@mui/icons-material';
+import { ContentCopy } from '@mui/icons-material';
 import { Box, Paper, Typography, IconButton, Tooltip } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import ReactMarkdown from 'react-markdown';
 
-import { useTextToSpeech } from '../../hooks/useTextToSpeech';
 import type { Message } from '../../types/chat-types';
 import { showSuccessToast } from '../../utils/error-handler';
 import { formatDateRelative } from '../../utils/formatters';
@@ -19,16 +18,11 @@ export default function MessageBubble({
   onCitationClick,
 }: MessageBubbleProps) {
   const { t } = useTranslation('chat');
-  const { speak } = useTextToSpeech();
   const isUser = message.role === 'user';
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(message.content);
     showSuccessToast(t('message.copied'));
-  };
-
-  const handleSpeak = () => {
-    speak(message.content);
   };
 
   return (
@@ -43,6 +37,7 @@ export default function MessageBubble({
         elevation={1}
         sx={{
           maxWidth: '70%',
+          minWidth: 200,
           p: 2,
           bgcolor: isUser ? 'chat.userBubble' : 'chat.assistantBubble',
           color: isUser ? 'chat.userText' : 'chat.assistantText',
@@ -128,13 +123,6 @@ export default function MessageBubble({
                 <ContentCopy fontSize="small" />
               </IconButton>
             </Tooltip>
-            {!isUser && (
-              <Tooltip title={t('message.speak')}>
-                <IconButton size="small" onClick={handleSpeak}>
-                  <VolumeUp fontSize="small" />
-                </IconButton>
-              </Tooltip>
-            )}
           </Box>
         </Box>
       </Paper>

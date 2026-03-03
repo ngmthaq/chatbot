@@ -97,6 +97,7 @@ export class DocumentsService {
           where: { id: document.id },
           data: { status: 'failed' },
         });
+
         throw ExceptionBuilder.badRequest({
           errors: [ExceptionDict.documentProcessingFailed()],
         });

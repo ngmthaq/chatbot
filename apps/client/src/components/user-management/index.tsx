@@ -18,6 +18,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { UserWithRole } from '../../types/admin-types';
+import { DefaultRole } from '../../types/auth-types';
 import { formatDate } from '../../utils/formatters';
 import ConfirmDialog from '../confirm-dialog';
 import EmptyState from '../empty-state';
@@ -130,24 +131,44 @@ export default function UserManagement({
                     <Chip
                       label={user.role?.name || t('users.noRole')}
                       size="small"
-                      color={user.role?.name === 'ADMIN' ? 'error' : 'default'}
                     />
                   </TableCell>
                   <TableCell>{formatDate(user.createdAt)}</TableCell>
                   <TableCell align="right">
-                    <Tooltip title={t('users.edit')}>
-                      <IconButton size="small" onClick={() => onEditUser(user)}>
-                        <Edit />
-                      </IconButton>
+                    <Tooltip
+                      title={
+                        user.role?.name === DefaultRole.SUPER_ADMIN
+                          ? t('users.superAdminProtected')
+                          : t('users.edit')
+                      }
+                    >
+                      <span>
+                        <IconButton
+                          size="small"
+                          onClick={() => onEditUser(user)}
+                          disabled={user.role?.name === DefaultRole.SUPER_ADMIN}
+                        >
+                          <Edit />
+                        </IconButton>
+                      </span>
                     </Tooltip>
-                    <Tooltip title={t('users.delete')}>
-                      <IconButton
-                        size="small"
-                        color="error"
-                        onClick={() => handleDeleteClick(user.id)}
-                      >
-                        <Delete />
-                      </IconButton>
+                    <Tooltip
+                      title={
+                        user.role?.name === DefaultRole.SUPER_ADMIN
+                          ? t('users.superAdminProtected')
+                          : t('users.delete')
+                      }
+                    >
+                      <span>
+                        <IconButton
+                          size="small"
+                          color="error"
+                          onClick={() => handleDeleteClick(user.id)}
+                          disabled={user.role?.name === DefaultRole.SUPER_ADMIN}
+                        >
+                          <Delete />
+                        </IconButton>
+                      </span>
                     </Tooltip>
                   </TableCell>
                 </TableRow>

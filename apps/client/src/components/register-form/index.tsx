@@ -63,7 +63,6 @@ export default function RegisterForm() {
           error={formik.touched.name && Boolean(formik.errors.name)}
           helperText={formik.touched.name && formik.errors.name}
           autoComplete="name"
-          autoFocus
         />
 
         <TextField

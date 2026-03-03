@@ -183,6 +183,10 @@ export class ExceptionDict {
     return standardizeRule('adminRoleRequired');
   }
 
+  public static superAdminProtected() {
+    return standardizeRule('superAdminProtected');
+  }
+
   // Document management errors
   public static noFileUploaded() {
     return standardizeRule('noFileUploaded');

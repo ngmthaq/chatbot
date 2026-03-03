@@ -10,14 +10,15 @@ import {
 import { Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
-import { useUserForm } from '../../forms/useUserForm';
-import type { CreateUserDto, UpdateUserDto } from '../../types/admin-types';
+import { useUserForm, type UserFormSchema } from '../../forms/useUserForm';
+import type { UpdateUserDto } from '../../types/admin-types';
+import { DefaultRole } from '../../types/auth-types';
 import type { Role } from '../../types/auth-types';
 
 interface UserFormDialogProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (data: CreateUserDto | UpdateUserDto) => void;
+  onSubmit: (data: UserFormSchema) => void;
   roles: Role[];
   initialData?: UpdateUserDto & { email: string };
   isLoading?: boolean;
@@ -47,7 +48,17 @@ export default function UserFormDialog({
       dateOfBirth: '',
     },
     (values) => {
-      onSubmit(values);
+      // Strip empty optional strings so the server doesn't receive invalid enum/date values
+      const payload = Object.fromEntries(
+        Object.entries(values).filter(
+          ([, v]) => v !== '' && v !== undefined && v !== null,
+        ),
+      ) as typeof values;
+      // Convert plain date (YYYY-MM-DD) to full ISO-8601 DateTime expected by the server
+      if (payload.dateOfBirth && !payload.dateOfBirth.includes('T')) {
+        payload.dateOfBirth = `${payload.dateOfBirth}T00:00:00.000Z`;
+      }
+      onSubmit(payload);
     },
     mode === 'edit',
   );
@@ -63,7 +74,7 @@ export default function UserFormDialog({
         <Box
           component="form"
           onSubmit={formik.handleSubmit}
-          sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 1 }}
+          sx={{ display: 'flex', flexDirection: 'column', gap: 1, pt: 1 }}
         >
           <TextField
             fullWidth
@@ -96,17 +107,19 @@ export default function UserFormDialog({
             id="roleId"
             name="roleId"
             label={t('admin:users.role')}
-            value={formik.values.roleId}
+            value={formik.values.roleId || null}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.roleId && Boolean(formik.errors.roleId)}
             helperText={formik.touched.roleId && formik.errors.roleId}
           >
-            {roles.map((role) => (
-              <MenuItem key={role.id} value={role.id}>
-                {role.name}
-              </MenuItem>
-            ))}
+            {roles
+              .filter((role) => role.name !== DefaultRole.SUPER_ADMIN)
+              .map((role) => (
+                <MenuItem key={role.id} value={role.id}>
+                  {role.name}
+                </MenuItem>
+              ))}
           </TextField>
 
           {mode === 'create' && (
@@ -134,6 +147,48 @@ export default function UserFormDialog({
             onBlur={formik.handleBlur}
             error={formik.touched.phone && Boolean(formik.errors.phone)}
             helperText={formik.touched.phone && formik.errors.phone}
+          />
+
+          <TextField
+            fullWidth
+            select
+            id="gender"
+            name="gender"
+            label={t('admin:users.gender')}
+            value={formik.values.gender || ''}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.gender && Boolean(formik.errors.gender)}
+            helperText={formik.touched.gender && formik.errors.gender}
+          >
+            <MenuItem value="">
+              {t('admin:users.genderNone', 'Not specified')}
+            </MenuItem>
+            <MenuItem value="MALE">
+              {t('admin:users.genderMale', 'Male')}
+            </MenuItem>
+            <MenuItem value="FEMALE">
+              {t('admin:users.genderFemale', 'Female')}
+            </MenuItem>
+            <MenuItem value="OTHER">
+              {t('admin:users.genderOther', 'Other')}
+            </MenuItem>
+          </TextField>
+
+          <TextField
+            fullWidth
+            id="dateOfBirth"
+            name="dateOfBirth"
+            label={t('admin:users.dateOfBirth')}
+            type="date"
+            value={formik.values.dateOfBirth || ''}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={
+              formik.touched.dateOfBirth && Boolean(formik.errors.dateOfBirth)
+            }
+            helperText={formik.touched.dateOfBirth && formik.errors.dateOfBirth}
+            slotProps={{ inputLabel: { shrink: true } }}
           />
         </Box>
       </DialogContent>

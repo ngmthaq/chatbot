@@ -19,11 +19,14 @@
   },
   "table": {
     "title": "Title",
+    "name": "Name",
     "status": "Status",
     "fileSize": "File Size",
+    "size": "File Size",
     "pageCount": "Pages",
     "chunkCount": "Chunks",
     "uploadedAt": "Uploaded At",
+    "uploadDate": "Uploaded At",
     "actions": "Actions",
     "noDocuments": "No documents found",
     "uploadFirst": "Upload your first document to get started"

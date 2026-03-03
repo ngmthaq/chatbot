@@ -20,6 +20,7 @@ import { LoginDto } from './login.dto';
 import { RefreshTokenDto } from './refresh-token.dto';
 import { RegisterDto } from './register.dto';
 import { ResetPasswordDto } from './reset-password.dto';
+import { UpdateProfileDto } from './update-profile.dto';
 
 @Injectable()
 export class AuthService {
@@ -252,6 +253,14 @@ export class AuthService {
       where: { id: userId },
     });
     return ResponseBuilder.data(new UserEntity(user!));
+  }
+
+  public async updateProfile(userId: number, data: UpdateProfileDto) {
+    const user = await this.prismaService.user.update({
+      where: { id: userId },
+      data,
+    });
+    return ResponseBuilder.data(new UserEntity(user));
   }
 
   public async getRole(userId: number) {

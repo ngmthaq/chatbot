@@ -1,5 +1,6 @@
 import * as path from 'path';
 
+import { BullModule } from '@nestjs/bullmq';
 import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
@@ -7,11 +8,14 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 
 import { ConfigType } from '../config/config-type';
 
+import { EMAIL_QUEUE } from './email-job.interface';
+import { EmailProcessor } from './email.processor';
 import { EmailService } from './email.service';
 
 @Global()
 @Module({
   imports: [
+    BullModule.registerQueue({ name: EMAIL_QUEUE }),
     MailerModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -43,7 +47,7 @@ import { EmailService } from './email.service';
       }),
     }),
   ],
-  providers: [EmailService],
+  providers: [EmailService, EmailProcessor],
   exports: [EmailService],
 })
 export class EmailModule {}

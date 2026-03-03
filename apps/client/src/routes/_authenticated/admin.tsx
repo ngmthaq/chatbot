@@ -9,6 +9,7 @@ import RoleFormDialog from '../../components/role-form-dialog';
 import RoleManagement from '../../components/role-management';
 import UserFormDialog from '../../components/user-form-dialog';
 import UserManagement from '../../components/user-management';
+import type { UserFormSchema } from '../../forms/useUserForm';
 import { useCreateRole } from '../../mutations/useCreateRole';
 import { useCreateUser } from '../../mutations/useCreateUser';
 import { useDeleteRole } from '../../mutations/useDeleteRole';
@@ -64,9 +65,9 @@ function Admin() {
     setUserDialogOpen(true);
   };
 
-  const handleUserSubmit = (data: CreateUserDto | UpdateUserDto) => {
+  const handleUserSubmit = (data: UserFormSchema) => {
     if (editingUser) {
-      updateUser(data as UpdateUserDto, {
+      updateUser({ ...data, id: editingUser.id } as UpdateUserDto, {
         onSuccess: () => {
           setUserDialogOpen(false);
           setEditingUser(null);
@@ -149,11 +150,13 @@ function Admin() {
                       id: editingUser.id,
                       email: editingUser.email,
                       name: editingUser.name || '',
-                      roleId: editingUser.roleId,
+                      roleId: editingUser.roleId || editingUser.role?.id || 0,
                       phone: editingUser.phone || '',
                       address: editingUser.address || '',
                       gender: editingUser.gender || '',
-                      dateOfBirth: editingUser.dateOfBirth || '',
+                      dateOfBirth: editingUser.dateOfBirth
+                        ? editingUser.dateOfBirth.split('T')[0]
+                        : '',
                     }
                   : undefined
               }

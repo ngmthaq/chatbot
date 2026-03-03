@@ -2,7 +2,7 @@ import { CheckCircle, Error, HourglassEmpty, Sync } from '@mui/icons-material';
 import { Chip } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
-import type { DocumentStatus } from '../../types/document-types';
+import { DocumentStatus } from '../../types/document-types';
 
 interface DocumentStatusBadgeProps {
   status: DocumentStatus;
@@ -15,9 +15,9 @@ export default function DocumentStatusBadge({
 
   const getStatusConfig = () => {
     switch (status) {
-      case DocumentStatus.UPLOADED:
+      case DocumentStatus.PENDING:
         return {
-          label: t('status.uploaded'),
+          label: t('status.pending'),
           color: 'default' as const,
           icon: <HourglassEmpty />,
         };
@@ -27,9 +27,9 @@ export default function DocumentStatusBadge({
           color: 'info' as const,
           icon: <Sync />,
         };
-      case DocumentStatus.PROCESSED:
+      case DocumentStatus.COMPLETED:
         return {
-          label: t('status.processed'),
+          label: t('status.completed'),
           color: 'success' as const,
           icon: <CheckCircle />,
         };

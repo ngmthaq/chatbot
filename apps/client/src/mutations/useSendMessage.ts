@@ -23,11 +23,11 @@ export function useSendMessage(conversationId: number) {
 
   return useMutation<SendMessageResponse, AxiosError, SendMessageDto>({
     mutationFn: async (dto: SendMessageDto) => {
-      const response = await apiClient.post<{ data: SendMessageResponse }>(
+      const response = await apiClient.post<{ json: SendMessageResponse }>(
         CHAT_ROUTES.MESSAGES(conversationId),
         dto,
       );
-      return response.data.data;
+      return response.data.json;
     },
     onSuccess: () => {
       // Invalidate conversation query to refetch messages

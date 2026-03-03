@@ -72,6 +72,9 @@
     "rowsPerPage": "Rows per page",
     "showing": "Showing {{from}} to {{to}} of {{total}} results"
   },
+  "labels": {
+    "loading": "Loading..."
+  },
   "errors": {
     "unauthorized": "Unauthorized. Please login again.",
     "forbidden": "You don't have permission to access this resource.",
@@ -79,5 +82,10 @@
     "serverError": "Server error. Please try again later.",
     "networkError": "Network error. Please check your connection.",
     "validationError": "Validation error. Please check your input."
+  },
+  "profile": {
+    "title": "My Profile",
+    "noName": "No name set",
+    "updateSuccess": "Profile updated successfully"
   }
 }

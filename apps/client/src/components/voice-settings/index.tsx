@@ -69,7 +69,7 @@ export default function VoiceSettings({ open, onClose }: VoiceSettingsProps) {
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>{t('voice.settingsTitle')}</DialogTitle>
       <DialogContent>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, pt: 1 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, pt: 1 }}>
           {/* Text-to-Speech Settings */}
           <Box>
             <Typography variant="subtitle2" gutterBottom fontWeight={600}>

@@ -175,7 +175,7 @@ export class QdrantService implements OnModuleInit {
     const payload = {
       filter: {
         must: Object.entries(filter).map(([key, value]) => ({
-          field: key,
+          key,
           match: { value },
         })),
       },

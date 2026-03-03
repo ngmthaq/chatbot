@@ -22,8 +22,10 @@ import { useState, type MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ThemeToggle from '../../components/theme-toggle';
+import UserProfileDialog from '../../components/user-profile';
 import { useAuth } from '../../hooks/useAuth';
 import { useLogout } from '../../mutations/useLogout';
+import { isProfileDialogOpenAtom } from '../../stores/auth-store';
 import { isVoiceSettingsOpenAtom } from '../../stores/conversation-store';
 
 interface AppHeaderProps {
@@ -36,6 +38,7 @@ export default function AppHeader({ onMenuClick }: AppHeaderProps) {
   const { mutate: logout } = useLogout();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const setVoiceSettingsOpen = useSetAtom(isVoiceSettingsOpenAtom);
+  const setProfileOpen = useSetAtom(isProfileDialogOpenAtom);
 
   const handleMenuOpen = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -46,7 +49,7 @@ export default function AppHeader({ onMenuClick }: AppHeaderProps) {
   };
 
   const handleProfile = () => {
-    // TODO: Navigate to profile page
+    setProfileOpen(true);
     handleMenuClose();
   };
 
@@ -133,6 +136,8 @@ export default function AppHeader({ onMenuClick }: AppHeaderProps) {
           </MenuItem>
         </Menu>
       </Toolbar>
+
+      <UserProfileDialog />
     </AppBar>
   );
 }

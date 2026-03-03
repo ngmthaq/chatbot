@@ -50,7 +50,6 @@ export default function ConfirmDialog({
           variant="contained"
           color={confirmColor}
           disabled={isLoading}
-          autoFocus
         >
           {confirmText || t('actions.confirm')}
         </Button>

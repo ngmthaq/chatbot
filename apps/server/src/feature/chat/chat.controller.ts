@@ -35,6 +35,7 @@ import { ConversationOwnershipGuard } from './conversation-ownership.guard';
 import { CreateConversationDto } from './create-conversation.dto';
 import { CreateMessageDto } from './create-message.dto';
 import { GetConversationListDto } from './get-conversation-list.dto';
+import { UpdateConversationDto } from './update-conversation.dto';
 
 export interface AuthRequest extends Request {
   authentication: { sub: number };
@@ -203,6 +204,39 @@ export class ChatController {
         ],
       });
     }
+  }
+
+  /**
+   * Update conversation settings
+   */
+  @Patch('conversations/:conversationId')
+  @UseGuards(ConversationOwnershipGuard)
+  @Rbac(Module.CHAT, Action.UPDATE)
+  @ApiOperation({
+    summary: 'Update conversation',
+    description:
+      'Update conversation settings (title, model, temperature, etc.)',
+  })
+  @ApiParam({
+    name: 'conversationId',
+    description: 'Conversation ID',
+    type: 'number',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Conversation updated successfully',
+  })
+  @ApiResponse({ status: 404, description: 'Conversation not found' })
+  async updateConversation(
+    @Param('conversationId') conversationId: string,
+    @Body() dto: UpdateConversationDto,
+  ) {
+    const conversation = await this.chatService.updateConversation(
+      Number(conversationId),
+      dto,
+    );
+
+    return ResponseBuilder.data(conversation);
   }
 
   /**

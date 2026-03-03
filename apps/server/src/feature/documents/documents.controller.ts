@@ -7,12 +7,13 @@ import {
   Get,
   Delete,
   Param,
-  ParseFilePipeBuilder,
   UseGuards,
   UseInterceptors,
   UploadedFile,
   Req,
   Query,
+  ParseFilePipeBuilder,
+  Logger,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
@@ -46,6 +47,8 @@ import { GetDocumentListDto } from './get-document-list.dto';
 @Controller('documents')
 @UseGuards(ThrottlerGuard, AuthGuard, RbacGuard)
 export class DocumentsController {
+  private readonly logger = new Logger(DocumentsController.name);
+
   constructor(private readonly documentsService: DocumentsService) {}
 
   /**
@@ -109,22 +112,19 @@ export class DocumentsController {
   })
   @ApiResponse({ status: 400, description: 'Invalid file or file too large' })
   async uploadDocument(
+    @Req() req: AuthRequest,
     @UploadedFile(
       new ParseFilePipeBuilder()
-        .addFileTypeValidator({
-          fileType:
-            /^(application\/pdf|application\/vnd\.openxmlformats-officedocument\.wordprocessingml\.document|text\/plain)$/,
-        })
         .addMaxSizeValidator({
           maxSize: 50 * 1024 * 1024,
         })
-        .build({
-          fileIsRequired: true,
-        }),
+        .build(),
     )
     file: Express.Multer.File,
-    @Req() req: AuthRequest,
   ) {
+    this.logger.log(
+      `Received file upload: ${file.originalname} (${file.mimetype}, ${file.size} bytes) from user ${req.authentication.sub}`,
+    );
     if (!file || file.size <= 0) {
       throw ExceptionBuilder.badRequest({
         errors: [ExceptionDict.noFileUploaded()],

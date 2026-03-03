@@ -14,7 +14,7 @@ export const createUserFormSchema = (t: TFunction, isEdit: boolean = false) => {
     roleId: Yup.number().required(t('forms:user.errors.roleRequired')),
     phone: Yup.string().optional(),
     address: Yup.string().optional(),
-    gender: Yup.string().optional(),
+    gender: Yup.string().optional().oneOf(['', 'MALE', 'FEMALE', 'OTHER']),
     dateOfBirth: Yup.string().optional(),
   };
 

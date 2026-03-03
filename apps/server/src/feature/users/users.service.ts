@@ -5,9 +5,12 @@ import { Prisma } from '../../../prisma-generated/client';
 import { PrismaService } from '../../core/database/prisma.service';
 import { EmailService } from '../../core/email/email.service';
 import { EncryptService } from '../../core/encrypt/encrypt.service';
+import { ExceptionBuilder } from '../../core/exception/exception-builder';
+import { ExceptionDict } from '../../core/exception/exception-dict';
 import { ResponseBuilder } from '../../core/response/response-builder';
 import dayjs from '../../utils/date';
 import { buildPrismaGetListQuery } from '../../utils/prisma';
+import { DefaultRole } from '../role/default-role';
 
 import { CreateUserDto } from './create-user.dto';
 import { GetUserListDto } from './get-user-list.dto';
@@ -67,7 +70,33 @@ export class UsersService {
     return ResponseBuilder.data(Object.values(UserGender));
   }
 
+  private async throwIfSuperAdminRole(roleId: number) {
+    const role = await this.prismaService.role.findUnique({
+      where: { id: roleId },
+    });
+    if (role?.name === DefaultRole.SUPER_ADMIN) {
+      throw ExceptionBuilder.forbidden({
+        errors: [ExceptionDict.superAdminProtected()],
+      });
+    }
+  }
+
+  private async throwIfTargetUserIsSuperAdmin(userId: number) {
+    const user = await this.prismaService.user.findUnique({
+      where: { id: userId },
+      include: { role: true },
+    });
+    if (user?.role.name === DefaultRole.SUPER_ADMIN) {
+      throw ExceptionBuilder.forbidden({
+        errors: [ExceptionDict.superAdminProtected()],
+      });
+    }
+  }
+
   public async createUser(data: CreateUserDto) {
+    if (data.roleId) {
+      await this.throwIfSuperAdminRole(data.roleId);
+    }
     const password = data.password || generateStrongPassword();
     const hashedPassword = await this.encryptionService.hash(password);
     const user = await this.prismaService.user.create({
@@ -94,6 +123,10 @@ export class UsersService {
   }
 
   public async updateUser(params: IdParamDto, data: UpdateUserDto) {
+    await this.throwIfTargetUserIsSuperAdmin(params.id);
+    if (data.roleId) {
+      await this.throwIfSuperAdminRole(data.roleId);
+    }
     const user = await this.prismaService.user.update({
       where: { id: params.id },
       data,
@@ -118,6 +151,7 @@ export class UsersService {
   }
 
   public async deleteUser(params: IdParamDto) {
+    await this.throwIfTargetUserIsSuperAdmin(params.id);
     const user = await this.prismaService.user.delete({
       where: { id: params.id },
     });
@@ -126,6 +160,8 @@ export class UsersService {
 
   public async deleteMultipleUsers(params: MultipleIdsParamDto) {
     const ids = params.ids.split(',').map((id) => +id);
+    // Prevent deleting any super admin
+    await Promise.all(ids.map((id) => this.throwIfTargetUserIsSuperAdmin(id)));
     const users = await this.prismaService.user.deleteMany({
       where: { id: { in: ids } },
     });

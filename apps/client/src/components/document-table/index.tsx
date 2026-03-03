@@ -57,11 +57,11 @@ export default function DocumentTable({
         <TableBody>
           {documents.map((doc) => (
             <TableRow key={doc.id} hover>
-              <TableCell>{doc.filename}</TableCell>
+              <TableCell>{doc.title}</TableCell>
               <TableCell>
                 <DocumentStatusBadge status={doc.status} />
               </TableCell>
-              <TableCell>{formatFileSize(doc.size)}</TableCell>
+              <TableCell>{formatFileSize(doc.fileSize)}</TableCell>
               <TableCell>{formatDate(doc.uploadedAt)}</TableCell>
               <TableCell align="right">
                 <Box

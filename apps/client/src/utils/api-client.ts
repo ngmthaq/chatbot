@@ -17,7 +17,7 @@ import {
 
 const apiClient = axios.create({
   baseURL: APP_CONFIG.API_BASE_URL,
-  timeout: 180000,
+  timeout: 600000,
 });
 
 let isRefreshing = false;

@@ -18,6 +18,7 @@
     "docker:base-down": "docker-compose -f docker-compose-base.yml down",
     "docker:prod-up": "docker-compose -f docker-compose-prod.yml up -d --build",
     "docker:prod-down": "docker-compose -f docker-compose-prod.yml down",
+    "ollama:install": "node ./scripts/install-ollama-models.cjs",
     "format": "prettier --write .",
     "lint": "turbo run lint",
     "prod": "turbo run prod"

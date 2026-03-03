@@ -32,7 +32,7 @@ export class GenerateEmbeddingsProcessor extends WorkerHost {
       // Upsert to Qdrant
       await this.qdrantService.upsertPoints('documents', [
         {
-          id: `${job.data.documentId}-${job.data.chunkId}`,
+          id: job.data.chunkId,
           vector: embedding,
           payload: {
             documentId: job.data.documentId,
@@ -47,7 +47,7 @@ export class GenerateEmbeddingsProcessor extends WorkerHost {
       await this.prismaService.documentChunk.update({
         where: { id: job.data.chunkId },
         data: {
-          qdrantPointId: `${job.data.documentId}-${job.data.chunkId}`,
+          qdrantPointId: String(job.data.chunkId),
           embedding: JSON.stringify(embedding),
         },
       });

@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 export interface QdrantPoint {
-  id: string;
+  id: string | number;
   vector: number[];
   payload: Record<string, any>;
 }
 
 export interface QdrantSearchResult {
-  id: string;
+  id: string | number;
   score: number;
   payload: Record<string, any>;
 }

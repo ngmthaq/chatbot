@@ -1,20 +1,17 @@
+import { InjectQueue } from '@nestjs/bullmq';
 import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { MailerService } from '@nestjs-modules/mailer';
+import { Queue } from 'bullmq';
 
-import { ConfigType } from '../config/config-type';
+import { EMAIL_QUEUE, EmailJobName } from './email-job.interface';
 
 @Injectable()
 export class EmailService {
   private readonly logger = new Logger(EmailService.name);
 
-  constructor(
-    private readonly mailerService: MailerService,
-    private readonly configService: ConfigService,
-  ) {}
+  constructor(@InjectQueue(EMAIL_QUEUE) private readonly emailQueue: Queue) {}
 
   /**
-   * Send user activation email
+   * Queue user activation email
    */
   async sendActivationEmail(
     email: string,
@@ -24,29 +21,12 @@ export class EmailService {
       activationUrl: string;
     },
   ): Promise<void> {
-    try {
-      await this.mailerService.sendMail({
-        to: email,
-        subject: 'Activate Your Account',
-        template: 'activation',
-        context: {
-          name: data.name,
-          activationUrl: data.activationUrl,
-          appName: this.configService.get<ConfigType['appName']>('appName'),
-        },
-      });
-
-      this.logger.log(`Activation email sent to ${email}`);
-    } catch (error) {
-      this.logger.error(
-        `Failed to send activation email to ${email}: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      );
-      throw error;
-    }
+    await this.emailQueue.add(EmailJobName.SEND_ACTIVATION, { email, ...data });
+    this.logger.log(`Activation email queued for ${email}`);
   }
 
   /**
-   * Send password reset email
+   * Queue password reset email
    */
   async sendPasswordResetEmail(
     email: string,
@@ -56,29 +36,15 @@ export class EmailService {
       resetUrl: string;
     },
   ): Promise<void> {
-    try {
-      await this.mailerService.sendMail({
-        to: email,
-        subject: 'Reset Your Password',
-        template: 'password-reset',
-        context: {
-          name: data.name,
-          resetUrl: data.resetUrl,
-          appName: this.configService.get<ConfigType['appName']>('appName'),
-        },
-      });
-
-      this.logger.log(`Password reset email sent to ${email}`);
-    } catch (error) {
-      this.logger.error(
-        `Failed to send password reset email to ${email}: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      );
-      throw error;
-    }
+    await this.emailQueue.add(EmailJobName.SEND_PASSWORD_RESET, {
+      email,
+      ...data,
+    });
+    this.logger.log(`Password reset email queued for ${email}`);
   }
 
   /**
-   * Send welcome email after account activation
+   * Queue welcome email after account activation
    */
   async sendWelcomeEmail(
     email: string,
@@ -86,28 +52,12 @@ export class EmailService {
       name: string;
     },
   ): Promise<void> {
-    try {
-      await this.mailerService.sendMail({
-        to: email,
-        subject: 'Welcome!',
-        template: 'welcome',
-        context: {
-          name: data.name,
-          appName: this.configService.get<ConfigType['appName']>('appName'),
-        },
-      });
-
-      this.logger.log(`Welcome email sent to ${email}`);
-    } catch (error) {
-      this.logger.error(
-        `Failed to send welcome email to ${email}: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      );
-      throw error;
-    }
+    await this.emailQueue.add(EmailJobName.SEND_WELCOME, { email, ...data });
+    this.logger.log(`Welcome email queued for ${email}`);
   }
 
   /**
-   * Send password changed notification
+   * Queue password changed notification
    */
   async sendPasswordChangedEmail(
     email: string,
@@ -115,28 +65,15 @@ export class EmailService {
       name: string;
     },
   ): Promise<void> {
-    try {
-      await this.mailerService.sendMail({
-        to: email,
-        subject: 'Password Changed',
-        template: 'password-changed',
-        context: {
-          name: data.name,
-          appName: this.configService.get<ConfigType['appName']>('appName'),
-        },
-      });
-
-      this.logger.log(`Password changed email sent to ${email}`);
-    } catch (error) {
-      this.logger.error(
-        `Failed to send password changed email to ${email}: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      );
-      throw error;
-    }
+    await this.emailQueue.add(EmailJobName.SEND_PASSWORD_CHANGED, {
+      email,
+      ...data,
+    });
+    this.logger.log(`Password changed email queued for ${email}`);
   }
 
   /**
-   * Send generic notification email
+   * Queue generic notification email
    */
   async sendNotificationEmail(
     email: string,
@@ -145,23 +82,10 @@ export class EmailService {
       message: string;
     },
   ): Promise<void> {
-    try {
-      await this.mailerService.sendMail({
-        to: email,
-        subject: data.subject,
-        template: 'notification',
-        context: {
-          message: data.message,
-          appName: this.configService.get<ConfigType['appName']>('appName'),
-        },
-      });
-
-      this.logger.log(`Notification email sent to ${email}`);
-    } catch (error) {
-      this.logger.error(
-        `Failed to send notification email to ${email}: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      );
-      throw error;
-    }
+    await this.emailQueue.add(EmailJobName.SEND_NOTIFICATION, {
+      email,
+      ...data,
+    });
+    this.logger.log(`Notification email queued for ${email}`);
   }
 }
