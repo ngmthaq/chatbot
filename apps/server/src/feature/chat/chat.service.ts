@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 import { Prisma } from '../../../prisma-generated/client';
 import { PrismaService } from '../../core/database/prisma.service';
@@ -12,20 +13,20 @@ import { GetConversationListDto } from './get-conversation-list.dto';
 export class ChatService {
   private readonly logger = new Logger(ChatService.name);
 
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly configService: ConfigService,
+  ) {}
 
   /**
    * Create new conversation
+   * Settings are now managed via environment config only
    */
   async createConversation(userId: number, dto: CreateConversationDto) {
     return this.prismaService.conversation.create({
       data: {
         userId,
         title: dto.title,
-        model: dto.model,
-        temperature: dto.temperature,
-        maxTokens: dto.maxTokens,
-        contextWindow: dto.contextWindow,
       },
     });
   }
@@ -119,10 +120,6 @@ export class ChatService {
     conversationId: number,
     dto: Partial<{
       title: string;
-      model: string;
-      temperature: number;
-      maxTokens: number;
-      contextWindow: number;
     }>,
   ) {
     const conversation = await this.prismaService.conversation.findUnique({

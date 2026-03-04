@@ -5,8 +5,6 @@ import {
   DialogActions,
   Button,
   TextField,
-  Slider,
-  Typography,
   Box,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -34,10 +32,6 @@ export default function ConversationSettings({
   const formik = useConversationForm(
     initialSettings || {
       title: '',
-      model: '',
-      temperature: 0.7,
-      maxTokens: 2000,
-      contextWindow: 10,
     },
     (values) => {
       onSave(values);
@@ -63,67 +57,6 @@ export default function ConversationSettings({
             onBlur={formik.handleBlur}
             error={formik.touched.title && Boolean(formik.errors.title)}
             helperText={formik.touched.title && formik.errors.title}
-          />
-
-          <TextField
-            fullWidth
-            id="model"
-            name="model"
-            label={t('chat:settings.model')}
-            value={formik.values.model}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.model && Boolean(formik.errors.model)}
-            helperText={formik.touched.model && formik.errors.model}
-          />
-
-          <Box>
-            <Typography gutterBottom>
-              {t('chat:settings.temperature')}: {formik.values.temperature}
-            </Typography>
-            <Slider
-              name="temperature"
-              value={formik.values.temperature}
-              onChange={(_, value) =>
-                formik.setFieldValue('temperature', value)
-              }
-              min={0}
-              max={1}
-              step={0.1}
-              marks
-              valueLabelDisplay="auto"
-            />
-          </Box>
-
-          <TextField
-            fullWidth
-            id="maxTokens"
-            name="maxTokens"
-            label={t('chat:settings.maxTokens')}
-            type="number"
-            value={formik.values.maxTokens}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.maxTokens && Boolean(formik.errors.maxTokens)}
-            helperText={formik.touched.maxTokens && formik.errors.maxTokens}
-          />
-
-          <TextField
-            fullWidth
-            id="contextWindow"
-            name="contextWindow"
-            label={t('chat:settings.contextWindow')}
-            type="number"
-            value={formik.values.contextWindow}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={
-              formik.touched.contextWindow &&
-              Boolean(formik.errors.contextWindow)
-            }
-            helperText={
-              formik.touched.contextWindow && formik.errors.contextWindow
-            }
           />
         </Box>
       </DialogContent>

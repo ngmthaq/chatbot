@@ -2,10 +2,6 @@ model Conversation {
   id            Int       @id @default(autoincrement())
   userId        Int
   title         String?
-  model         String    @default("gemma3")
-  temperature   Float     @default(0.7)
-  maxTokens     Int       @default(2048)
-  contextWindow Int       @default(20)
   isArchived    Boolean   @default(false)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt

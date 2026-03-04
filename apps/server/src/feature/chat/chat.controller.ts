@@ -163,18 +163,14 @@ export class ChatController {
       // Save user message
       await this.chatService.createMessage(convId, userId, 'user', dto.content);
 
-      // Get conversation config
-      const conversation = await this.chatService.getConversation(convId);
+      // Verify conversation exists
+      await this.chatService.getConversation(convId);
 
-      // Get response from RAG
+      // Get response from RAG using environment config
       const response = await this.ragService.executeRagQuery({
         conversationId: convId,
         userId,
         userMessage: dto.content,
-        model: conversation.model,
-        temperature: conversation.temperature,
-        maxTokens: conversation.maxTokens,
-        contextWindow: conversation.contextWindow,
       });
 
       // Save assistant message

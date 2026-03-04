@@ -10,19 +10,6 @@ export const createConversationFormSchema = (t: TFunction) => {
     title: Yup.string()
       .optional()
       .max(100, t('forms:conversation.errors.titleMax', { max: 100 })),
-    model: Yup.string().required(t('forms:conversation.errors.modelRequired')),
-    temperature: Yup.number()
-      .required()
-      .min(0, t('forms:conversation.errors.temperatureMin', { min: 0 }))
-      .max(1, t('forms:conversation.errors.temperatureMax', { max: 1 })),
-    maxTokens: Yup.number()
-      .required()
-      .min(100, t('forms:conversation.errors.maxTokensMin', { min: 100 }))
-      .max(8000, t('forms:conversation.errors.maxTokensMax', { max: 8000 })),
-    contextWindow: Yup.number()
-      .required()
-      .min(1, t('forms:conversation.errors.contextWindowMin', { min: 1 }))
-      .max(50, t('forms:conversation.errors.contextWindowMax', { max: 50 })),
   });
 };
 

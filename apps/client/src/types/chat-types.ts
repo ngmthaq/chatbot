@@ -29,10 +29,6 @@ export interface Conversation {
   id: number;
   userId: number;
   title?: string;
-  model: string;
-  temperature: number;
-  maxTokens: number;
-  contextWindow: number;
   isArchived: boolean;
   createdAt: string;
   updatedAt: string;
@@ -44,22 +40,15 @@ export interface Conversation {
 
 export interface ConversationSettings {
   title?: string;
-  model: string;
-  temperature: number;
-  maxTokens: number;
-  contextWindow: number;
 }
 
 export interface CreateConversationDto {
   title?: string;
-  model?: string;
-  temperature?: number;
-  maxTokens?: number;
-  contextWindow?: number;
 }
 
-export interface UpdateConversationDto extends Partial<ConversationSettings> {
+export interface UpdateConversationDto {
   id: number;
+  title?: string;
 }
 
 export interface SendMessageDto {

@@ -31,12 +31,6 @@ export const APP_CONFIG = {
     TTS_VOLUME: 1.0,
   },
 
-  // Chat Configuration
-  DEFAULT_MODEL: 'gemma3',
-  DEFAULT_TEMPERATURE: 0.7,
-  DEFAULT_MAX_TOKENS: 2048,
-  DEFAULT_CONTEXT_WINDOW: 20,
-
   // Debounce/Throttle
   SEARCH_DEBOUNCE_MS: 500,
   AUTO_SAVE_DEBOUNCE_MS: 1000,
@@ -62,19 +56,6 @@ export const APP_CONFIG = {
     STT_LANGUAGE: 'chatbot_stt_language',
   },
 } as const;
-
-export const AVAILABLE_MODELS = [
-  { value: 'gemma3', label: 'Llama 3' },
-  { value: 'gemma3.1', label: 'Llama 3.1' },
-  { value: 'mistral', label: 'Mistral' },
-  { value: 'codellama', label: 'Code Llama' },
-] as const;
-
-export const GENDER_OPTIONS = [
-  { value: 'male', label: 'Male' },
-  { value: 'female', label: 'Female' },
-  { value: 'other', label: 'Other' },
-] as const;
 
 export const DATE_FORMATS = {
   DISPLAY: 'MMM D, YYYY',

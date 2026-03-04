@@ -60,7 +60,3 @@ export const ADMIN_ROUTES = {
   DELETE_DOCUMENT: (id: number) =>
     `${BASE_API_URL}/api/admin/documents/${id}/delete`,
 } as const;
-
-export const IMAGES_ROUTES = {
-  ANALYZE: `${BASE_API_URL}/api/images/analyze`,
-} as const;
