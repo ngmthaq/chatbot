@@ -2,7 +2,9 @@
 
 const fs = require('fs');
 const path = require('path');
-const { spawn } = require('child_process');
+const { exec } = require('child_process');
+const { promisify } = require('util');
+const execPromise = promisify(exec);
 
 const rootDir = path.resolve(__dirname, '..');
 
@@ -20,26 +22,17 @@ function log(message, color = 'reset') {
   console.log(`${colors[color]}${message}${colors.reset}`);
 }
 
-function runCommand(cmd, args = [], options = {}) {
-  return new Promise((resolve, reject) => {
-    log(`\n$ ${cmd} ${args.join(' ')}`, 'blue');
+async function runCommand(cmd, args = [], options = {}) {
+  const fullCmd = `${cmd} ${args.join(' ')}`;
+  log(`\n$ ${fullCmd}`, 'blue');
 
-    const child = spawn(cmd, args, {
-      cwd: rootDir,
-      stdio: 'inherit',
-      ...options,
-    });
-
-    child.on('close', (code) => {
-      if (code !== 0) {
-        reject(new Error(`Command failed with exit code ${code}`));
-      } else {
-        resolve();
-      }
-    });
-
-    child.on('error', reject);
+  const { stdout, stderr } = await execPromise(fullCmd, {
+    cwd: rootDir,
+    ...options,
   });
+
+  if (stdout) process.stdout.write(stdout);
+  if (stderr) process.stderr.write(stderr);
 }
 
 async function checkEnvFile() {
@@ -72,19 +65,12 @@ async function waitForDocker() {
     try {
       // Check if MySQL is healthy
       const checkMysql = async () => {
-        return new Promise((resolve) => {
-          const child = spawn('docker', ['exec', 'chatbot-database_service-1', 'mysqladmin', 'ping', '-h', 'localhost'], {
-            stdio: 'pipe',
-          });
-          
-          child.on('close', (code) => {
-            resolve(code === 0);
-          });
-          
-          child.on('error', () => {
-            resolve(false);
-          });
-        });
+        try {
+          await execPromise('docker exec chatbot-database_service-1 mysqladmin ping -h localhost');
+          return true;
+        } catch {
+          return false;
+        }
       };
 
       const mysqlHealthy = await checkMysql();
