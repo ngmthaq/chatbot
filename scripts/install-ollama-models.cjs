@@ -127,12 +127,14 @@ async function main() {
   const port = parseInt(process.env.OLLAMA_PORT ?? '11434', 10);
 
   // Collect unique, non-empty model names
-  const modelKeys = ['OLLAMA_CHAT_MODEL', 'OLLAMA_EMBED_MODEL', 'OLLAMA_VISION_MODEL'];
+  const modelKeys = [
+    'OLLAMA_CHAT_MODEL',
+    'OLLAMA_EMBED_MODEL',
+    'OLLAMA_VISION_MODEL',
+  ];
   const models = [
     ...new Set(
-      modelKeys
-        .map((key) => process.env[key])
-        .filter((m) => m && m.trim()),
+      modelKeys.map((key) => process.env[key]).filter((m) => m && m.trim()),
     ),
   ];
 

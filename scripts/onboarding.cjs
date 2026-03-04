@@ -141,6 +141,17 @@ async function main() {
     const certEnv = {};
     let hasCert = false;
 
+    // Forward proxy settings from .env into child process env
+    for (const key of ['HTTP_PROXY', 'HTTPS_PROXY', 'NO_PROXY']) {
+      const val = envVars[key] || process.env[key] || '';
+      if (val) {
+        certEnv[key] = val;
+        certEnv[key.toLowerCase()] = val;
+        process.env[key] = val;
+        process.env[key.toLowerCase()] = val;
+      }
+    }
+
     if (certPath) {
       if (!fs.existsSync(certPath)) {
         log(`\n⚠️  CA_CERT_PATH is set but file not found: ${certPath}`, 'yellow');
