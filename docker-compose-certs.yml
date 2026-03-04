@@ -1,0 +1,19 @@
+# Docker Compose override for corporate proxy / custom CA certificate.
+# Applied automatically by the onboarding script when CA_CERT_PATH is set in .env.
+# To apply manually:
+#   docker compose -f docker-compose-base.yml -f docker-compose-certs.yml up -d
+
+services:
+  ollama_service:
+    volumes:
+      - ${CA_CERT_PATH}:/etc/ssl/certs/ca-certificates.crt:ro
+    environment:
+      SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
+      CURL_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt
+
+  qdrant_service:
+    volumes:
+      - ${CA_CERT_PATH}:/etc/ssl/certs/ca-certificates.crt:ro
+    environment:
+      SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
+      CURL_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt

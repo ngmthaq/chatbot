@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const { exec } = require('child_process');
 const { promisify } = require('util');
 const execPromise = promisify(exec);
@@ -26,13 +27,37 @@ async function runCommand(cmd, args = [], options = {}) {
   const fullCmd = `${cmd} ${args.join(' ')}`;
   log(`\n$ ${fullCmd}`, 'blue');
 
+  const { env: extraEnv, ...restOptions } = options;
   const { stdout, stderr } = await execPromise(fullCmd, {
     cwd: rootDir,
-    ...options,
+    ...restOptions,
+    env: { ...process.env, ...extraEnv },
   });
 
   if (stdout) process.stdout.write(stdout);
   if (stderr) process.stderr.write(stderr);
+}
+
+function parseEnvFile(envPath) {
+  if (!fs.existsSync(envPath)) return {};
+  return fs
+    .readFileSync(envPath, 'utf-8')
+    .split('\n')
+    .reduce((acc, line) => {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) return acc;
+      const eqIdx = trimmed.indexOf('=');
+      if (eqIdx === -1) return acc;
+      const key = trimmed.slice(0, eqIdx).trim();
+      const value = trimmed.slice(eqIdx + 1).trim();
+      acc[key] = value;
+      return acc;
+    }, {});
+}
+
+function resolvePath(p) {
+  if (!p) return '';
+  return p.startsWith('~') ? path.join(os.homedir(), p.slice(1)) : p;
 }
 
 async function checkEnvFile() {
@@ -110,9 +135,36 @@ async function main() {
     log('\n🔧 Step 2: Checking environment configuration...', 'bright');
     await checkEnvFile();
 
+    // Resolve CA certificate path from .env
+    const envVars = parseEnvFile(path.join(rootDir, '.env'));
+    const certPath = resolvePath(envVars.CA_CERT_PATH);
+    const certEnv = {};
+    let hasCert = false;
+
+    if (certPath) {
+      if (!fs.existsSync(certPath)) {
+        log(`\n⚠️  CA_CERT_PATH is set but file not found: ${certPath}`, 'yellow');
+        log('   Proceeding without custom certificate...', 'yellow');
+      } else {
+        log(`\n🔐 Custom CA certificate detected: ${certPath}`, 'green');
+        certEnv.NODE_EXTRA_CA_CERTS = certPath;
+        certEnv.CURL_CA_BUNDLE = certPath;
+        certEnv.SSL_CERT_FILE = certPath;
+        // Expose resolved path so docker-compose-certs.yml can use it
+        process.env.CA_CERT_PATH = certPath;
+        hasCert = true;
+      }
+    } else {
+      log('\nℹ️  No CA_CERT_PATH set — skipping custom certificate', 'reset');
+    }
+
     // Step 3: Start Docker containers
     log('\n🐳 Step 3: Starting Docker services...', 'bright');
-    await runCommand('yarn', ['docker:base-up']);
+    const composeFiles = ['-f', 'docker-compose-base.yml'];
+    if (hasCert) {
+      composeFiles.push('-f', 'docker-compose-certs.yml');
+    }
+    await runCommand(`docker compose ${composeFiles.join(' ')} up -d --build`, [], { env: certEnv });
     log('✅ Docker services started', 'green');
 
     // Step 4: Wait for services to be healthy
@@ -120,22 +172,22 @@ async function main() {
 
     // Step 5: Install Ollama models
     log('\n🤖 Step 5: Installing Ollama models...', 'bright');
-    await runCommand('yarn', ['ollama:install']);
+    await runCommand('yarn', ['ollama:install'], { env: certEnv });
     log('✅ Ollama models installed successfully', 'green');
 
     // Step 6: Generate Prisma client
     log('\n🔨 Step 6: Generating Prisma client...', 'bright');
-    await runCommand('yarn', ['db:generate']);
+    await runCommand('yarn', ['db:generate'], { env: certEnv });
     log('✅ Prisma client generated successfully', 'green');
 
     // Step 7: Run database migrations
     log('\n🗄️  Step 7: Running database migrations...', 'bright');
-    await runCommand('yarn', ['db:migrate-dev']);
+    await runCommand('yarn', ['db:migrate-dev'], { env: certEnv });
     log('✅ Database migrations completed', 'green');
 
     // Step 8: Seed the database
     log('\n🌱 Step 8: Seeding database...', 'bright');
-    await runCommand('yarn', ['db:seed']);
+    await runCommand('yarn', ['db:seed'], { env: certEnv });
     log('✅ Database seeded successfully', 'green');
 
     // Final success message
